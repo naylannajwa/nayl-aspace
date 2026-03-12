@@ -130,7 +130,7 @@
 .scroll-hint i{color:rgba(0,212,255,.4);animation:float 2s ease-in-out infinite}
 
 /* QUICK LINKS */
-.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .quick-card{padding:28px;text-decoration:none;display:block;position:relative;overflow:hidden}
 .quick-card::before{
   content:'';position:absolute;inset:0;
@@ -162,6 +162,7 @@
 @media(max-width:1024px){
   .home-grid{gap:30px}
   .home-name{font-size:4rem}
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
   #home-section{padding:20px 22px 20px;min-height:auto}
@@ -217,7 +218,7 @@
       <p class="eyebrow"><span class="eyebrow-line"></span>Portfolio · 2026</p>
       <h1 class="home-name"><span class="grad">nayl-aSpace</span></h1>
       <p class="home-role">// <span id="typing" class="typing-cur"></span></p>
-      <p class="home-bio" id="bio-text">Full-stack developer & creative technologist — building digital experiences at the intersection of code, design, and imagination. From web apps to game worlds, always shipping.</p>
+      <p class="home-bio" id="bio-text">Rewriting the scenario, one line of code at a time. A creative technologist dedicated to reaching the perfect epilogue for every project. I build worlds for the reader behind the screen.</p>
       <div class="home-cta">
         <a href="pages/projects.html" class="btn-primary"><i class="fa-solid fa-rocket"></i>See My Work</a>
         <a href="pages/interests.html" class="btn-ghost"><i class="fa-solid fa-user-astronaut"></i>About Me</a>
@@ -271,6 +272,12 @@
         <div class="qc-title">Interests</div>
         <div class="qc-desc">Anime, manhwa, movies, games — my whole personality, honestly.</div>
         <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Explore</div>
+      </a>
+      <a href="pages/messages.html" class="gc quick-card reveal">
+        <div class="qc-icon"><i class="fa-solid fa-paper-plane"></i></div>
+        <div class="qc-title">Drop a Message</div>
+        <div class="qc-desc">Leave a note, share a thought, or just say hi on the public wall.</div>
+        <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Write something</div>
       </a>
     </div>
   </div>

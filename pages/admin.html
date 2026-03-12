@@ -3,521 +3,1259 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>nayl-aSpace · Admin</title>
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%236366f1%22>✦</text></svg>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-body.admin-body{background:#03051a}
-
-/* ── ADMIN LAYOUT ── */
-.admin-layout{
-  display:grid;grid-template-columns:240px 1fr;
-  min-height:calc(100vh - var(--nav-h));
-  position:relative;z-index:2;
-  max-width:100vw;overflow-x:hidden;
+/* ── VARIABLES ─────────────────────── */
+:root {
+  --bg:          #f5f3ef;
+  --bg-card:     #fdfcfa;
+  --bg-card2:    #f0ede8;
+  --ink:         #1a1714;
+  --ink-2:       #4a4540;
+  --ink-3:       #8a827a;
+  --accent:      #5b4fcf;
+  --accent-soft: #ede9fe;
+  --accent-mid:  #8b80e8;
+  --warm:        #e8633a;
+  --warm-soft:   #fde8e0;
+  --green:       #2d9e6b;
+  --green-soft:  #d8f5eb;
+  --amber:       #d4860d;
+  --amber-soft:  #fef3d0;
+  --border:      #e4dfd8;
+  --border-2:    #cfc8be;
+  --shadow-sm:   0 1px 3px rgba(26,23,20,0.06), 0 1px 2px rgba(26,23,20,0.04);
+  --shadow-md:   0 4px 12px rgba(26,23,20,0.08), 0 2px 4px rgba(26,23,20,0.05);
+  --shadow-lg:   0 12px 32px rgba(26,23,20,0.12), 0 4px 8px rgba(26,23,20,0.06);
+  --r:           14px;
+  --r-lg:        20px;
+  --r-pill:      999px;
+  --trans:       all 0.22s cubic-bezier(0.4,0,0.2,1);
+  --f-display:   'Syne', sans-serif;
+  --f-body:      'DM Sans', sans-serif;
+  --f-mono:      'JetBrains Mono', monospace;
 }
 
-/* SIDEBAR */
-.sidebar{
-  background:rgba(3,5,20,.8);border-right:1px solid rgba(120,80,255,.12);
-  backdrop-filter:blur(20px);padding:24px 14px;
-  position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;
+/* ── RESET & BASE ──────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--f-body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
-.sidebar-section-lbl{
-  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(140,120,255,.4);padding:0 10px;margin:16px 0 8px;
-}
-.sidebar-item{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:10px 14px;border-radius:10px;
-  font-size:.86rem;font-weight:500;color:rgba(180,170,255,.65);
-  cursor:pointer;background:transparent;border:none;text-align:left;
-  transition:var(--trans);margin-bottom:2px;text-decoration:none;
-}
-.sidebar-item i{font-size:.88rem;width:16px;text-align:center;opacity:.7}
-.sidebar-item:hover{background:rgba(99,60,255,.12);color:rgba(200,190,255,.9)}
-.sidebar-item.active{background:rgba(99,60,255,.2);color:#c4b5fd;border:1px solid rgba(120,80,255,.2)}
-.sidebar-item.active i{opacity:1;color:#a78bfa}
-.sidebar-divider{height:1px;background:rgba(120,80,255,.1);margin:14px 0}
-.sidebar-logout{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:10px 14px;border-radius:10px;
-  font-size:.85rem;color:rgba(255,100,100,.65);
-  cursor:pointer;background:transparent;border:none;text-align:left;
-  transition:var(--trans);
-}
-.sidebar-logout:hover{background:rgba(255,50,50,.1);color:#ff6b6b}
 
-/* MAIN */
-.admin-main{padding:32px 38px;overflow-y:auto}
-.panel{display:none}
-.panel.active{display:block;animation:fadeUp .35s ease both}
-.panel-header{margin-bottom:28px}
-.panel-title{font-family:var(--f-display);font-size:1.55rem;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:12px}
-.panel-title i{font-size:1.3rem;color:#a78bfa}
-.panel-sub{font-family:var(--f-mono);font-size:.7rem;color:rgba(180,170,255,.5)}
+/* ── TEXTURE BG ────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(91,79,207,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(232,99,58,0.05) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
 
-/* ── LOGIN ── */
-#login-page{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  padding:20px;position:relative;z-index:2;
+/* ── NAV ───────────────────────────── */
+#admin-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 62px;
+  background: rgba(245,243,239,0.88);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 0;
 }
-.login-card{
-  width:100%;max-width:400px;
-  background:rgba(4,6,22,.92);border:1px solid rgba(120,80,255,.2);
-  border-radius:22px;padding:40px;backdrop-filter:blur(20px);
-  animation:fadeUp .6s ease both;
+.nav-brand {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
 }
-.login-logo-wrap{text-align:center;margin-bottom:8px}
-.login-logo-icon{
-  width:56px;height:56px;border-radius:16px;
-  background:linear-gradient(135deg,#6d28d9,#4f46e5);
-  display:inline-flex;align-items:center;justify-content:center;
-  font-size:1.4rem;color:#fff;
-  box-shadow:0 4px 20px rgba(109,40,217,.45);
-  margin-bottom:14px;
+.nav-brand-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse-dot 2.5s ease-in-out infinite;
 }
-.login-logo-text{font-family:var(--f-display);font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#c4b5fd,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.login-sub{font-family:var(--f-mono);font-size:.7rem;color:rgba(180,170,255,.45);text-align:center;margin-bottom:28px}
-.setup-notice{
-  padding:14px 16px;margin-bottom:22px;
-  background:rgba(99,60,255,.07);border:1px solid rgba(120,80,255,.18);
-  border-radius:12px;font-family:var(--f-mono);font-size:.7rem;color:rgba(180,170,255,.7);line-height:1.65;
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
 }
-.setup-notice code{color:#a78bfa}
-.setup-notice a{color:#a78bfa}
+.nav-badge {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(91,79,207,0.2);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
 
-/* ── DASHBOARD ── */
-.dash-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:32px}
-.dash-stat-card{
-  padding:22px;
-  background:rgba(8,6,30,.6);border:1px solid rgba(120,80,255,.12);
-  border-radius:var(--r-lg);position:relative;overflow:hidden;
-  transition:var(--trans);
+.nav-tabs {
+  display: flex; align-items: center; gap: 2px;
+  margin: 0 auto;
+  list-style: none;
 }
-.dash-stat-card:hover{border-color:rgba(120,80,255,.3);transform:translateY(-2px)}
-.dash-stat-card::before{
-  content:'';position:absolute;top:-50%;right:-50%;
-  width:100%;height:100%;
-  background:radial-gradient(circle,rgba(120,80,255,.08),transparent 70%);
-  pointer-events:none;
+.nav-tabs a {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: var(--trans);
+  white-space: nowrap;
 }
-.dsc-icon{
-  width:36px;height:36px;border-radius:10px;
-  background:rgba(99,60,255,.2);border:1px solid rgba(120,80,255,.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.9rem;color:#a78bfa;margin-bottom:14px;
+.nav-tabs a i { font-size: 0.8rem; opacity: 0.7; }
+.nav-tabs a:hover {
+  background: var(--bg-card2);
+  color: var(--ink);
 }
-.dsc-num{font-family:var(--f-display);font-size:2rem;font-weight:800;color:#fff;margin-bottom:2px}
-.dsc-lbl{font-family:var(--f-mono);font-size:.68rem;color:rgba(180,170,255,.45);letter-spacing:.06em}
+.nav-tabs a.active {
+  background: var(--accent);
+  color: #fff;
+}
+.nav-tabs a.active i { opacity: 1; }
 
-/* ACTIVITY FEED */
-.activity-feed{
-  background:rgba(8,6,30,.5);border:1px solid rgba(120,80,255,.1);
-  border-radius:var(--r-lg);padding:22px;
+.nav-end {
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
 }
-.activity-title{font-family:var(--f-display);font-size:1rem;font-weight:700;color:#c4b5fd;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.activity-title i{font-size:.9rem;color:#a78bfa}
-.activity-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0;border-bottom:1px solid rgba(120,80,255,.08);
+.nav-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r);
+  font-family: var(--f-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: var(--trans);
 }
-.activity-item:last-child{border-bottom:none}
-.activity-dot{width:7px;height:7px;border-radius:50%;background:#a78bfa;flex-shrink:0}
-.activity-text{font-size:.82rem;color:rgba(180,170,255,.65);flex:1}
-.activity-time{font-family:var(--f-mono);font-size:.65rem;color:rgba(120,80,255,.4)}
+.nav-btn:hover { border-color: var(--border-2); background: var(--bg-card2); color: var(--ink); }
+.nav-btn-accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.nav-btn-accent:hover { background: #4a3fbf; border-color: #4a3fbf; color: #fff; }
+.nav-btn-danger {
+  background: #fef2f2; border-color: #fecaca; color: #dc2626;
+}
+.nav-btn-danger:hover { background: #dc2626; border-color: #dc2626; color: #fff; }
 
-/* FORM CARD */
-.form-card{
-  background:rgba(8,6,30,.55);border:1px solid rgba(120,80,255,.1);
-  border-radius:var(--r-lg);padding:26px;margin-bottom:20px;
+/* ── LAYOUT ────────────────────────── */
+.app-body {
+  padding-top: 62px;
+  min-height: 100vh;
+  position: relative; z-index: 1;
 }
-.form-card-title{
-  font-family:var(--f-display);font-size:1.05rem;font-weight:700;
-  color:#c4b5fd;margin-bottom:20px;
-  display:flex;align-items:center;gap:9px;
+.main-content {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 28px 100px;
 }
-.form-card-title i{font-size:.95rem;color:#a78bfa}
 
-/* ICON PICKER */
-.icon-picker-wrap{position:relative}
-.icon-preview{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;
-  background:rgba(8,18,60,.55);border:1px solid var(--glass-b);border-radius:12px;
-  cursor:pointer;transition:border-color .2s;
+/* ── PANEL ─────────────────────────── */
+.panel { display: none; }
+.panel.active { display: block; animation: slideUp 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.icon-preview:hover{border-color:rgba(120,80,255,.4)}
-.icon-preview i{font-size:1.1rem;color:#a78bfa;width:20px;text-align:center}
-.icon-preview-name{font-family:var(--f-mono);font-size:.78rem;color:rgba(180,170,255,.7);flex:1}
-.icon-preview-chevron{font-size:.7rem;color:rgba(180,170,255,.3)}
-.icon-grid-pop{
-  position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:100;
-  background:rgba(5,8,30,.97);border:1px solid rgba(120,80,255,.2);
-  border-radius:14px;padding:14px;
-  display:none;flex-wrap:wrap;gap:6px;
-  max-height:220px;overflow-y:auto;
-}
-.icon-grid-pop.open{display:flex}
-.icon-grid-btn{
-  width:36px;height:36px;border-radius:8px;
-  background:rgba(99,60,255,.1);border:1px solid rgba(120,80,255,.1);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(180,170,255,.6);font-size:.88rem;cursor:pointer;
-  transition:var(--trans);
-}
-.icon-grid-btn:hover,.icon-grid-btn.sel{background:rgba(99,60,255,.3);color:#c4b5fd;border-color:rgba(120,80,255,.4)}
 
-/* ADMIN OVERRIDE: use purple for admin inputs */
-body.admin-body .fi:focus,body.admin-body .fta:focus,body.admin-body .fsel:focus{
-  border-color:rgba(120,80,255,.5);box-shadow:0 0 0 3px rgba(99,60,255,.12);
+/* ── PANEL HEADER ──────────────────── */
+.panel-header {
+  margin-bottom: 36px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
 }
-body.admin-body .f-submit{background:linear-gradient(135deg,#5b21b6,#4f46e5)}
-body.admin-body .f-submit:hover{box-shadow:0 6px 24px rgba(91,33,182,.5)}
-
-/* LIST */
-.items-list{margin-top:8px}
-.list-item-admin{
-  display:flex;align-items:center;gap:12px;
-  padding:13px 16px;
-  background:rgba(8,6,28,.5);border:1px solid rgba(120,80,255,.1);
-  border-radius:12px;margin-bottom:8px;transition:var(--trans);
+.panel-header-left {}
+.panel-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
 }
-.list-item-admin:hover{border-color:rgba(120,80,255,.25)}
-.lia-icon{
-  width:40px;height:40px;border-radius:10px;
-  background:rgba(99,60,255,.18);border:1px solid rgba(120,80,255,.15);
-  display:flex;align-items:center;justify-content:center;
-  color:#a78bfa;font-size:.95rem;flex-shrink:0;overflow:hidden;
+.panel-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 16px; height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
 }
-.lia-icon img{width:100%;height:100%;object-fit:cover}
-.lia-body{flex:1;min-width:0}
-.lia-name{font-size:.87rem;font-weight:600;color:#e2e0ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.lia-meta{font-family:var(--f-mono);font-size:.66rem;color:rgba(140,120,255,.5)}
-.lia-actions{display:flex;gap:7px;flex-shrink:0}
-
-/* EMPTY */
-.list-empty{
-  text-align:center;padding:40px;
-  font-family:var(--f-mono);font-size:.8rem;color:rgba(140,120,255,.4);
+.panel-title {
+  font-family: var(--f-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1.5px;
+  line-height: 1.1;
 }
-.list-empty i{font-size:2rem;margin-bottom:12px;display:block;opacity:.3}
-
-/* SUPABASE STATUS */
-.sb-status{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:6px 14px;border-radius:var(--r-pill);
-  font-family:var(--f-mono);font-size:.7rem;
-  border:1px solid;
+.panel-sub {
+  font-size: 0.9rem;
+  color: var(--ink-3);
+  margin-top: 6px;
 }
-.sb-on{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2);color:#4ade80}
-.sb-off{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.18);color:var(--warn)}
 
-/* RESPONSIVE FORMS */
-.f-row{display:flex;gap:20px;margin-bottom:16px}
-.f-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:16px}
-.fg{flex:1;margin-bottom:16px;min-width:0}
+/* ── CARDS ─────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+.card-header {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.card-header-icon {
+  width: 34px; height: 34px;
+  background: var(--accent-soft);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.card-title {
+  font-family: var(--f-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
 
-@media(max-width:900px){
-  .admin-layout{grid-template-columns:1fr}
-  /* Responsive Sidebar -> Top Scrollable Menu */
-  .sidebar{
-    position:sticky;top:var(--nav-h);z-index:90;height:auto;
-    display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:12px 16px;
-    border-right:none;border-bottom:1px solid rgba(120,80,255,.15);
-    background:rgba(3,5,25,.95);backdrop-filter:blur(16px);
-    -webkit-overflow-scrolling:touch;
-  }
-  .sidebar-section-lbl,.sidebar-divider,.sidebar-logout{display:none}
-  .sidebar-item{flex:0 0 auto;width:auto;font-size:.8rem;padding:8px 14px;border-radius:20px;background:rgba(255,255,255,.03)}
-  .sidebar-item.active{background:rgba(99,60,255,.25)}
-  
-  .admin-main{padding:20px 16px}
-  /* Form Stacking */
-  .f-row{flex-direction:column;gap:0}
-  .f-3col{grid-template-columns:1fr;gap:0}
-  
-  /* Admin Nav Mobile */
-  .admin-nav-brand-sub{display:none}
-  #admin-nav-tabs{display:none} /* Use sidebar tabs on mobile instead */
-  .admin-view-site-btn span{display:none}
-  .admin-view-site-btn i{margin:0}
+/* ── STATS ─────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--trans);
+  cursor: default;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+  opacity: 0;
+  transition: var(--trans);
+}
+.stat-card:hover {
+  border-color: var(--accent-mid);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.stat-card:hover::after { opacity: 1; }
+.stat-icon {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: block;
+}
+.stat-num {
+  font-family: var(--f-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── ACTIVITY FEED ─────────────────── */
+.activity-feed {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+.activity-feed-title {
+  font-family: var(--f-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.activity-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.activity-text { font-size: 0.88rem; color: var(--ink-2); flex: 1; }
+.activity-time {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ── FORMS ─────────────────────────── */
+.f-row { display: flex; gap: 16px; margin-bottom: 0; }
+.f-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.fg { flex: 1; min-width: 0; margin-bottom: 16px; }
+
+.fl {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.fl i { font-size: 0.7rem; color: var(--accent); }
+
+.fi, .fsel, .fta {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-family: var(--f-body);
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: var(--trans);
+  appearance: none;
+}
+.fi::placeholder, .fta::placeholder { color: var(--ink-3); }
+.fi:focus, .fsel:focus, .fta:focus {
+  border-color: var(--accent);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px rgba(91,79,207,0.1);
+}
+.fsel {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238a827a' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+.fta { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+/* SUBMIT BTN */
+.f-submit {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--r);
+  font-family: var(--f-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--trans);
+}
+.f-submit:hover { background: #4a3fbf; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(91,79,207,0.35); }
+.f-submit:active { transform: translateY(0); }
+
+/* ── LOGIN ─────────────────────────── */
+#login-page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  position: relative; z-index: 2;
+  background: var(--bg);
+}
+.login-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.5s cubic-bezier(0.4,0,0.2,1) both;
+}
+.login-left {
+  background: linear-gradient(145deg, #1a1714 0%, #2e2a26 100%);
+  padding: 52px 44px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.login-left::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(91,79,207,0.35) 0%, transparent 70%);
+}
+.login-left::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(232,99,58,0.2) 0%, transparent 70%);
+}
+.ll-brand {
+  font-family: var(--f-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fdfcfa;
+  letter-spacing: -1px;
+  position: relative; z-index: 1;
+}
+.ll-brand span {
+  display: block;
+  font-size: 0.65rem;
+  font-family: var(--f-mono);
+  font-weight: 400;
+  color: rgba(253,252,250,0.45);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.ll-tagline {
+  font-size: 0.88rem;
+  color: rgba(253,252,250,0.5);
+  line-height: 1.7;
+  position: relative; z-index: 1;
+  margin-top: 32px;
+  flex: 1;
+}
+.ll-features {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 28px;
+  position: relative; z-index: 1;
+}
+.ll-feat {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.82rem;
+  color: rgba(253,252,250,0.6);
+}
+.ll-feat i { color: var(--accent-mid); font-size: 0.75rem; }
+.ll-deco {
+  font-family: var(--f-display);
+  font-size: 7rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.03);
+  position: absolute; bottom: -20px; right: -10px;
+  line-height: 1;
+  letter-spacing: -6px;
+  z-index: 0;
+}
+.login-right {
+  padding: 52px 44px;
+}
+.lr-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.lr-title {
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.lr-sub {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+.setup-notice {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: var(--r);
+  padding: 12px 14px;
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: #2563eb;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.setup-notice code { color: #7c3aed; }
+
+/* ── ICON PICKER ───────────────────── */
+.icon-picker-wrap { position: relative; }
+.icon-preview {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: var(--trans);
+}
+.icon-preview:hover { border-color: var(--accent); background: var(--bg-card); }
+.icon-preview i:first-child { font-size: 1rem; color: var(--accent); width: 18px; text-align: center; }
+.icon-preview-name { font-family: var(--f-mono); font-size: 0.78rem; color: var(--ink-2); flex: 1; }
+.icon-preview-chevron { font-size: 0.65rem; color: var(--ink-3); }
+.icon-grid-pop {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 200;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: none; flex-wrap: wrap; gap: 6px;
+  max-height: 210px; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.icon-grid-pop.open { display: flex; }
+.icon-grid-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-2); font-size: 0.85rem;
+  cursor: pointer; transition: var(--trans);
+}
+.icon-grid-btn:hover, .icon-grid-btn.sel {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(91,79,207,0.3);
+}
+
+/* ── UPLOAD ZONE ───────────────────── */
+.upload-zone {
+  border: 2px dashed var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--trans);
+  background: var(--bg);
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-soft); }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-zone-icon { font-size: 1.8rem; color: var(--ink-3); margin-bottom: 10px; }
+.upload-zone:hover .upload-zone-icon { color: var(--accent); }
+.upload-zone-text { font-size: 0.9rem; font-weight: 500; color: var(--ink-2); margin-bottom: 4px; }
+.upload-zone-sub { font-size: 0.75rem; color: var(--ink-3); font-family: var(--f-mono); }
+
+.img-preview-grid {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 14px;
+}
+.img-preview-item {
+  width: 80px; height: 80px; border-radius: 12px;
+  overflow: hidden; position: relative;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.img-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+.img-preview-remove {
+  position: absolute; top: 4px; right: 4px;
+  width: 20px; height: 20px; border-radius: 6px;
+  background: rgba(220,38,38,0.85);
+  border: none; color: #fff; font-size: 0.6rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.img-preview-order {
+  position: absolute; bottom: 4px; left: 4px;
+  font-family: var(--f-mono); font-size: 0.55rem;
+  background: rgba(0,0,0,0.5); color: #fff;
+  padding: 1px 5px; border-radius: 4px;
+}
+
+/* ── LIST ITEMS ────────────────────── */
+.items-list { margin-top: 4px; }
+.list-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 8px;
+  transition: var(--trans);
+}
+.list-item:hover { border-color: var(--accent-mid); transform: translateX(4px); box-shadow: var(--shadow-sm); }
+.li-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(91,79,207,0.15);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-size: 1rem;
+  flex-shrink: 0; overflow: hidden;
+}
+.li-icon img { width: 100%; height: 100%; object-fit: cover; }
+.li-body { flex: 1; min-width: 0; }
+.li-name {
+  font-size: 0.92rem; font-weight: 600; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+.li-meta { font-family: var(--f-mono); font-size: 0.68rem; color: var(--ink-3); }
+.li-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.btn-sm {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: var(--f-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--trans);
+  border: 1px solid;
+}
+.btn-edit {
+  background: var(--accent-soft);
+  border-color: rgba(91,79,207,0.2);
+  color: var(--accent);
+}
+.btn-edit:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-del {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+.btn-del:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+.list-empty {
+  text-align: center; padding: 48px 20px;
+  font-family: var(--f-mono); font-size: 0.82rem;
+  color: var(--ink-3);
+}
+.list-empty i { font-size: 2rem; display: block; margin-bottom: 12px; opacity: 0.3; }
+
+/* ── MESSAGES STICKY NOTES ─────────── */
+.msg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 8px 4px 48px;
+}
+.msg-note {
+  padding: 22px 20px;
+  border-radius: 4px 20px 20px 4px;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.3s ease;
+  min-height: 160px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+.msg-note:nth-child(4n+1) { background: #fef9c3; border: 1px solid #fde68a; }
+.msg-note:nth-child(4n+2) { background: #e0f2fe; border: 1px solid #bae6fd; }
+.msg-note:nth-child(4n+3) { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.msg-note:nth-child(4n+4) { background: #fdf4ff; border: 1px solid #e9d5ff; }
+.msg-note:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+.msg-note-pin {
+  position: absolute; top: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f97316, #c2410c);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.msg-note-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.msg-note-name {
+  font-family: var(--f-display);
+  font-size: 0.92rem; font-weight: 700;
+  color: #1a1714;
+}
+.msg-note-body {
+  font-size: 0.88rem; line-height: 1.55;
+  color: #3a3530; flex: 1;
+  word-break: break-word;
+  margin-bottom: 12px;
+}
+.msg-note-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: auto;
+}
+.msg-note-time {
+  font-family: var(--f-mono); font-size: 0.65rem;
+  color: rgba(26,23,20,0.4);
+}
+.btn-del-msg {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: rgba(220,38,38,0.12);
+  border: 1px solid rgba(220,38,38,0.18);
+  color: #dc2626; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; transition: var(--trans);
+}
+.btn-del-msg:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+/* ── STATUS BADGES ─────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono); font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.03em;
+  border: 1px solid;
+}
+.badge-ok { background: var(--green-soft); border-color: rgba(45,158,107,0.25); color: var(--green); }
+.badge-warn { background: var(--amber-soft); border-color: rgba(212,134,13,0.25); color: var(--amber); }
+
+/* ── QUILL OVERRIDE ────────────────── */
+.ql-toolbar { border-color: var(--border) !important; border-radius: var(--r) var(--r) 0 0 !important; background: var(--bg) !important; }
+.ql-container { border-color: var(--border) !important; border-radius: 0 0 var(--r) var(--r) !important; background: var(--bg-card) !important; font-family: var(--f-body) !important; font-size: 0.9rem !important; min-height: 120px; }
+
+/* ── TOAST ─────────────────────────── */
+#toast {
+  position: fixed; bottom: 28px; right: 28px;
+  z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px;
+  background: var(--ink);
+  color: #fdfcfa;
+  border-radius: var(--r);
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+  pointer-events: auto;
+}
+.toast-item.ok i { color: #4ade80; }
+.toast-item.err { background: #dc2626; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── SCROLLBAR ─────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
+
+/* ── CANCEL BTN ────────────────────── */
+.btn-cancel {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: var(--r);
+  font-family: var(--f-body); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: var(--trans);
+  min-width: 110px;
+}
+.btn-cancel:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+/* ── SUPABASE STATUS ───────────────── */
+.sb-status {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono); font-size: 0.72rem;
+  border: 1px solid;
+}
+.sb-on { background: var(--green-soft); border-color: rgba(45,158,107,0.3); color: var(--green); }
+.sb-off { background: var(--amber-soft); border-color: rgba(212,134,13,0.25); color: var(--amber); }
+
+/* ── SETTINGS INFO ─────────────────── */
+.settings-steps {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.settings-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-2);
+  line-height: 1.6;
+}
+.settings-step-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent); font-size: 0.65rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.settings-step code { color: var(--accent); font-weight: 500; }
+
+/* ── RESPONSIVE ────────────────────── */
+@media (max-width: 860px) {
+  .login-wrap { grid-template-columns: 1fr; }
+  .login-left { display: none; }
+  .login-right { padding: 36px 28px; }
+  .nav-tabs { display: none; }
+  .panel-title { font-size: 1.7rem; }
+}
+@media (max-width: 640px) {
+  .f-row { flex-direction: column; }
+  .f-3col { grid-template-columns: 1fr; }
+  .main-content { padding: 28px 16px 80px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── MOBILE NAV ────────────────────── */
+.mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(245,243,239,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 8px 16px 12px;
+  justify-content: space-around;
+}
+.mob-nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 12px;
+  border-radius: var(--r);
+  cursor: pointer; border: none; background: transparent;
+  color: var(--ink-3); font-family: var(--f-mono); font-size: 0.6rem;
+  transition: var(--trans);
+}
+.mob-nav-btn i { font-size: 1rem; }
+.mob-nav-btn.active { color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 860px) {
+  .mobile-nav { display: flex; }
+  .app-body { padding-bottom: 70px; }
 }
 </style>
 </head>
-<body class="admin-body">
-<div id="cursor"></div><div id="cursor-ring"></div>
-<canvas id="bg-canvas"></canvas>
+<body>
 
-<!-- ADMIN NAVBAR -->
-<nav id="admin-nav">
-  <a class="admin-nav-brand" href="admin.html">
-    <div class="admin-nav-logo-badge"><i class="fa-solid fa-shield-halved"></i></div>
-    <div><div class="admin-nav-brand-text">nayl-aSpace</div><div class="admin-nav-brand-sub">// admin panel</div></div>
-  </a>
-  <div class="admin-nav-center" id="admin-nav-tabs">
-    <a class="admin-nav-tab active" data-panel="dashboard" href="#" onclick="showPanel('dashboard',this);return false"><i class="fa-solid fa-chart-line"></i>Dashboard</a>
-    <a class="admin-nav-tab" data-panel="projects" href="#" onclick="showPanel('projects',this);return false"><i class="fa-solid fa-rocket"></i>Projects</a>
-    <a class="admin-nav-tab" data-panel="interests" href="#" onclick="showPanel('interests',this);return false"><i class="fa-solid fa-heart"></i>Interests</a>
-    <a class="admin-nav-tab" data-panel="settings" href="#" onclick="showPanel('settings',this);return false"><i class="fa-solid fa-gear"></i>Settings</a>
-  </div>
-  <div class="admin-nav-right">
-    <a class="admin-view-site-btn" href="../index.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Site</a>
-    <button class="admin-logout-btn" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
-  </div>
-</nav>
-
-<!-- LOGIN PAGE -->
+<!-- ── LOGIN PAGE ─────────────────── -->
 <div id="login-page">
-  <div class="login-card">
-    <div class="login-logo-wrap">
-      <div class="login-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div class="login-logo-text">Admin Panel</div>
+  <div class="login-wrap">
+    <div class="login-left">
+      <div>
+        <div class="ll-brand">
+          nayl-aSpace
+          <span>// ADMIN PANEL</span>
+        </div>
+        <p class="ll-tagline">Your creative portfolio, fully in your control. Add projects, manage interests, read messages — all from one clean dashboard.</p>
+      </div>
+      <div class="ll-features">
+        <div class="ll-feat"><i class="fa-solid fa-rocket"></i> Manage portfolio projects</div>
+        <div class="ll-feat"><i class="fa-solid fa-heart"></i> Curate interests & collections</div>
+        <div class="ll-feat"><i class="fa-solid fa-paper-plane"></i> Moderate public messages</div>
+        <div class="ll-feat"><i class="fa-solid fa-cloud"></i> Supabase or localStorage mode</div>
+      </div>
+      <div class="ll-deco">✦</div>
     </div>
-    <p class="login-sub">// authenticate to manage portfolio content</p>
-    <div class="setup-notice">
-      <i class="fa-solid fa-circle-info"></i> Configure <code>SUPABASE_URL</code> & <code>SUPABASE_ANON_KEY</code> in <code>assets/script.js</code> for real auth.<br>
-      Without Supabase, data saves to <code>localStorage</code> (demo mode — works great for local dev).
+    <div class="login-right">
+      <div class="lr-eyebrow">Authenticate</div>
+      <div class="lr-title">Welcome back</div>
+      <p class="lr-sub">Sign in to manage your portfolio content and settings.</p>
+      <div class="setup-notice">
+        <i class="fa-solid fa-circle-info"></i> Set <code>SUPABASE_URL</code> & <code>SUPABASE_ANON_KEY</code> in <code>script.js</code> for real auth. Without it, data saves to <code>localStorage</code> (demo mode).
+      </div>
+      <div class="fg"><label class="fl"><i class="fa-solid fa-envelope"></i>Email</label><input class="fi" type="email" id="l-email" placeholder="admin@email.com"></div>
+      <div class="fg"><label class="fl"><i class="fa-solid fa-lock"></i>Password</label><input class="fi" type="password" id="l-pw" placeholder="••••••••"></div>
+      <button class="f-submit" id="l-btn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i>Enter Admin Panel</button>
     </div>
-    <div class="fg"><label class="fl"><i class="fa-solid fa-envelope"></i>Email</label><input class="fi" type="email" id="l-email" placeholder="admin@email.com"></div>
-    <div class="fg"><label class="fl"><i class="fa-solid fa-lock"></i>Password</label><input class="fi" type="password" id="l-pw" placeholder="••••••••"></div>
-    <button class="f-submit" id="l-btn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i>Enter Admin</button>
   </div>
 </div>
 
-<!-- ADMIN APP -->
+<!-- ── ADMIN APP ──────────────────── -->
 <div id="admin-app" style="display:none">
-<div class="admin-layout">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-section-lbl">Content</div>
-    <button class="sidebar-item active" onclick="showPanel('dashboard',this)"><i class="fa-solid fa-chart-line"></i>Dashboard</button>
-    <button class="sidebar-item" onclick="showPanel('projects',this)"><i class="fa-solid fa-rocket"></i>Projects</button>
-    <button class="sidebar-item" onclick="showPanel('interests',this)"><i class="fa-solid fa-heart"></i>Interests</button>
-    <div class="sidebar-section-lbl">Config</div>
-    <button class="sidebar-item" onclick="showPanel('settings',this)"><i class="fa-solid fa-gear"></i>Settings</button>
-    <div class="sidebar-divider"></div>
-    <a class="sidebar-item" href="../index.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Site</a>
-    <button class="sidebar-logout" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
+  <!-- NAV -->
+  <nav id="admin-nav">
+    <a class="nav-brand" href="admin.html">
+      <div class="nav-brand-dot"></div>
+      nayl-aSpace
+      <span class="nav-badge">ADMIN</span>
+    </a>
+    <ul class="nav-tabs">
+      <li><a href="#" class="active" onclick="showPanel('dashboard',this);return false"><i class="fa-solid fa-chart-line"></i>Dashboard</a></li>
+      <li><a href="#" onclick="showPanel('projects',this);return false"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="#" onclick="showPanel('messages',this);return false"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
+      <li><a href="#" onclick="showPanel('interests',this);return false"><i class="fa-solid fa-heart"></i>Interests</a></li>
+      <li><a href="#" onclick="showPanel('settings',this);return false"><i class="fa-solid fa-gear"></i>Settings</a></li>
+    </ul>
+    <div class="nav-end">
+      <a class="nav-btn" href="../index.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Site</a>
+      <button class="nav-btn nav-btn-danger" onclick="doLogout()"><i class="fa-solid fa-power-off"></i></button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="mob-nav-btn active" onclick="showPanel('dashboard',this)"><i class="fa-solid fa-chart-line"></i>Dash</button>
+    <button class="mob-nav-btn" onclick="showPanel('projects',this)"><i class="fa-solid fa-rocket"></i>Projects</button>
+    <button class="mob-nav-btn" onclick="showPanel('messages',this)"><i class="fa-solid fa-paper-plane"></i>Msgs</button>
+    <button class="mob-nav-btn" onclick="showPanel('interests',this)"><i class="fa-solid fa-heart"></i>Interests</button>
+    <button class="mob-nav-btn" onclick="showPanel('settings',this)"><i class="fa-solid fa-gear"></i>Settings</button>
   </div>
 
-  <!-- MAIN AREA -->
-  <div class="admin-main">
+  <div class="app-body">
+    <div class="main-content">
 
-    <!-- ── DASHBOARD ── -->
-    <div class="panel active" id="p-dashboard">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-chart-line"></i>Dashboard</div>
-        <div class="panel-sub">// welcome back — here's your portfolio at a glance</div>
-      </div>
-      <div class="dash-stats" id="dash-stats"></div>
-      <div class="activity-feed">
-        <div class="activity-title"><i class="fa-solid fa-clock-rotate-left"></i>Recent Activity</div>
-        <div id="activity-list">
-          <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Portfolio site initialized</div><div class="activity-time">just now</div></div>
+      <!-- ── DASHBOARD ── -->
+      <div class="panel active" id="p-dashboard">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-eyebrow">Overview</div>
+            <div class="panel-title">Dashboard</div>
+            <div class="panel-sub">Your portfolio at a glance</div>
+          </div>
+        </div>
+        <div class="stats-grid" id="dash-stats"></div>
+        <div class="activity-feed">
+          <div class="activity-feed-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);font-size:.9rem"></i>Recent Activity</div>
+          <div id="activity-list">
+            <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Portfolio site initialized</div><div class="activity-time">just now</div></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- ── PROJECTS ── -->
-    <div class="panel" id="p-projects">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-rocket"></i>Projects</div>
-        <div class="panel-sub">// add, edit & delete portfolio projects</div>
-      </div>
+      <!-- ── PROJECTS ── -->
+      <div class="panel" id="p-projects">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-eyebrow">Portfolio</div>
+            <div class="panel-title">Projects</div>
+            <div class="panel-sub">Add, edit & manage your portfolio projects</div>
+          </div>
+        </div>
 
-      <div class="form-card" id="proj-form-area">
-        <div class="form-card-title"><i class="fa-solid fa-plus-circle"></i><span id="proj-form-lbl">Add New Project</span></div>
+        <div class="card" id="proj-form-area">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="card-title" id="proj-form-lbl">Add New Project</div>
+          </div>
 
-        <div class="f-row">
-          <div class="fg"><label class="fl"><i class="fa-solid fa-signature"></i>Project Name</label><input class="fi" id="p-name" placeholder="My Awesome Project"></div>
-          <div class="fg">
-            <label class="fl"><i class="fa-solid fa-icons"></i>Icon</label>
-            <div class="icon-picker-wrap" id="proj-icon-wrap">
-              <div class="icon-preview" onclick="toggleIconPicker('proj')">
-                <i class="fa-solid fa-rocket" id="p-icon-preview-i"></i>
-                <span class="icon-preview-name" id="p-icon-preview-name">fa-solid fa-rocket</span>
-                <i class="fa-solid fa-chevron-down icon-preview-chevron"></i>
+          <div class="f-row">
+            <div class="fg"><label class="fl"><i class="fa-solid fa-signature"></i>Project Name</label><input class="fi" id="p-name" placeholder="My Awesome Project"></div>
+            <div class="fg">
+              <label class="fl"><i class="fa-solid fa-icons"></i>Icon</label>
+              <div class="icon-picker-wrap" id="proj-icon-wrap">
+                <div class="icon-preview" onclick="toggleIconPicker('proj')">
+                  <i class="fa-solid fa-rocket" id="p-icon-preview-i"></i>
+                  <span class="icon-preview-name" id="p-icon-preview-name">fa-solid fa-rocket</span>
+                  <i class="fa-solid fa-chevron-down icon-preview-chevron"></i>
+                </div>
+                <div class="icon-grid-pop" id="proj-icon-pop"></div>
+                <input type="hidden" id="p-icon" value="fa-solid fa-rocket">
               </div>
-              <div class="icon-grid-pop" id="proj-icon-pop"></div>
-              <input type="hidden" id="p-icon" value="fa-solid fa-rocket">
             </div>
           </div>
-        </div>
 
-        <div class="f-3col">
-          <div class="fg"><label class="fl"><i class="fa-solid fa-tag"></i>Category</label>
-            <select class="fsel" id="p-cat">
-              <option value="web">Web Dev</option><option value="mobile">Mobile</option>
-              <option value="game">Game Dev</option><option value="design">Design</option>
-              <option value="ai">AI / ML</option><option value="other">Other</option>
-            </select>
+          <div class="f-3col">
+            <div class="fg"><label class="fl"><i class="fa-solid fa-tag"></i>Category</label>
+              <select class="fsel" id="p-cat">
+                <option value="web">Web Dev</option><option value="mobile">Mobile</option>
+                <option value="game">Game Dev</option><option value="design">Design</option>
+                <option value="ai">AI / ML</option><option value="other">Other</option>
+              </select>
+            </div>
+            <div class="fg"><label class="fl"><i class="fa-solid fa-circle-half-stroke"></i>Status</label>
+              <select class="fsel" id="p-status">
+                <option value="completed">Completed</option>
+                <option value="wip">In Progress</option>
+                <option value="paused">Paused</option>
+              </select>
+            </div>
+            <div class="fg"><label class="fl"><i class="fa-solid fa-tags"></i>Tags</label><input class="fi" id="p-tags" placeholder="React, Node.js, Supabase"></div>
           </div>
-          <div class="fg"><label class="fl"><i class="fa-solid fa-circle-half-stroke"></i>Status</label>
-            <select class="fsel" id="p-status">
-              <option value="completed">Completed</option>
-              <option value="wip">In Progress</option>
-              <option value="paused">Paused</option>
-            </select>
+
+          <div class="f-row">
+            <div class="fg"><label class="fl"><i class="fa-brands fa-github"></i>GitHub URL</label><input class="fi" id="p-github" placeholder="https://github.com/..."></div>
+            <div class="fg"><label class="fl"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live URL</label><input class="fi" id="p-live" placeholder="https://..."></div>
           </div>
-          <div class="fg"><label class="fl"><i class="fa-solid fa-tags"></i>Tags</label><input class="fi" id="p-tags" placeholder="React, Node.js, Supabase"></div>
-        </div>
 
-        <div class="f-row">
-          <div class="fg"><label class="fl"><i class="fa-brands fa-github"></i>GitHub URL</label><input class="fi" id="p-github" placeholder="https://github.com/..."></div>
-          <div class="fg"><label class="fl"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live URL</label><input class="fi" id="p-live" placeholder="https://..."></div>
-        </div>
-
-        <!-- RICH TEXT -->
-        <div class="fg">
-          <label class="fl"><i class="fa-solid fa-pen-nib"></i>Description (rich text)</label>
-          <div id="p-editor"></div>
-        </div>
-
-        <!-- IMAGE UPLOAD -->
-        <div class="fg">
-          <label class="fl"><i class="fa-solid fa-images"></i>Project Images (multi-upload)</label>
-          <div class="upload-zone" id="p-upload-zone">
-            <input type="file" accept="image/*" multiple>
-            <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-            <div class="upload-zone-text">Drop images here or click to browse</div>
-            <div class="upload-zone-sub">PNG, JPG, WEBP — multiple files supported — drag to reorder</div>
-          </div>
-          <div class="img-preview-grid" id="p-img-preview"></div>
-        </div>
-
-        <input type="hidden" id="p-edit-id">
-        <div style="display:flex;gap:10px;margin-top:4px">
-          <button class="f-submit" style="flex:1" onclick="saveProject()"><i class="fa-solid fa-floppy-disk"></i><span id="p-save-lbl">Add Project</span></button>
-          <button class="f-submit" id="p-cancel" style="flex:0;min-width:110px;background:rgba(255,77,109,.18);border:1px solid rgba(255,77,109,.25)" onclick="clearProjForm()" hidden><i class="fa-solid fa-xmark"></i>Cancel</button>
-        </div>
-      </div>
-
-      <div class="items-list" id="proj-list"></div>
-    </div>
-
-    <!-- ── INTERESTS ── -->
-    <div class="panel" id="p-interests">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-heart"></i>Interests</div>
-        <div class="panel-sub">// add custom items to anime, manhwa, movies & misc categories</div>
-      </div>
-
-      <div class="form-card">
-        <div class="form-card-title"><i class="fa-solid fa-plus-circle"></i><span id="int-form-lbl">Add Interest Item</span></div>
-
-        <div class="f-row">
-          <div class="fg"><label class="fl"><i class="fa-solid fa-heading"></i>Title</label><input class="fi" id="i-title" placeholder="Attack on Titan"></div>
           <div class="fg">
-            <label class="fl"><i class="fa-solid fa-icons"></i>Icon</label>
-            <div class="icon-picker-wrap" id="int-icon-wrap">
-              <div class="icon-preview" onclick="toggleIconPicker('int')">
-                <i class="fa-solid fa-star" id="i-icon-preview-i"></i>
-                <span class="icon-preview-name" id="i-icon-preview-name">fa-solid fa-star</span>
-                <i class="fa-solid fa-chevron-down icon-preview-chevron"></i>
+            <label class="fl"><i class="fa-solid fa-pen-nib"></i>Description (rich text)</label>
+            <div id="p-editor"></div>
+          </div>
+
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-images"></i>Project Images</label>
+            <div class="upload-zone" id="p-upload-zone">
+              <input type="file" accept="image/*" multiple>
+              <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="upload-zone-text">Drop images here or click to browse</div>
+              <div class="upload-zone-sub">PNG, JPG, WEBP — multiple files — drag to reorder</div>
+            </div>
+            <div class="img-preview-grid" id="p-img-preview"></div>
+          </div>
+
+          <input type="hidden" id="p-edit-id">
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="f-submit" style="flex:1" onclick="saveProject()"><i class="fa-solid fa-floppy-disk"></i><span id="p-save-lbl">Add Project</span></button>
+            <button class="btn-cancel" id="p-cancel" onclick="clearProjForm()" hidden><i class="fa-solid fa-xmark"></i>Cancel</button>
+          </div>
+        </div>
+
+        <div class="items-list" id="proj-list"></div>
+      </div>
+
+      <!-- ── MESSAGES ── -->
+      <div class="panel" id="p-messages">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-eyebrow">Moderate</div>
+            <div class="panel-title">Messages</div>
+            <div class="panel-sub">Public messages from your visitors</div>
+          </div>
+        </div>
+        <div class="msg-grid" id="msg-admin-wall"></div>
+      </div>
+
+      <!-- ── INTERESTS ── -->
+      <div class="panel" id="p-interests">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-eyebrow">Collections</div>
+            <div class="panel-title">Interests</div>
+            <div class="panel-sub">Curate anime, manhwa, movies & misc items</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-plus"></i></div>
+            <div class="card-title" id="int-form-lbl">Add Interest Item</div>
+          </div>
+
+          <div class="f-row">
+            <div class="fg"><label class="fl"><i class="fa-solid fa-heading"></i>Title</label><input class="fi" id="i-title" placeholder="Attack on Titan"></div>
+            <div class="fg">
+              <label class="fl"><i class="fa-solid fa-icons"></i>Icon</label>
+              <div class="icon-picker-wrap" id="int-icon-wrap">
+                <div class="icon-preview" onclick="toggleIconPicker('int')">
+                  <i class="fa-solid fa-star" id="i-icon-preview-i"></i>
+                  <span class="icon-preview-name" id="i-icon-preview-name">fa-solid fa-star</span>
+                  <i class="fa-solid fa-chevron-down icon-preview-chevron"></i>
+                </div>
+                <div class="icon-grid-pop" id="int-icon-pop"></div>
+                <input type="hidden" id="i-icon" value="fa-solid fa-star">
               </div>
-              <div class="icon-grid-pop" id="int-icon-pop"></div>
-              <input type="hidden" id="i-icon" value="fa-solid fa-star">
             </div>
           </div>
-        </div>
 
-        <div class="f-3col">
-          <div class="fg"><label class="fl"><i class="fa-solid fa-layer-group"></i>Category</label>
-            <select class="fsel" id="i-cat">
-              <option value="anime">Anime</option><option value="manhwa">Manhwa</option>
-              <option value="movies">Movies</option><option value="misc">Misc</option>
-            </select>
+          <div class="f-3col">
+            <div class="fg"><label class="fl"><i class="fa-solid fa-layer-group"></i>Category</label>
+              <select class="fsel" id="i-cat">
+                <option value="anime">Anime</option><option value="manhwa">Manhwa</option>
+                <option value="movies">Movies</option><option value="misc">Misc</option>
+              </select>
+            </div>
+            <div class="fg"><label class="fl"><i class="fa-solid fa-calendar"></i>Meta</label><input class="fi" id="i-meta" placeholder="2013 · Isayama"></div>
+            <div class="fg"><label class="fl"><i class="fa-solid fa-tag"></i>Genre</label><input class="fi" id="i-genre" placeholder="Action · Fantasy"></div>
           </div>
-          <div class="fg"><label class="fl"><i class="fa-solid fa-calendar"></i>Meta</label><input class="fi" id="i-meta" placeholder="2013 · Isayama"></div>
-          <div class="fg"><label class="fl"><i class="fa-solid fa-tag"></i>Genre</label><input class="fi" id="i-genre" placeholder="Action · Fantasy"></div>
-        </div>
 
-        <!-- RICH TEXT FEEL -->
-        <div class="fg">
-          <label class="fl"><i class="fa-solid fa-heart-pulse"></i>My Feel (rich text)</label>
-          <div id="i-editor"></div>
-        </div>
-
-        <!-- IMAGE UPLOAD -->
-        <div class="fg">
-          <label class="fl"><i class="fa-solid fa-images"></i>Gallery Images (optional)</label>
-          <div class="upload-zone" id="i-upload-zone">
-            <input type="file" accept="image/*" multiple>
-            <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-            <div class="upload-zone-text">Drop images here or click to browse</div>
-            <div class="upload-zone-sub">Cover art, screenshots, fan art — all welcome</div>
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-heart-pulse"></i>My Feel (rich text)</label>
+            <div id="i-editor"></div>
           </div>
-          <div class="img-preview-grid" id="i-img-preview"></div>
+
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-images"></i>Gallery Images (optional)</label>
+            <div class="upload-zone" id="i-upload-zone">
+              <input type="file" accept="image/*" multiple>
+              <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="upload-zone-text">Drop images here or click to browse</div>
+              <div class="upload-zone-sub">Cover art, screenshots, fan art — all welcome</div>
+            </div>
+            <div class="img-preview-grid" id="i-img-preview"></div>
+          </div>
+
+          <input type="hidden" id="i-edit-id">
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="f-submit" style="flex:1" onclick="saveInterest()"><i class="fa-solid fa-floppy-disk"></i><span id="i-save-lbl">Add Item</span></button>
+            <button class="btn-cancel" id="i-cancel" onclick="clearIntForm()" hidden><i class="fa-solid fa-xmark"></i>Cancel</button>
+          </div>
         </div>
 
-        <input type="hidden" id="i-edit-id">
-        <div style="display:flex;gap:10px;margin-top:4px">
-          <button class="f-submit" style="flex:1" onclick="saveInterest()"><i class="fa-solid fa-floppy-disk"></i><span id="i-save-lbl">Add Item</span></button>
-          <button class="f-submit" id="i-cancel" style="flex:0;min-width:110px;background:rgba(255,77,109,.18);border:1px solid rgba(255,77,109,.25)" onclick="clearIntForm()" hidden><i class="fa-solid fa-xmark"></i>Cancel</button>
+        <div class="items-list" id="int-list"></div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="panel" id="p-settings">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-eyebrow">Configuration</div>
+            <div class="panel-title">Settings</div>
+            <div class="panel-sub">Manage site content and integrations</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-solid fa-user"></i></div>
+            <div class="card-title">Bio & Profile</div>
+          </div>
+          <div class="fg"><label class="fl"><i class="fa-solid fa-align-left"></i>Home Bio Text</label>
+            <textarea class="fta" id="s-bio" style="min-height:100px" placeholder="Your bio..."></textarea>
+          </div>
+          <button class="f-submit" style="max-width:200px" onclick="saveBio()"><i class="fa-solid fa-floppy-disk"></i>Save Bio</button>
+        </div>
+
+        <div class="card" style="margin-top:0">
+          <div class="card-header">
+            <div class="card-header-icon"><i class="fa-brands fa-superpowers"></i></div>
+            <div class="card-title">Supabase Integration</div>
+          </div>
+          <div id="sb-status-display"></div>
+          <div class="settings-steps" id="sb-steps">
+            <div class="settings-step"><div class="settings-step-num">1</div><div>Edit <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in <code>assets/script.js</code></div></div>
+            <div class="settings-step"><div class="settings-step-num">2</div><div>Create a Supabase Auth user for admin login</div></div>
+            <div class="settings-step"><div class="settings-step-num">3</div><div>Create tables: <code>projects</code> · <code>interests</code></div></div>
+            <div class="settings-step"><div class="settings-step-num">4</div><div>Create storage bucket: <code>images</code> (public)</div></div>
+            <div class="settings-step"><div class="settings-step-num">5</div><div>Enable RLS + policies for authenticated users</div></div>
+          </div>
         </div>
       </div>
 
-      <div class="items-list" id="int-list"></div>
-    </div>
-
-    <!-- ── SETTINGS ── -->
-    <div class="panel" id="p-settings">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-gear"></i>Settings</div>
-        <div class="panel-sub">// manage site content and configuration</div>
-      </div>
-
-      <div class="form-card">
-        <div class="form-card-title"><i class="fa-solid fa-user"></i>Bio & Profile</div>
-        <div class="fg"><label class="fl"><i class="fa-solid fa-align-left"></i>Home Bio Text</label>
-          <textarea class="fta" id="s-bio" style="min-height:100px" placeholder="Your bio..."></textarea>
-        </div>
-        <button class="f-submit" style="max-width:200px" onclick="saveBio()"><i class="fa-solid fa-floppy-disk"></i>Save Bio</button>
-      </div>
-
-      <div class="form-card" style="margin-top:16px">
-        <div class="form-card-title"><i class="fa-brands fa-superpowers"></i>Supabase Integration</div>
-        <div id="sb-status-display"></div>
-        <div style="margin-top:14px;font-family:var(--f-mono);font-size:.73rem;color:rgba(180,170,255,.55);line-height:1.7">
-          1. Edit <code style="color:#a78bfa">SUPABASE_URL</code> and <code style="color:#a78bfa">SUPABASE_ANON_KEY</code> in <code style="color:#a78bfa">assets/script.js</code><br>
-          2. Create Supabase Auth user for admin login<br>
-          3. Create tables: <code style="color:#a78bfa">projects</code> · <code style="color:#a78bfa">interests</code><br>
-          4. Create storage bucket: <code style="color:#a78bfa">images</code> (public)<br>
-          5. Enable RLS + policies for authenticated users
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /admin-main -->
-</div><!-- /admin-layout -->
+    </div><!-- /main-content -->
+  </div><!-- /app-body -->
 </div><!-- /admin-app -->
 
 <div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-<script src="../assets/script.js"></script>
+
 <script>
-// ── ICON LIST ────────────────────────────────────────────
+/* ── STUB GLOBALS (replace with real script.js) ── */
+const sbReady = false;
+const sb = null;
+const LS = {
+  get: (k, d) => { try { const v = localStorage.getItem('ns_'+k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+  set: (k, v) => localStorage.setItem('ns_'+k, JSON.stringify(v)),
+  del: (k) => localStorage.removeItem('ns_'+k)
+};
+function toast(msg, type='ok', icon='fa-circle-check') {
+  const t = document.getElementById('toast');
+  const div = document.createElement('div');
+  div.className = `toast-item ${type}`;
+  div.innerHTML = `<i class="fa-solid ${icon}"></i>${msg}`;
+  t.appendChild(div);
+  setTimeout(() => div.remove(), 3200);
+}
+function animateCount(el, target) {
+  let n = 0; const step = Math.ceil(target / 30);
+  const iv = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.textContent = n;
+    if (n >= target) clearInterval(iv);
+  }, 30);
+}
+async function uploadImages(files) {
+  return files.map(f => f.url || f.dataUrl).filter(Boolean);
+}
+function initUploadZone(zone, preview, state) {
+  const input = zone.querySelector('input[type=file]');
+  input.addEventListener('change', e => {
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        state.files.push({ file, dataUrl: ev.target.result, name: file.name });
+        renderPreviews(state, preview);
+      };
+      reader.readAsDataURL(file);
+    });
+    input.value = '';
+  });
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag');
+    Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => { state.files.push({ file, dataUrl: ev.target.result, name: file.name }); renderPreviews(state, preview); };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+function renderPreviews(state, previewEl) {
+  previewEl.innerHTML = '';
+  state.files.forEach((f, i) => {
+    const item = document.createElement('div');
+    item.className = 'img-preview-item';
+    const img = document.createElement('img'); img.src = f.dataUrl || f.url;
+    const rm = document.createElement('button');
+    rm.className = 'img-preview-remove';
+    rm.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    rm.onclick = e => { e.stopPropagation(); state.files.splice(i, 1); renderPreviews(state, previewEl); };
+    const ord = document.createElement('div');
+    ord.className = 'img-preview-order'; ord.textContent = `#${i+1}`;
+    item.append(img, rm, ord);
+    previewEl.appendChild(item);
+  });
+}
+
+/* ── ICONS ── */
 const ICONS = [
   'fa-solid fa-rocket','fa-solid fa-globe','fa-solid fa-gamepad','fa-solid fa-mobile-screen',
   'fa-solid fa-robot','fa-solid fa-pen-ruler','fa-solid fa-code','fa-solid fa-database',
   'fa-solid fa-server','fa-solid fa-brain','fa-solid fa-wand-magic-sparkles',
   'fa-solid fa-cube','fa-solid fa-star','fa-solid fa-heart','fa-solid fa-fire',
-  'fa-solid fa-bolt','fa-solid fa-crown','fa-solid fa-shield','fa-solid fa-sword',
-  'fa-solid fa-book','fa-solid fa-film','fa-solid fa-music','fa-solid fa-palette',
-  'fa-solid fa-pencil','fa-solid fa-flask','fa-solid fa-microscope',
-  'fa-solid fa-chart-line','fa-solid fa-layer-group','fa-solid fa-infinity',
-  'fa-solid fa-laptop-code','fa-solid fa-terminal','fa-solid fa-microchip',
+  'fa-solid fa-bolt','fa-solid fa-crown','fa-solid fa-shield','fa-solid fa-book',
+  'fa-solid fa-film','fa-solid fa-music','fa-solid fa-palette','fa-solid fa-pencil',
+  'fa-solid fa-flask','fa-solid fa-microscope','fa-solid fa-chart-line',
+  'fa-solid fa-layer-group','fa-solid fa-infinity','fa-solid fa-laptop-code',
+  'fa-solid fa-terminal','fa-solid fa-microchip',
   'fa-brands fa-github','fa-brands fa-react','fa-brands fa-node-js',
   'fa-brands fa-python','fa-brands fa-android','fa-brands fa-figma',
   'fa-solid fa-user-ninja','fa-solid fa-user-astronaut','fa-solid fa-dragon',
   'fa-solid fa-gem','fa-solid fa-trophy','fa-solid fa-medal',
 ];
-
-let projIconPop=false, intIconPop=false;
 
 function buildIconGrid(popId, hiddenId, previewI, previewName, currentVal) {
   const pop = document.getElementById(popId);
@@ -527,7 +1265,6 @@ function buildIconGrid(popId, hiddenId, previewI, previewName, currentVal) {
     </button>
   `).join('');
 }
-
 function selectIcon(popId, hiddenId, previewIId, previewNameId, ic) {
   document.getElementById(hiddenId).value = ic;
   document.getElementById(previewIId).className = ic;
@@ -535,371 +1272,328 @@ function selectIcon(popId, hiddenId, previewIId, previewNameId, ic) {
   document.getElementById(popId).classList.remove('open');
   buildIconGrid(popId, hiddenId, previewIId, previewNameId, ic);
 }
-
 function toggleIconPicker(which) {
-  if (which==='proj') {
-    const pop = document.getElementById('proj-icon-pop');
-    const isOpen = pop.classList.contains('open');
-    pop.classList.toggle('open');
-    if (!isOpen) buildIconGrid('proj-icon-pop','p-icon','p-icon-preview-i','p-icon-preview-name', document.getElementById('p-icon').value);
-  } else {
-    const pop = document.getElementById('int-icon-pop');
-    const isOpen = pop.classList.contains('open');
-    pop.classList.toggle('open');
-    if (!isOpen) buildIconGrid('int-icon-pop','i-icon','i-icon-preview-i','i-icon-preview-name', document.getElementById('i-icon').value);
-  }
+  const map = {
+    proj: { pop: 'proj-icon-pop', hid: 'p-icon', pi: 'p-icon-preview-i', pn: 'p-icon-preview-name' },
+    int:  { pop: 'int-icon-pop',  hid: 'i-icon', pi: 'i-icon-preview-i', pn: 'i-icon-preview-name' }
+  };
+  const m = map[which];
+  const pop = document.getElementById(m.pop);
+  const isOpen = pop.classList.contains('open');
+  pop.classList.toggle('open');
+  if (!isOpen) buildIconGrid(m.pop, m.hid, m.pi, m.pn, document.getElementById(m.hid).value);
 }
-
 document.addEventListener('click', e => {
   if (!e.target.closest('#proj-icon-wrap')) document.getElementById('proj-icon-pop')?.classList.remove('open');
-  if (!e.target.closest('#int-icon-wrap')) document.getElementById('int-icon-pop')?.classList.remove('open');
+  if (!e.target.closest('#int-icon-wrap'))  document.getElementById('int-icon-pop')?.classList.remove('open');
 });
 
-// ── QUILL ─────────────────────────────────────────────────
-let qProj=null, qInt=null;
-
+/* ── QUILL ── */
+let qProj = null, qInt = null;
 function initEditors() {
-  qProj = new Quill('#p-editor', {
-    theme:'snow', placeholder:'Describe your project — supports H1, H2, H3, bold, italic, lists, links...',
-    modules:{ toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline','strike'],[{list:'ordered'},{list:'bullet'}],['link'],['clean']] }
-  });
-  qInt = new Quill('#i-editor', {
-    theme:'snow', placeholder:'Describe your feel — what vibe did this give you?',
-    modules:{ toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'bullet'}],['clean']] }
-  });
+  const tbOptions = { toolbar: [[{header:[1,2,3,false]}],['bold','italic','underline','strike'],[{list:'ordered'},{list:'bullet'}],['link'],['clean']] };
+  qProj = new Quill('#p-editor', { theme:'snow', placeholder:'Describe your project…', modules: tbOptions });
+  qInt  = new Quill('#i-editor', { theme:'snow', placeholder:'What vibe did this give you?', modules: tbOptions });
 }
 
-// ── IMAGE UPLOAD STATE ─────────────────────────────────────
-const projImgState = { files:[] };
-const intImgState  = { files:[] };
-
-// ── AUTH ─────────────────────────────────────────────────
+/* ── AUTH ── */
 async function doLogin() {
-  const email=document.getElementById('l-email').value;
-  const pw=document.getElementById('l-pw').value;
-  const btn=document.getElementById('l-btn');
-  btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>Signing in...';
-
+  const email = document.getElementById('l-email').value;
+  const pw    = document.getElementById('l-pw').value;
+  const btn   = document.getElementById('l-btn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>Signing in…';
   if (!sbReady) {
-    // demo mode
-    LS.set('admin_session','1');
+    localStorage.setItem('ns_admin_session','1');
     showApp();
-    toast('Logged in — demo mode (localStorage)','ok','fa-circle-check');
+    toast('Logged in — demo mode','ok','fa-circle-check');
     return;
   }
-  const {error} = await sb.auth.signInWithPassword({email,password:pw});
-  btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i>Enter Admin';
-  if(error){toast('Login failed: '+error.message,'err'); return;}
-  LS.set('admin_session','1');
+  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+  btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>Enter Admin Panel';
+  if (error) { toast('Login failed: '+error.message,'err'); return; }
+  localStorage.setItem('ns_admin_session','1');
   showApp();
   toast('Welcome back ✦','ok','fa-circle-check');
 }
-
-function doLogout(){
-  if(sbReady) sb.auth.signOut();
-  LS.del('admin_session');
+function doLogout() {
+  if (sbReady) sb.auth.signOut();
+  localStorage.removeItem('ns_admin_session');
   location.reload();
 }
-
-function showApp(){
-  document.getElementById('login-page').style.display='none';
-  document.getElementById('admin-app').style.display='block';
+function showApp() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('admin-app').style.display = 'block';
   initEditors();
+  const projImgState = { files: [] };
+  const intImgState  = { files: [] };
+  window._projImgState = projImgState;
+  window._intImgState  = intImgState;
   initUploadZone(document.getElementById('p-upload-zone'), document.getElementById('p-img-preview'), projImgState);
   initUploadZone(document.getElementById('i-upload-zone'), document.getElementById('i-img-preview'), intImgState);
-  refreshDash();
-  loadProjList();
-  loadIntList();
-  document.getElementById('s-bio').value = localStorage.getItem('ns_bio')||'';
+  refreshDash(); loadProjList(); loadIntList(); loadMsgList();
+  document.getElementById('s-bio').value = localStorage.getItem('ns_bio') || '';
   document.getElementById('sb-status-display').innerHTML = sbReady
     ? '<span class="sb-status sb-on"><i class="fa-solid fa-circle-check"></i>Connected to Supabase</span>'
     : '<span class="sb-status sb-off"><i class="fa-solid fa-triangle-exclamation"></i>Not connected — using localStorage</span>';
 }
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  if(LS.get('admin_session','')===('1')||LS.get('admin_session',null)==='1'||localStorage.getItem('ns_admin_session')==='1') {
-    showApp();
-  }
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('ns_admin_session') === '1') showApp();
 });
 
-// ── PANEL SWITCH ─────────────────────────────────────────
+/* ── PANEL ── */
 function showPanel(id, btn) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-item,.admin-nav-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('p-'+id)?.classList.add('active');
-  if(btn) btn.classList.add('active');
-  // also sync sidebar + nav tab
-  document.querySelectorAll(`.sidebar-item[onclick*="'${id}'"]`).forEach(b=>b.classList.add('active'));
-  document.querySelectorAll(`.admin-nav-tab[data-panel="${id}"]`).forEach(b=>b.classList.add('active'));
+  // nav tabs
+  document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
+  // mobile nav
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── DASHBOARD ────────────────────────────────────────────
-function refreshDash(){
-  const projs=LS.get('projects',[]);
-  let intCount=0;
-  ['anime','manhwa','movies','misc'].forEach(c=>intCount+=LS.get('interests_'+c,[]).length);
-  const sb_s=sbReady?'<span class="dsc-num">✓</span>':'<span class="dsc-num" style="font-size:1.2rem">—</span>';
-
-  document.getElementById('dash-stats').innerHTML=`
-    <div class="dash-stat-card"><div class="dsc-icon"><i class="fa-solid fa-rocket"></i></div><div class="dsc-num" id="dc-proj">0</div><div class="dsc-lbl">Projects</div></div>
-    <div class="dash-stat-card"><div class="dsc-icon"><i class="fa-solid fa-heart"></i></div><div class="dsc-num" id="dc-int">0</div><div class="dsc-lbl">Interest Items</div></div>
-    <div class="dash-stat-card"><div class="dsc-icon"><i class="fa-solid fa-layer-group"></i></div><div class="dsc-num">4</div><div class="dsc-lbl">Categories</div></div>
-    <div class="dash-stat-card"><div class="dsc-icon"><i class="fa-brands fa-superpowers"></i></div>${sb_s}<div class="dsc-lbl">Supabase</div></div>
+/* ── DASHBOARD ── */
+function refreshDash() {
+  const projs = LS.get('projects', []);
+  let intCount = 0;
+  const msgCount = LS.get('public_messages', []).length;
+  ['anime','manhwa','movies','misc'].forEach(c => intCount += LS.get('interests_'+c, []).length);
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-rocket"></i></span><div class="stat-num" id="dc-proj">0</div><div class="stat-label">Projects</div></div>
+    <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-heart"></i></span><div class="stat-num" id="dc-int">0</div><div class="stat-label">Interest Items</div></div>
+    <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-paper-plane"></i></span><div class="stat-num" id="dc-msg">0</div><div class="stat-label">Messages</div></div>
+    <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-layer-group"></i></span><div class="stat-num">4</div><div class="stat-label">Categories</div></div>
+    <div class="stat-card"><span class="stat-icon"><i class="fa-brands fa-superpowers"></i></span><div class="stat-num" style="font-size:2rem">${sbReady?'✓':'—'}</div><div class="stat-label">Supabase</div></div>
   `;
-  setTimeout(()=>{
-    const ep=document.getElementById('dc-proj'); if(ep) animateCount(ep, projs.length);
-    const ei=document.getElementById('dc-int');  if(ei) animateCount(ei, intCount);
-  },100);
+  setTimeout(() => {
+    const ep = document.getElementById('dc-proj'); if(ep) animateCount(ep, projs.length);
+    const ei = document.getElementById('dc-int');  if(ei) animateCount(ei, intCount);
+    const em = document.getElementById('dc-msg');  if(em) animateCount(em, msgCount);
+  }, 100);
 }
 
-// ── PROJECTS ─────────────────────────────────────────────
-function getProjects(){return LS.get('projects',[])}
-function setProjects(arr){LS.set('projects',arr)}
+/* ── PROJECTS ── */
+function getProjects() { return LS.get('projects', []); }
+function setProjects(arr) { LS.set('projects', arr); }
 
-async function saveProject(){
-  const id=document.getElementById('p-edit-id').value;
+async function saveProject() {
+  const id = document.getElementById('p-edit-id').value;
   const descHTML = qProj ? qProj.root.innerHTML : '';
-  const urls = await uploadImages(projImgState.files);
-
-  // merge existing images if editing
-  let existingImgs=[];
-  if(id){ const existing=getProjects().find(p=>p.id===id); existingImgs=existing?.images||[]; }
-  const allImgs=[...existingImgs.filter(u=>!projImgState.files.some(f=>f.url===u)), ...urls];
-
-  const data={
-    id:id||Date.now().toString(),
-    name:document.getElementById('p-name').value.trim(),
-    icon:document.getElementById('p-icon').value||'fa-solid fa-rocket',
-    tags:document.getElementById('p-tags').value.split(',').map(s=>s.trim()).filter(Boolean),
-    category:document.getElementById('p-cat').value,
-    status:document.getElementById('p-status').value,
-    github_url:document.getElementById('p-github').value.trim(),
-    live_url:document.getElementById('p-live').value.trim(),
-    description:descHTML,
-    images:allImgs,
-    created_at:new Date().toISOString(),
+  const state = window._projImgState || { files: [] };
+  const urls = await uploadImages(state.files);
+  let existingImgs = [];
+  if (id) { const ex = getProjects().find(p => p.id === id); existingImgs = ex?.images || []; }
+  const allImgs = [...existingImgs.filter(u => !state.files.some(f => f.url === u)), ...urls];
+  const data = {
+    id: id || Date.now().toString(),
+    name: document.getElementById('p-name').value.trim(),
+    icon: document.getElementById('p-icon').value || 'fa-solid fa-rocket',
+    tags: document.getElementById('p-tags').value.split(',').map(s => s.trim()).filter(Boolean),
+    category: document.getElementById('p-cat').value,
+    status: document.getElementById('p-status').value,
+    github_url: document.getElementById('p-github').value.trim(),
+    live_url: document.getElementById('p-live').value.trim(),
+    description: descHTML,
+    images: allImgs,
+    created_at: new Date().toISOString(),
   };
-  if(!data.name){toast('Project name is required!','err');return}
-
-  const projs=getProjects();
-  if(id){const idx=projs.findIndex(p=>p.id===id);if(idx!==-1)projs[idx]=data;else projs.unshift(data);}
+  if (!data.name) { toast('Project name required!', 'err'); return; }
+  const projs = getProjects();
+  if (id) { const idx = projs.findIndex(p => p.id === id); if (idx !== -1) projs[idx] = data; else projs.unshift(data); }
   else projs.unshift(data);
   setProjects(projs);
   logActivity(`Project "${data.name}" ${id?'updated':'added'}`);
-  clearProjForm();
-  loadProjList();
-  refreshDash();
-  toast(id?'Project updated! ✦':'Project added! 🚀','ok','fa-rocket');
+  clearProjForm(); loadProjList(); refreshDash();
+  toast(id ? 'Project updated! ✦' : 'Project added! 🚀', 'ok', 'fa-rocket');
 }
 
-function loadProjList(){
-  const projs=getProjects();
-  const el=document.getElementById('proj-list');
-  if(!projs.length){el.innerHTML='<div class="list-empty"><i class="fa-solid fa-rocket"></i>No projects yet — add one above!</div>';return}
-  el.innerHTML=projs.map(p=>`
-    <div class="list-item-admin">
-      <div class="lia-icon">${p.images?.[0]?`<img src="${p.images[0]}" alt="">`:`<i class="${p.icon||'fa-solid fa-rocket'}"></i>`}</div>
-      <div class="lia-body">
-        <div class="lia-name">${p.name}</div>
-        <div class="lia-meta"><i class="fa-solid fa-folder" style="font-size:.6rem;margin-right:4px"></i>${p.category||'web'} · ${(p.tags||[]).slice(0,3).join(', ')}${p.images?.length?` · <i class="fa-solid fa-images" style="font-size:.6rem;margin-right:3px"></i>${p.images.length} img`:''}</div>
+function loadProjList() {
+  const projs = getProjects();
+  const el = document.getElementById('proj-list');
+  if (!projs.length) { el.innerHTML = '<div class="list-empty"><i class="fa-solid fa-rocket"></i>No projects yet — add one above!</div>'; return; }
+  el.innerHTML = projs.map(p => `
+    <div class="list-item">
+      <div class="li-icon">${p.images?.[0] ? `<img src="${p.images[0]}" alt="">` : `<i class="${p.icon||'fa-solid fa-rocket'}"></i>`}</div>
+      <div class="li-body">
+        <div class="li-name">${p.name}</div>
+        <div class="li-meta"><i class="fa-solid fa-folder" style="font-size:.6rem;margin-right:4px"></i>${p.category||'web'} · ${(p.tags||[]).slice(0,3).join(', ')}${p.images?.length?` · ${p.images.length} img`:''}</div>
       </div>
-      <div class="lia-actions">
+      <div class="li-actions">
         <button class="btn-sm btn-edit" onclick="editProject('${p.id}')"><i class="fa-solid fa-pen"></i>Edit</button>
         <button class="btn-sm btn-del" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
       </div>
     </div>
   `).join('');
 }
-
-function editProject(id){
-  const p=getProjects().find(p=>p.id===id);
-  if(!p) return;
-  document.getElementById('p-edit-id').value=p.id;
-  document.getElementById('p-name').value=p.name||'';
-  document.getElementById('p-tags').value=(p.tags||[]).join(', ');
-  document.getElementById('p-cat').value=p.category||'web';
-  document.getElementById('p-status').value=p.status||'completed';
-  document.getElementById('p-github').value=p.github_url||'';
-  document.getElementById('p-live').value=p.live_url||'';
-  // icon
-  const ic=p.icon||'fa-solid fa-rocket';
-  document.getElementById('p-icon').value=ic;
-  document.getElementById('p-icon-preview-i').className=ic;
-  document.getElementById('p-icon-preview-name').textContent=ic;
-  // quill
-  if(qProj) qProj.root.innerHTML=p.description||'';
-  // images
-  projImgState.files=(p.images||[]).map(url=>({url,dataUrl:url,name:'existing'}));
-  renderExistingImgs(projImgState, document.getElementById('p-img-preview'));
-  // UI
-  document.getElementById('proj-form-lbl').textContent='Edit Project';
-  document.getElementById('p-save-lbl').textContent='Update Project';
-  document.getElementById('p-cancel').hidden=false;
+function editProject(id) {
+  const p = getProjects().find(p => p.id === id); if (!p) return;
+  document.getElementById('p-edit-id').value = p.id;
+  document.getElementById('p-name').value = p.name || '';
+  document.getElementById('p-tags').value = (p.tags||[]).join(', ');
+  document.getElementById('p-cat').value = p.category || 'web';
+  document.getElementById('p-status').value = p.status || 'completed';
+  document.getElementById('p-github').value = p.github_url || '';
+  document.getElementById('p-live').value = p.live_url || '';
+  const ic = p.icon || 'fa-solid fa-rocket';
+  document.getElementById('p-icon').value = ic;
+  document.getElementById('p-icon-preview-i').className = ic;
+  document.getElementById('p-icon-preview-name').textContent = ic;
+  if (qProj) qProj.root.innerHTML = p.description || '';
+  const state = window._projImgState; if (state) { state.files = (p.images||[]).map(url => ({ url, dataUrl: url, name: 'existing' })); renderPreviews(state, document.getElementById('p-img-preview')); }
+  document.getElementById('proj-form-lbl').textContent = 'Edit Project';
+  document.getElementById('p-save-lbl').textContent = 'Update Project';
+  document.getElementById('p-cancel').hidden = false;
   showPanel('projects');
-  document.getElementById('proj-form-area').scrollIntoView({behavior:'smooth'});
+  document.getElementById('proj-form-area').scrollIntoView({ behavior: 'smooth' });
+}
+function deleteProject(id) {
+  if (!confirm('Delete this project?')) return;
+  setProjects(getProjects().filter(p => p.id !== id));
+  loadProjList(); refreshDash(); toast('Project deleted','ok','fa-trash');
+}
+function clearProjForm() {
+  ['p-edit-id','p-name','p-tags','p-github','p-live'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('p-icon').value = 'fa-solid fa-rocket';
+  document.getElementById('p-icon-preview-i').className = 'fa-solid fa-rocket';
+  document.getElementById('p-icon-preview-name').textContent = 'fa-solid fa-rocket';
+  if (qProj) qProj.setText('');
+  const state = window._projImgState; if (state) { state.files = []; document.getElementById('p-img-preview').innerHTML = ''; }
+  document.getElementById('proj-form-lbl').textContent = 'Add New Project';
+  document.getElementById('p-save-lbl').textContent = 'Add Project';
+  document.getElementById('p-cancel').hidden = true;
 }
 
-function deleteProject(id){
-  if(!confirm('Delete this project?')) return;
-  setProjects(getProjects().filter(p=>p.id!==id));
-  loadProjList(); refreshDash();
-  toast('Project deleted','ok','fa-trash');
-}
-
-function clearProjForm(){
-  document.getElementById('p-edit-id').value='';
-  document.getElementById('p-name').value='';
-  document.getElementById('p-tags').value='';
-  document.getElementById('p-github').value='';
-  document.getElementById('p-live').value='';
-  document.getElementById('p-icon').value='fa-solid fa-rocket';
-  document.getElementById('p-icon-preview-i').className='fa-solid fa-rocket';
-  document.getElementById('p-icon-preview-name').textContent='fa-solid fa-rocket';
-  if(qProj) qProj.setText('');
-  projImgState.files=[];
-  document.getElementById('p-img-preview').innerHTML='';
-  document.getElementById('proj-form-lbl').textContent='Add New Project';
-  document.getElementById('p-save-lbl').textContent='Add Project';
-  document.getElementById('p-cancel').hidden=true;
-}
-
-// ── INTERESTS ─────────────────────────────────────────────
-function getInterests(cat){return LS.get('interests_'+cat,[])}
-function setInterests(cat,arr){LS.set('interests_'+cat,arr)}
-
-async function saveInterest(){
-  const id=document.getElementById('i-edit-id').value;
-  const cat=document.getElementById('i-cat').value;
-  const feelHTML = qInt ? qInt.root.innerHTML : '';
-  const urls = await uploadImages(intImgState.files);
-  let existingImgs=[];
-  if(id){const existing=getInterests(cat).find(i=>i.id===id);existingImgs=existing?.images||[];}
-  const allImgs=[...existingImgs.filter(u=>!intImgState.files.some(f=>f.url===u)),...urls];
-
-  const genre=document.getElementById('i-genre').value.trim();
-  const data={
-    id:id||Date.now().toString(),
-    title:document.getElementById('i-title').value.trim(),
-    icon:document.getElementById('i-icon').value||'fa-solid fa-star',
-    category:cat,
-    meta:document.getElementById('i-meta').value.trim(),
-    genre,
-    feel:feelHTML,
-    badges:[genre.split('·')[0].trim()||'Custom'],
-    moments:[],
-    gallery:[],
-    images:allImgs,
-    rating:5,
-  };
-  if(!data.title){toast('Title is required!','err');return}
-
-  const items=getInterests(cat);
-  if(id){const idx=items.findIndex(i=>i.id===id);if(idx!==-1)items[idx]=data;else items.unshift(data);}
-  else items.unshift(data);
-  setInterests(cat,items);
-  logActivity(`Interest "${data.title}" ${id?'updated':'added'}`);
-  clearIntForm();
-  loadIntList();
-  refreshDash();
-  toast(id?'Updated! ✦':'Item added! ✨','ok','fa-star');
-}
-
-function loadIntList(){
-  let all=[];
-  ['anime','manhwa','movies','misc'].forEach(c=>getInterests(c).forEach(i=>all.push({...i,_cat:c})));
-  const el=document.getElementById('int-list');
-  if(!all.length){el.innerHTML='<div class="list-empty"><i class="fa-solid fa-heart"></i>No custom interest items yet.</div>';return}
-  el.innerHTML=all.map(i=>`
-    <div class="list-item-admin">
-      <div class="lia-icon">${i.images?.[0]?`<img src="${i.images[0]}" alt="">`:`<i class="${i.icon||'fa-solid fa-star'}"></i>`}</div>
-      <div class="lia-body">
-        <div class="lia-name">${i.title}</div>
-        <div class="lia-meta"><i class="fa-solid fa-layer-group" style="font-size:.6rem;margin-right:4px"></i>${i._cat}${i.images?.length?` · <i class="fa-solid fa-images" style="font-size:.6rem;margin-right:3px"></i>${i.images.length} img`:''}</div>
+/* ── MESSAGES ── */
+function getMessages() { return LS.get('public_messages', []); }
+function setMessages(arr) { LS.set('public_messages', arr); }
+function loadMsgList() {
+  const msgs = getMessages();
+  const el = document.getElementById('msg-admin-wall');
+  if (!msgs.length) { el.innerHTML = '<div class="list-empty"><i class="fa-solid fa-paper-plane"></i>No messages yet.</div>'; return; }
+  el.innerHTML = msgs.map(m => {
+    const rot = (Math.random()*5 - 2.5).toFixed(1);
+    return `
+    <div class="msg-note" style="transform:rotate(${rot}deg)">
+      <div class="msg-note-pin"></div>
+      <div class="msg-note-head">
+        <span class="msg-note-name">${m.name}</span>
+        <button class="btn-del-msg" onclick="deleteMessage(${m.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
       </div>
-      <div class="lia-actions">
+      <div class="msg-note-body">${m.text}</div>
+      <div class="msg-note-foot">
+        <span class="msg-note-time">${m.date}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function deleteMessage(id) {
+  if (!confirm('Delete this message?')) return;
+  setMessages(getMessages().filter(m => m.id !== id));
+  loadMsgList(); refreshDash(); toast('Message deleted','ok','fa-trash');
+}
+
+/* ── INTERESTS ── */
+function getInterests(cat) { return LS.get('interests_'+cat, []); }
+function setInterests(cat, arr) { LS.set('interests_'+cat, arr); }
+async function saveInterest() {
+  const id  = document.getElementById('i-edit-id').value;
+  const cat = document.getElementById('i-cat').value;
+  const feelHTML = qInt ? qInt.root.innerHTML : '';
+  const state = window._intImgState || { files: [] };
+  const urls = await uploadImages(state.files);
+  let existingImgs = [];
+  if (id) { const ex = getInterests(cat).find(i => i.id === id); existingImgs = ex?.images || []; }
+  const allImgs = [...existingImgs.filter(u => !state.files.some(f => f.url === u)), ...urls];
+  const genre = document.getElementById('i-genre').value.trim();
+  const data = {
+    id: id || Date.now().toString(),
+    title: document.getElementById('i-title').value.trim(),
+    icon: document.getElementById('i-icon').value || 'fa-solid fa-star',
+    category: cat,
+    meta: document.getElementById('i-meta').value.trim(),
+    genre, feel: feelHTML,
+    badges: [genre.split('·')[0].trim() || 'Custom'],
+    images: allImgs, rating: 5,
+  };
+  if (!data.title) { toast('Title required!', 'err'); return; }
+  const items = getInterests(cat);
+  if (id) { const idx = items.findIndex(i => i.id === id); if (idx !== -1) items[idx] = data; else items.unshift(data); }
+  else items.unshift(data);
+  setInterests(cat, items);
+  logActivity(`Interest "${data.title}" ${id?'updated':'added'}`);
+  clearIntForm(); loadIntList(); refreshDash();
+  toast(id ? 'Updated! ✦' : 'Item added! ✨', 'ok', 'fa-star');
+}
+function loadIntList() {
+  let all = [];
+  ['anime','manhwa','movies','misc'].forEach(c => getInterests(c).forEach(i => all.push({...i, _cat: c})));
+  const el = document.getElementById('int-list');
+  if (!all.length) { el.innerHTML = '<div class="list-empty"><i class="fa-solid fa-heart"></i>No custom interest items yet.</div>'; return; }
+  el.innerHTML = all.map(i => `
+    <div class="list-item">
+      <div class="li-icon">${i.images?.[0] ? `<img src="${i.images[0]}" alt="">` : `<i class="${i.icon||'fa-solid fa-star'}"></i>`}</div>
+      <div class="li-body">
+        <div class="li-name">${i.title}</div>
+        <div class="li-meta"><i class="fa-solid fa-layer-group" style="font-size:.6rem;margin-right:4px"></i>${i._cat}${i.images?.length ? ` · ${i.images.length} img` : ''}</div>
+      </div>
+      <div class="li-actions">
         <button class="btn-sm btn-edit" onclick="editInterest('${i._cat}','${i.id}')"><i class="fa-solid fa-pen"></i>Edit</button>
         <button class="btn-sm btn-del" onclick="deleteInterest('${i._cat}','${i.id}')"><i class="fa-solid fa-trash"></i></button>
       </div>
     </div>
   `).join('');
 }
-
-function editInterest(cat,id){
-  const item=getInterests(cat).find(i=>i.id===id);
-  if(!item) return;
-  document.getElementById('i-edit-id').value=item.id;
-  document.getElementById('i-title').value=item.title||'';
-  document.getElementById('i-cat').value=cat;
-  document.getElementById('i-meta').value=item.meta||'';
-  document.getElementById('i-genre').value=item.genre||'';
-  const ic=item.icon||'fa-solid fa-star';
-  document.getElementById('i-icon').value=ic;
-  document.getElementById('i-icon-preview-i').className=ic;
-  document.getElementById('i-icon-preview-name').textContent=ic;
-  if(qInt) qInt.root.innerHTML=item.feel||'';
-  intImgState.files=(item.images||[]).map(url=>({url,dataUrl:url,name:'existing'}));
-  renderExistingImgs(intImgState, document.getElementById('i-img-preview'));
-  document.getElementById('int-form-lbl').textContent='Edit Item';
-  document.getElementById('i-save-lbl').textContent='Update Item';
-  document.getElementById('i-cancel').hidden=false;
+function editInterest(cat, id) {
+  const item = getInterests(cat).find(i => i.id === id); if (!item) return;
+  document.getElementById('i-edit-id').value = item.id;
+  document.getElementById('i-title').value = item.title || '';
+  document.getElementById('i-cat').value = cat;
+  document.getElementById('i-meta').value = item.meta || '';
+  document.getElementById('i-genre').value = item.genre || '';
+  const ic = item.icon || 'fa-solid fa-star';
+  document.getElementById('i-icon').value = ic;
+  document.getElementById('i-icon-preview-i').className = ic;
+  document.getElementById('i-icon-preview-name').textContent = ic;
+  if (qInt) qInt.root.innerHTML = item.feel || '';
+  const state = window._intImgState; if (state) { state.files = (item.images||[]).map(url => ({ url, dataUrl: url, name: 'existing' })); renderPreviews(state, document.getElementById('i-img-preview')); }
+  document.getElementById('int-form-lbl').textContent = 'Edit Item';
+  document.getElementById('i-save-lbl').textContent = 'Update Item';
+  document.getElementById('i-cancel').hidden = false;
   showPanel('interests');
 }
-
-function deleteInterest(cat,id){
-  if(!confirm('Delete this item?')) return;
-  setInterests(cat,getInterests(cat).filter(i=>i.id!==id));
-  loadIntList(); refreshDash();
-  toast('Deleted','ok','fa-trash');
+function deleteInterest(cat, id) {
+  if (!confirm('Delete?')) return;
+  setInterests(cat, getInterests(cat).filter(i => i.id !== id));
+  loadIntList(); refreshDash(); toast('Deleted','ok','fa-trash');
+}
+function clearIntForm() {
+  ['i-edit-id','i-title','i-meta','i-genre'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('i-cat').value = 'anime';
+  document.getElementById('i-icon').value = 'fa-solid fa-star';
+  document.getElementById('i-icon-preview-i').className = 'fa-solid fa-star';
+  document.getElementById('i-icon-preview-name').textContent = 'fa-solid fa-star';
+  if (qInt) qInt.setText('');
+  const state = window._intImgState; if (state) { state.files = []; document.getElementById('i-img-preview').innerHTML = ''; }
+  document.getElementById('int-form-lbl').textContent = 'Add Interest Item';
+  document.getElementById('i-save-lbl').textContent = 'Add Item';
+  document.getElementById('i-cancel').hidden = true;
 }
 
-function clearIntForm(){
-  ['i-edit-id','i-title','i-meta','i-genre'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('i-cat').value='anime';
-  document.getElementById('i-icon').value='fa-solid fa-star';
-  document.getElementById('i-icon-preview-i').className='fa-solid fa-star';
-  document.getElementById('i-icon-preview-name').textContent='fa-solid fa-star';
-  if(qInt) qInt.setText('');
-  intImgState.files=[];
-  document.getElementById('i-img-preview').innerHTML='';
-  document.getElementById('int-form-lbl').textContent='Add Interest Item';
-  document.getElementById('i-save-lbl').textContent='Add Item';
-  document.getElementById('i-cancel').hidden=true;
-}
-
-// Render existing images in preview grid (for edit mode)
-function renderExistingImgs(state, previewEl){
-  previewEl.innerHTML='';
-  state.files.forEach((f,i)=>{
-    const item=document.createElement('div');
-    item.className='img-preview-item';
-    const img=document.createElement('img');
-    img.src=f.dataUrl||f.url||'';
-    const rm=document.createElement('button');
-    rm.className='img-preview-remove';
-    rm.innerHTML='<i class="fa-solid fa-xmark"></i>';
-    rm.onclick=e=>{e.stopPropagation();state.files.splice(i,1);renderExistingImgs(state,previewEl)};
-    const ord=document.createElement('div');
-    ord.className='img-preview-order';ord.textContent=`#${i+1}`;
-    item.append(img,rm,ord);
-    previewEl.appendChild(item);
-  });
-}
-
-// ── SETTINGS ─────────────────────────────────────────────
-function saveBio(){
-  localStorage.setItem('ns_bio',document.getElementById('s-bio').value);
+/* ── SETTINGS ── */
+function saveBio() {
+  localStorage.setItem('ns_bio', document.getElementById('s-bio').value);
   toast('Bio saved! ✦','ok','fa-floppy-disk');
 }
 
-// ── ACTIVITY LOG ──────────────────────────────────────────
-function logActivity(text){
-  const el=document.getElementById('activity-list');
-  const time=new Date().toLocaleTimeString();
-  const div=document.createElement('div');
-  div.className='activity-item';
-  div.innerHTML=`<div class="activity-dot"></div><div class="activity-text">${text}</div><div class="activity-time">${time}</div>`;
-  el.insertBefore(div,el.firstChild);
-  if(el.children.length>8) el.removeChild(el.lastChild);
+/* ── ACTIVITY ── */
+function logActivity(text) {
+  const el = document.getElementById('activity-list');
+  const time = new Date().toLocaleTimeString();
+  const div = document.createElement('div');
+  div.className = 'activity-item';
+  div.innerHTML = `<div class="activity-dot"></div><div class="activity-text">${text}</div><div class="activity-time">${time}</div>`;
+  el.insertBefore(div, el.firstChild);
+  if (el.children.length > 8) el.removeChild(el.lastChild);
 }
 </script>
 </body>
