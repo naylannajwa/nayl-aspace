@@ -244,6 +244,33 @@ function initMobileMenu() {
   }
 }
 
+// ── ADMIN EASTER EGG ─────────────────────────────────────
+function initAdminTrigger() {
+  let adminClickCount = 0;
+  let adminClickTimer = null;
+
+  const adminTrigger = Array.from(document.querySelectorAll('footer .accent'))
+                            .find(el => el.textContent.includes('nayl-aSpace'));
+
+  if (adminTrigger) {
+    adminTrigger.style.cursor = 'pointer';
+    adminTrigger.title = '...';
+
+    adminTrigger.addEventListener('click', () => {
+      adminClickCount++;
+      clearTimeout(adminClickTimer);
+      adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 1500);
+
+      if (adminClickCount === 4) {
+        const isIndex = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
+        const adminPath = isIndex ? 'pages/admin.html' : 'admin.html';
+        toast('Admin portal unlocked!', 'ok', 'fa-key');
+        setTimeout(() => { window.location.href = adminPath; }, 800);
+      }
+    });
+  }
+}
+
 // ── INIT ALL ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initSB();
@@ -252,5 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initAdminNav();
   initMobileMenu();
+  initAdminTrigger();
   setTimeout(initReveal, 80);
 });
