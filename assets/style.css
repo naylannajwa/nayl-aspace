@@ -334,9 +334,83 @@ nav#admin-nav{
 .msg-body{font-size:.92rem;line-height:1.6;color:#e2e8f0;flex:1;word-wrap:break-word}
 .msg-decoration{position:absolute;bottom:10px;right:10px;font-size:3rem;opacity:.05;pointer-events:none}
 
+/* ── SCATTERED SOCIAL LEAVES ────────────── */
+.msg-scatter-wrap{
+  position:relative;max-width:600px;margin:0 auto 80px;
+}
+.msg-input-box{position:relative;z-index:10} /* Ensure form is above leaves */
+
+.scat-link{
+  position:absolute;z-index:1;
+  width:46px;height:46px;border-radius:14px;
+  background:rgba(8,18,60,.4);border:1px solid var(--glass-b);
+  backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--white-dim);font-size:1.2rem;
+  transition:all .4s cubic-bezier(.175,.885,.32,1.275);
+  animation:float 6s ease-in-out infinite;
+}
+/* Hover Effect: Star Glow */
+.scat-link:hover{
+  z-index:20;
+  background:rgba(10,47,255,.3);
+  border-color:var(--cyan); color:#fff;
+  /* Glow effect like a star */
+  box-shadow: 0 0 20px var(--cyan), 0 0 40px var(--glow-cyan);
+  transform:scale(1.2) rotate(0deg)!important;
+}
+/* Star decoration on hover */
+.scat-link::after {
+  content: '\f005'; /* FontAwesome Star */
+  font-family: 'Font Awesome 6 Free'; font-weight: 900;
+  position: absolute; top: -12px; right: -12px;
+  font-size: 1rem; color: #fff;
+  text-shadow: 0 0 10px var(--cyan);
+  opacity: 0; transform: scale(0) rotate(-45deg);
+  transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+.scat-link:hover::after {
+  opacity: 1; transform: scale(1.2) rotate(15deg);
+}
+
+/* Random Positions (Desktop) */
+/* KIRI (Important/Social): LinkedIn, Email, Insta, Discord, X */
+.sl-1 {top:50%; left:-100px; transform:rotate(-15deg); animation-delay:0s}   /* Insta */
+.sl-2 {top:0%;  left:-80px;  transform:rotate(10deg);  animation-delay:.5s}  /* LinkedIn */
+.sl-3 {top:25%; left:-160px; transform:rotate(-8deg);  animation-delay:1s}   /* Email */
+.sl-4 {top:85%; left:-80px;  transform:rotate(20deg);  animation-delay:1.5s} /* Discord */
+.sl-5 {top:70%; left:-150px; transform:rotate(12deg);  animation-delay:.2s}  /* X */
+
+/* KANAN (Entertainment/Fun): YouTube, Spotify, Locket, BeReal, Line, Tele */
+.sl-6 {top:55%; right:-90px;  transform:rotate(-5deg);  animation-delay:.7s}  /* Locket */
+.sl-7 {top:70%; right:-170px; transform:rotate(15deg);  animation-delay:1.2s} /* BeReal */
+.sl-8 {top:95%; right:-70px;  transform:rotate(-12deg); animation-delay:1.7s} /* Line */
+.sl-9 {top:85%; right:-140px; transform:rotate(8deg);   animation-delay:.4s}  /* Tele */
+.sl-10{top:30%; right:-150px; transform:rotate(-5deg);  animation-delay:.9s}  /* Spotify */
+.sl-11{top:10%; right:-100px; transform:rotate(10deg);  animation-delay:1.4s} /* YT */
+
+/* Mobile Responsive: Stack them neatly below instead of scattering (messy on small screens) */
+@media(max-width:960px){
+  .msg-scatter-wrap{display:flex;flex-direction:column;gap:30px}
+  .scat-link{
+    position:static;transform:none!important;animation:none;
+    width:40px;height:40px;font-size:1.1rem;
+  }
+  /* Wrap links in a flex container via CSS only by targeting them */
+  .msg-scatter-wrap {
+    display: grid; 
+    grid-template-areas: "form" "socials";
+  }
+  .msg-input-box { grid-area: form; margin-bottom: 0; }
+  /* Use a pseudo-grid logic or just simpler: make them flow */
+  .msg-scatter-wrap { display:block; text-align:center }
+  .scat-link { display:inline-flex; margin:5px; position:static; }
+}
+
 /* ── PAGINATION BAR ─────────────────────── */
 .pagination-bar{
-  display:flex;justify-content:center;flex-wrap:wrap;gap:10px;
+  display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;
   margin-top:50px;padding-top:20px;border-top:1px solid rgba(120,80,255,.1);
   animation:fadeIn .5s ease;
 }
