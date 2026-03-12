@@ -108,13 +108,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/script.js"></script>
 <script>
-function getMessages(){ return LS.get('public_messages', []) }
-function setMessages(arr){ LS.set('public_messages', arr) }
 let currentPage = 1;
 const ITEMS_PER_PAGE = 8;
 
-function renderMessages(){
-  const msgs = getMessages();
+async function renderMessages(){
+  const msgs = await DB.get('public_messages');
   const wall = document.getElementById('msg-wall');
   
   if(!msgs.length){
@@ -200,7 +198,7 @@ function goToPage(n) {
   // Pagination tetap di tempat, tidak scroll ke atas
 }
 
-function postMessage(){
+async function postMessage(){
   const name = document.getElementById('m-name').value.trim() || 'Anonymous';
   const text = document.getElementById('m-text').value.trim();
   
@@ -213,14 +211,16 @@ function postMessage(){
     date: new Date().toLocaleDateString()
   };
 
-  const msgs = getMessages();
-  msgs.unshift(newMsg); // Add to top
-  setMessages(msgs);
+  const ok = await DB.add('public_messages', newMsg);
   currentPage = 1; // Go to first page to see new message
 
   document.getElementById('m-text').value = '';
-  renderMessages();
-  toast('Message posted! 🎉', 'ok', 'fa-paper-plane');
+  if(ok) {
+    renderMessages();
+    toast('Message posted! 🎉', 'ok', 'fa-paper-plane');
+  } else {
+    toast('Failed to post message', 'err');
+  }
 }
 
 // Init

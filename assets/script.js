@@ -1,22 +1,73 @@
 /* nayl-aSpace v2 · shared.js */
 
 // ── CONFIG ──────────────────────────────────────────────
-const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL      = 'https://lbdonhwjewekgjdzirxp.supabase.co'; // Masukkan URL dari Settings > API
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiZG9uaHdqZXdla2dqZHppcnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMDM3NzAsImV4cCI6MjA4ODg3OTc3MH0.uUcZR5hT6xacu3A-bBvfH3HwactmQW-be_sr3Vudfr0'; // Masukkan Anon Key dari Settings > API
 let sb = null, sbReady = false;
 
 function initSB() {
-  if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && window.supabase) {
+  if (SUPABASE_URL !== 'https://lbdonhwjewekgjdzirxp.supabase.co' && window.supabase) {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     sbReady = true;
   }
 }
 
 // ── STORAGE HELPERS ─────────────────────────────────────
+// LS is Synchronous (Local Storage) - Fallback & Immediate UI
 const LS = {
   get: (k, def=[]) => { try { return JSON.parse(localStorage.getItem('ns_'+k)) ?? def; } catch { return def; } },
   set: (k, v) => localStorage.setItem('ns_'+k, JSON.stringify(v)),
   del: k => localStorage.removeItem('ns_'+k),
+};
+
+// DB is Asynchronous (Supabase > LS Fallback)
+const DB = {
+  get: async (key) => {
+    if (!sbReady) return LS.get(key);
+    
+    const map = {
+      'public_messages': { t:'public_messages', o:'created_at', d:false },
+      'projects':        { t:'projects', o:'created_at', d:false },
+      'interests_anime': { t:'interests', c:'anime' },
+      'interests_manhwa':{ t:'interests', c:'manhwa' },
+      'interests_movies':{ t:'interests', c:'movies' },
+      'interests_misc':  { t:'interests', c:'misc' }
+    };
+    
+    const m = map[key];
+    if (!m) return LS.get(key);
+
+    let q = sb.from(m.t).select('*');
+    if (m.c) q = q.eq('category', m.c);
+    if (m.o) q = q.order(m.o, { ascending: m.d });
+    else q = q.order('created_at', { ascending: false });
+
+    const { data, error } = await q;
+    return error ? LS.get(key) : data;
+  },
+  
+  add: async (key, item) => {
+    if (!sbReady) {
+      const d = LS.get(key);
+      if (Array.isArray(d)) { d.unshift(item); LS.set(key, d); }
+      return true;
+    }
+    
+    const map = {
+      'public_messages': 'public_messages',
+      'projects': 'projects',
+      'interests_anime': 'interests',
+      'interests_manhwa':'interests',
+      'interests_movies':'interests',
+      'interests_misc':  'interests'
+    };
+    const table = map[key];
+    if (!table) return false;
+
+    const { error } = await sb.from(table).insert(item);
+    if (error) console.error(error);
+    return !error;
+  }
 };
 
 // ── CURSOR ───────────────────────────────────────────────
@@ -185,6 +236,8 @@ async function uploadImages(stateFiles) {
   const urls = [];
   for (const f of stateFiles) {
     if (f.url) { urls.push(f.url); continue; } // already uploaded
+    // If it's a new file (File object present)
+    if (!f.file) continue; 
     const ext = f.name.split('.').pop();
     const path = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
     const { data, error } = await sb.storage.from('images').upload(path, f.file, { upsert:true });
