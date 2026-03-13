@@ -189,6 +189,10 @@
   <div style="max-width:1180px;margin:0 auto">
     <p class="section-label reveal"><i class="fa-solid fa-heart"></i>What I'm Into (Fun Fact About Me Lol)</p>
     <h1 class="section-title reveal"><span class="grad">My Interests ✦</span></h1>
+    <div class="search-box reveal">
+      <input type="text" class="search-input" id="search-input" placeholder="Search interests..." oninput="buildGrids()">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    </div>
   </div>
 </div>
 
@@ -319,19 +323,25 @@ function buildCatTabs(){
 }
 
 function buildGrids(){
+  const query=document.getElementById('search-input')?.value.toLowerCase().trim() || '';
   let allItemsWithCat = [];
   Object.entries(DATA).forEach(([key,items])=>{
     const ls=LS.get('interests_'+key,[]);
     const all=[...items,...ls];
-    all.forEach(item => allItemsWithCat.push({ ...item, _cat: key }));
+    const filtered = all.filter(item => !query || item.title.toLowerCase().includes(query) || (item.meta||'').toLowerCase().includes(query));
+    
+    filtered.forEach(item => allItemsWithCat.push({ ...item, _cat: key }));
+    
     const grid=document.getElementById('grid-'+key);
     if(!grid) return;
-    grid.innerHTML=all.map(item=>renderTitleCard(key, item)).join('');
+    grid.innerHTML=filtered.map(item=>renderTitleCard(key, item)).join('');
+    // Show empty state if needed? For now just empty grid.
   });
 
   const allGrid = document.getElementById('grid-all');
   if (allGrid) {
     allGrid.innerHTML = allItemsWithCat.map(item => renderTitleCard(item._cat, item)).join('');
+    if(!allItemsWithCat.length) allGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:rgba(255,255,255,.4)">No interests found matching "${query}"</div>`;
   }
 }
 

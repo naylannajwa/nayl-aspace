@@ -437,6 +437,28 @@ nav#admin-nav{
 /* ── ADMIN NAVBAR ────────────────────────── */
 
 /* ── INTERESTS PAGE ─────────────────────── */
+/* ── SEARCH BAR ─────────────────────────── */
+.search-box {
+  position: relative; margin-bottom: 24px; max-width: 100%;
+}
+.search-input {
+  width: 100%; padding: 12px 16px 12px 42px;
+  background: var(--glass); border: 1px solid var(--glass-b);
+  border-radius: var(--r-pill); color: var(--white);
+  font-family: var(--f-body); font-size: 0.9rem;
+  outline: none; transition: var(--trans);
+}
+.search-input:focus {
+  border-color: var(--cyan); background: rgba(10, 20, 45, 0.6);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+}
+.search-icon {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--white-dim); font-size: 0.9rem; pointer-events: none;
+  transition: color 0.3s;
+}
+.search-input:focus + .search-icon { color: var(--cyan); }
+
 /* ── SHARED CATEGORY TABS/FILTERS ── */
 .filter-bar, .cat-tabs {
   display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px;

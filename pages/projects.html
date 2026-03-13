@@ -133,6 +133,10 @@
 <div class="section-wrap">
   <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>My Projects</p>
   <h1 class="section-title reveal"><span class="grad">Things I've Built</span></h1>
+  <div class="search-box reveal">
+    <input type="text" class="search-input" id="search-input" placeholder="Search projects..." oninput="renderProjects()">
+    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+  </div>
   <div class="filter-bar reveal" id="filter-bar">
     <button class="filter-btn active" onclick="filterProj('all',this)"><i class="fa-solid fa-border-all"></i>All<span class="cat-count" id="c-all">0</span></button>
     <button class="filter-btn" onclick="filterProj('web',this)"><i class="fa-solid fa-globe"></i>Web<span class="cat-count" id="c-web">0</span></button>
@@ -212,10 +216,17 @@ function renderStatus(p){
 
 function renderProjects(){
   const grid=document.getElementById('projects-grid');
+  const query=document.getElementById('search-input').value.toLowerCase().trim();
   const f=currentFilter;
-  const shown=f==='all'?allProjects:allProjects.filter(p=>(p.category||'').includes(f)||(p.tags||[]).some(t=>t.toLowerCase().includes(f)));
+  
+  const shown = allProjects.filter(p => {
+    const matchesFilter = f==='all' || (p.category||'').includes(f) || (p.tags||[]).some(t=>t.toLowerCase().includes(f));
+    const matchesSearch = !query || p.name.toLowerCase().includes(query) || (p.tags||[]).some(t=>t.toLowerCase().includes(query));
+    return matchesFilter && matchesSearch;
+  });
+
   if(!shown.length){
-    grid.innerHTML=`<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>No projects in this category yet.</div>`;
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>No projects found.</div>`;
     return;
   }
   grid.innerHTML=shown.map(p=>`
