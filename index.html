@@ -1,306 +1,638 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nayl-aSpace · Home</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
-<link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-/* ── HOME ── */
-#home-section{
-  min-height:85vh;display:flex;align-items:center;
-  padding:calc(var(--nav-h) - 30px) -52px -20px;
-  overflow:hidden;position:relative;z-index:2;
-}
-.home-grid{
-  display:grid;grid-template-columns:1.15fr .85fr;
-  gap:60px;align-items:center;
-  max-width:1180px;margin:0 auto;width:100%;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nayl-aSpace · Home</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ── HOME ── */
+    #home-section {
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      padding: calc(var(--nav-h) - 30px) -52px -20px;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
 
-/* TEXT */
-.eyebrow{
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--cyan);margin-bottom:18px;
-  opacity:0;animation:fadeUp .7s .15s ease forwards;
-}
-.eyebrow-line{width:28px;height:1px;background:var(--cyan)}
-.home-name{
-  font-family:var(--f-display);
-  font-size:clamp(3rem,6.5vw,5.6rem);
-  font-weight:800;letter-spacing:-2.5px;line-height:1;margin-bottom:14px;
-  opacity:0;animation:fadeUp .7s .3s ease forwards;
-}
-.home-name .grad{
-  background:linear-gradient(135deg,#fff 0%,var(--blue-3) 45%,var(--cyan) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;
-}
-.home-role{
-  font-family:var(--f-mono);font-size:.98rem;color:var(--blue-3);margin-bottom:26px;
-  opacity:0;animation:fadeUp .7s .44s ease forwards;
-}
-.typing-cur{border-right:2px solid var(--cyan);padding-right:3px;animation:blink 1s step-end infinite}
-.home-bio{
-  font-size:.96rem;color:var(--white-dim);line-height:1.8;max-width:500px;margin-bottom:38px;
-  opacity:0;animation:fadeUp .7s .58s ease forwards;
-}
-.home-cta{
-  display:flex;gap:14px;flex-wrap:wrap;
-  opacity:0;animation:fadeUp .7s .72s ease forwards;
-}
-.status-badge{
-  display:inline-flex;align-items:center;gap:8px;margin-top:24px;
-  padding:7px 16px;background:rgba(74,222,128,.07);
-  border:1px solid rgba(74,222,128,.2);border-radius:var(--r-pill);
-  font-family:var(--f-mono);font-size:.7rem;color:#4ade80;
-  opacity:0;animation:fadeUp .7s .86s ease forwards;
-}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:ping 2s ease infinite}
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-/* STATS */
-.stats-row{
-  display:flex;gap:36px;flex-wrap:wrap;margin-top:44px;
-  padding-top:32px;border-top:1px solid var(--glass-b);
-  opacity:0;animation:fadeUp .7s 1.0s ease forwards;
-}
-.stat-num{
-  font-family:var(--f-display);font-size:1.9rem;font-weight:800;
-  background:linear-gradient(135deg,#fff,var(--blue-3));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.stat-lbl{font-family:var(--f-mono);font-size:.67rem;color:var(--white-dim);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+    /* TEXT */
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--f-mono);
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp .7s .15s ease forwards;
+    }
 
-/* RING VISUAL */
-.home-visual{display:flex;justify-content:center;align-items:center;opacity:0;animation:fadeIn 1.2s .5s ease forwards}
-.ring-wrap{position:relative;width:480px;height:480px}
-.ring-outer{
-  position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(var(--cyan),var(--blue-2),var(--blue-0),transparent 60%,var(--cyan));
-  padding:2px;animation:spinSlow 8s linear infinite;
-}
-.ring-outer-fill{width:100%;height:100%;border-radius:50%;background:var(--bg)}
-.ring-mid{
-  position:absolute;inset:14px;border-radius:50%;
-  border:1px dashed rgba(0,212,255,.15);
-  animation:spinSlow 18s linear infinite reverse;
-}
-.ring-inner-track{
-  position:absolute;inset:30px;border-radius:50%;
-  border:1px solid rgba(78,130,255,.08);
-}
-.avatar-core{
-  position:absolute;inset:22px;border-radius:50%;
-  background:linear-gradient(145deg,#060e30,var(--bg-mid));
-  display:flex;align-items:center;justify-content:center;
-  border:1px solid rgba(90,150,255,.12);z-index:1;overflow:hidden;
-}
-.avatar-letter{
-  font-family:var(--f-display);font-size:5.5rem;font-weight:800;
-  background:linear-gradient(135deg,var(--cyan),var(--blue-2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.avatar-img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15)}
-/* orbit dots */
-.od{position:absolute;border-radius:50%;z-index:2;top:50%;left:50%}
-.od1{width:10px;height:10px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:orbitA 8s linear infinite}
-.od2{width:6px;height:6px;background:var(--blue-3);box-shadow:0 0 8px var(--blue-3);animation:orbitB 12s linear infinite reverse}
-/* float tags */
-.ftag{
-  position:absolute;padding:6px 14px;
-  background:rgba(4,12,46,.8);border:1px solid var(--glass-b);
-  backdrop-filter:blur(12px);border-radius:var(--r-pill);
-  font-family:var(--f-mono);font-size:.68rem;color:var(--cyan);
-  white-space:nowrap;z-index:3;
-  display:flex;align-items:center;gap:6px;
-}
-.ftag i{font-size:.72rem}
-.ftag:nth-of-type(7){top:14%;left:-4%;animation:float 4s 0s ease-in-out infinite}
-.ftag:nth-of-type(8){top:32%;right:-9%;animation:float 4s .9s ease-in-out infinite}
-.ftag:nth-of-type(9){bottom:32%;left:-9%;animation:float 4s 1.7s ease-in-out infinite}
-.ftag:nth-of-type(10){bottom:14%;right:-4%;animation:float 4s 2.5s ease-in-out infinite}
+    .eyebrow-line {
+      width: 28px;
+      height: 1px;
+      background: var(--cyan)
+    }
 
-.scroll-hint{
-  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  opacity:0;animation:fadeIn 1s 2s ease forwards;
-}
-.scroll-hint span{font-family:var(--f-mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(140,170,255,.4)}
-.scroll-hint i{color:rgba(0,212,255,.4);animation:float 2s ease-in-out infinite}
+    .home-name {
+      font-family: var(--f-display);
+      font-size: clamp(3rem, 6.5vw, 5.6rem);
+      font-weight: 800;
+      letter-spacing: -2.5px;
+      line-height: 1;
+      margin-bottom: 14px;
+      opacity: 0;
+      animation: fadeUp .7s .3s ease forwards;
+    }
 
-/* QUICK LINKS */
-.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.quick-card{padding:28px;text-decoration:none;display:block;position:relative;overflow:hidden}
-.quick-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent,rgba(10,47,255,.04));
-  opacity:0;transition:opacity .3s;
-}
-.quick-card:hover::before{opacity:1}
-.qc-icon{
-  width:44px;height:44px;border-radius:12px;margin-bottom:16px;
-  background:linear-gradient(135deg,rgba(10,47,255,.3),rgba(0,212,255,.1));
-  border:1px solid var(--glass-b);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--blue-3);font-size:1.1rem;
-  transition:var(--trans);
-}
-.quick-card:hover .qc-icon{background:linear-gradient(135deg,rgba(10,47,255,.5),rgba(0,212,255,.2));color:var(--cyan);border-color:rgba(0,212,255,.3)}
-.qc-title{font-family:var(--f-display);font-size:1.1rem;font-weight:700;margin-bottom:6px}
-.qc-desc{font-size:.84rem;color:var(--white-dim);line-height:1.65}
-.qc-arr{
-  margin-top:14px;font-family:var(--f-mono);font-size:.7rem;color:var(--cyan);
-  display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .2s;
-}
-.quick-card:hover .qc-arr{opacity:1}
+    .home-name .grad {
+      background: linear-gradient(135deg, #fff 0%, var(--blue-3) 45%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
 
-/* MOBILE NAV */
-.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.5rem;cursor:pointer;z-index:1001}
+    .home-role {
+      font-family: var(--f-mono);
+      font-size: .98rem;
+      color: var(--blue-3);
+      margin-bottom: 26px;
+      opacity: 0;
+      animation: fadeUp .7s .44s ease forwards;
+    }
 
-/* TABLET OPTIMIZATION */
-@media(max-width:1024px){
-  .home-grid{gap:30px}
-  .home-name{font-size:4rem}
-  .quick-grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:768px){
-  #home-section{padding:20px 22px 20px;min-height:auto}
-  .home-grid{grid-template-columns:1fr;gap:40px}
-  .home-visual{order:-1}
-  .ring-wrap{width:240px;height:240px}
-  .avatar-letter{font-size:3.8rem}
-  
-  /* Hide admin button on mobile/move to menu if needed */
-  .nav-right{display:none}
-  
-  /* Better Card Grid on Mobile */
-  .quick-grid{grid-template-columns:1fr}
-  .home-name{font-size:3.2rem;word-break:break-word}
-  .home-visual{transform:scale(0.85);margin-bottom:-40px}
-  .stats-row{justify-content:flex-start;gap:24px}
-}
-</style>
+    .typing-cur {
+      border-right: 2px solid var(--cyan);
+      padding-right: 3px;
+      animation: blink 1s step-end infinite
+    }
+
+    .home-bio {
+      font-size: .96rem;
+      color: var(--white-dim);
+      line-height: 1.8;
+      max-width: 500px;
+      margin-bottom: 38px;
+      opacity: 0;
+      animation: fadeUp .7s .58s ease forwards;
+    }
+
+    .home-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s .72s ease forwards;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 7px 16px;
+      background: rgba(74, 222, 128, .07);
+      border: 1px solid rgba(74, 222, 128, .2);
+      border-radius: var(--r-pill);
+      font-family: var(--f-mono);
+      font-size: .7rem;
+      color: #4ade80;
+      opacity: 0;
+      animation: fadeUp .7s .86s ease forwards;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: ping 2s ease infinite
+    }
+
+    /* STATS */
+    .stats-row {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+      margin-top: 44px;
+      padding-top: 32px;
+      border-top: 1px solid var(--glass-b);
+      opacity: 0;
+      animation: fadeUp .7s 1.0s ease forwards;
+    }
+
+    .stat-num {
+      font-family: var(--f-display);
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--blue-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-lbl {
+      font-family: var(--f-mono);
+      font-size: .67rem;
+      color: var(--white-dim);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 2px
+    }
+
+    /* RING VISUAL */
+    .home-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 1.2s .5s ease forwards
+    }
+
+    .ring-wrap {
+      position: relative;
+      width: 480px;
+      height: 480px
+    }
+
+    .ring-outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(var(--cyan), var(--blue-2), var(--blue-0), transparent 60%, var(--cyan));
+      padding: 2px;
+      animation: spinSlow 8s linear infinite;
+    }
+
+    .ring-outer-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--bg)
+    }
+
+    .ring-mid {
+      position: absolute;
+      inset: 14px;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 212, 255, .15);
+      animation: spinSlow 18s linear infinite reverse;
+    }
+
+    .ring-inner-track {
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(78, 130, 255, .08);
+    }
+
+    .avatar-core {
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #060e30, var(--bg-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(90, 150, 255, .12);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .avatar-letter {
+      font-family: var(--f-display);
+      font-size: 5.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--blue-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.15)
+    }
+
+    /* orbit dots */
+    .od {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 2;
+      top: 50%;
+      left: 50%
+    }
+
+    .od1 {
+      width: 10px;
+      height: 10px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+      animation: orbitA 8s linear infinite
+    }
+
+    .od2 {
+      width: 6px;
+      height: 6px;
+      background: var(--blue-3);
+      box-shadow: 0 0 8px var(--blue-3);
+      animation: orbitB 12s linear infinite reverse
+    }
+
+    /* float tags */
+    .ftag {
+      position: absolute;
+      padding: 6px 14px;
+      background: rgba(4, 12, 46, .8);
+      border: 1px solid var(--glass-b);
+      backdrop-filter: blur(12px);
+      border-radius: var(--r-pill);
+      font-family: var(--f-mono);
+      font-size: .68rem;
+      color: var(--cyan);
+      white-space: nowrap;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ftag i {
+      font-size: .72rem
+    }
+
+    .ftag:nth-of-type(7) {
+      top: 14%;
+      left: -4%;
+      animation: float 4s 0s ease-in-out infinite
+    }
+
+    .ftag:nth-of-type(8) {
+      top: 32%;
+      right: -9%;
+      animation: float 4s .9s ease-in-out infinite
+    }
+
+    .ftag:nth-of-type(9) {
+      bottom: 32%;
+      left: -9%;
+      animation: float 4s 1.7s ease-in-out infinite
+    }
+
+    .ftag:nth-of-type(10) {
+      bottom: 14%;
+      right: -4%;
+      animation: float 4s 2.5s ease-in-out infinite
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeIn 1s 2s ease forwards;
+    }
+
+    .scroll-hint span {
+      font-family: var(--f-mono);
+      font-size: .63rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(140, 170, 255, .4)
+    }
+
+    .scroll-hint i {
+      color: rgba(0, 212, 255, .4);
+      animation: float 2s ease-in-out infinite
+    }
+
+    /* QUICK LINKS */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px
+    }
+
+    .quick-card {
+      padding: 28px;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden
+    }
+
+    .quick-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(10, 47, 255, .04));
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .quick-card:hover::before {
+      opacity: 1
+    }
+
+    .qc-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(10, 47, 255, .3), rgba(0, 212, 255, .1));
+      border: 1px solid var(--glass-b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-3);
+      font-size: 1.1rem;
+      transition: var(--trans);
+    }
+
+    .quick-card:hover .qc-icon {
+      background: linear-gradient(135deg, rgba(10, 47, 255, .5), rgba(0, 212, 255, .2));
+      color: var(--cyan);
+      border-color: rgba(0, 212, 255, .3)
+    }
+
+    .qc-title {
+      font-family: var(--f-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .qc-desc {
+      font-size: .84rem;
+      color: var(--white-dim);
+      line-height: 1.65
+    }
+
+    .qc-arr {
+      margin-top: 14px;
+      font-family: var(--f-mono);
+      font-size: .7rem;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .quick-card:hover .qc-arr {
+      opacity: 1
+    }
+
+    /* MOBILE NAV */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001
+    }
+
+    /* TABLET OPTIMIZATION */
+    @media(max-width:1024px) {
+      .home-grid {
+        gap: 30px
+      }
+
+      .home-name {
+        font-size: 4rem
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:768px) {
+      #home-section {
+        padding: 20px 22px 20px;
+        min-height: auto
+      }
+
+      .home-grid {
+        grid-template-columns: 1fr;
+        gap: 40px
+      }
+
+      .home-visual {
+        order: -1
+      }
+
+      .ring-wrap {
+        width: 240px;
+        height: 240px
+      }
+
+      .avatar-letter {
+        font-size: 3.8rem
+      }
+
+      /* Hide admin button on mobile/move to menu if needed */
+      .nav-right {
+        display: none
+      }
+
+      /* Better Card Grid on Mobile */
+      .quick-grid {
+        grid-template-columns: 1fr
+      }
+
+      .home-name {
+        font-size: 3.2rem;
+        word-break: break-word
+      }
+
+      .home-visual {
+        transform: scale(0.85);
+        margin-bottom: -40px
+      }
+
+      .stats-row {
+        justify-content: flex-start;
+        gap: 24px
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="cursor"></div><div id="cursor-ring"></div>
-<canvas id="bg-canvas"></canvas>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <canvas id="bg-canvas"></canvas>
 
-<!-- USER NAVBAR -->
-<nav id="user-nav">
-  <a class="nav-logo" href="index.html">nayl-aSpace</a>
-  <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="index.html"><i class="fa-solid fa-house"></i>Home</a></li>
-    <li><a href="pages/projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
-    <li><a href="pages/skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
-    <li><a href="pages/messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
-    <li><a href="pages/interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
-  </ul>
-</nav>
+  <!-- USER NAVBAR -->
+  <nav id="user-nav">
+    <a class="nav-logo" href="index.html">nayl-aSpace</a>
+    <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+      <li><a href="pages/projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="pages/skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
+      <li><a href="pages/messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
+      <li><a href="pages/interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
+    </ul>
+  </nav>
 
-<div class="page-content">
-<!-- ── HERO ── -->
-<section id="home-section">
-  <div class="home-grid">
-    <!-- TEXT -->
-    <div>
-      <p class="eyebrow"><span class="eyebrow-line"></span>Portfolio · 2026</p>
-      <h1 class="home-name"><span class="grad">nayl-aSpace</span></h1>
-      <p class="home-role">// <span id="typing" class="typing-cur"></span></p>
-      <p class="home-bio" id="bio-text">Rewriting the scenario, one line of code at a time. A creative technologist dedicated to reaching the perfect epilogue for every project. I build worlds for the reader behind the screen.</p>
-      <div class="home-cta">
-        <a href="pages/projects.html" class="btn-primary"><i class="fa-solid fa-rocket"></i>See My Work</a>
-        <a href="pages/interests.html" class="btn-ghost"><i class="fa-solid fa-user-astronaut"></i>About Me</a>
-      </div>
-      <div class="status-badge"><div class="status-dot"></div>Open to opportunities &amp; collabs</div>
-      <div class="stats-row">
-        <div class="stat"><div class="stat-num" id="s-proj">5+</div><div class="stat-lbl"><i class="fa-solid fa-code" style="margin-right:4px;font-size:.6rem"></i>Projects</div></div>
-        <div class="stat"><div class="stat-num">10+</div><div class="stat-lbl"><i class="fa-solid fa-layer-group" style="margin-right:4px;font-size:.6rem"></i>Tech Stack</div></div>
-        <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl"><i class="fa-solid fa-infinity" style="margin-right:4px;font-size:.6rem"></i>Curiosity</div></div>
-      </div>
-    </div>
-
-    <!-- RING VISUAL -->
-    <div class="home-visual">
-      <div class="ring-wrap">
-        <div class="ring-outer"><div class="ring-outer-fill"></div></div>
-        <div class="ring-mid"></div>
-        <div class="ring-inner-track"></div>
-        <div class="avatar-core">
-          <img src="../images/nay-pic-2.png" alt="Profile" class="avatar-img">
+  <div class="page-content">
+    <!-- ── HERO ── -->
+    <section id="home-section">
+      <div class="home-grid">
+        <!-- TEXT -->
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span>Portfolio · 2026</p>
+          <h1 class="home-name"><span class="grad">nayl-aSpace</span></h1>
+          <p class="home-role">// <span id="typing" class="typing-cur"></span></p>
+          <p class="home-bio" id="bio-text">Rewriting the scenario, one line of code at a time. A creative technologist
+            dedicated to reaching the perfect epilogue for every project. I build worlds for the reader behind the
+            screen.</p>
+          <div class="home-cta">
+            <a href="pages/projects.html" class="btn-primary"><i class="fa-solid fa-rocket"></i>See My Work</a>
+            <a href="pages/interests.html" class="btn-ghost"><i class="fa-solid fa-user-astronaut"></i>About Me</a>
+          </div>
+          <div class="status-badge">
+            <div class="status-dot"></div>Open to opportunities &amp; collabs
+          </div>
+          <div class="stats-row">
+            <div class="stat">
+              <div class="stat-num" id="s-proj">5+</div>
+              <div class="stat-lbl"><i class="fa-solid fa-code" style="margin-right:4px;font-size:.6rem"></i>Projects
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">10+</div>
+              <div class="stat-lbl"><i class="fa-solid fa-layer-group" style="margin-right:4px;font-size:.6rem"></i>Tech
+                Stack</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">∞</div>
+              <div class="stat-lbl"><i class="fa-solid fa-infinity"
+                  style="margin-right:4px;font-size:.6rem"></i>Curiosity</div>
+            </div>
+          </div>
         </div>
-        <div class="od od1"></div>
-        <div class="od od2"></div>
-        <div class="ftag"><i class="fa-brands fa-react"></i>AI Integration</div>
-        <div class="ftag"><i class="fa-solid fa-pen-nib"></i>Figma</div>
-        <div class="ftag"><i class="fa-solid fa-gamepad"></i>Unity</div>
-        <div class="ftag"><i class="fa-solid fa-robot"></i>Web Dev</div>
+
+        <!-- RING VISUAL -->
+        <div class="home-visual">
+          <div class="ring-wrap">
+            <div class="ring-outer">
+              <div class="ring-outer-fill"></div>
+            </div>
+            <div class="ring-mid"></div>
+            <div class="ring-inner-track"></div>
+            <div class="avatar-core">
+              <img src="../images/nay-pic-2.png" alt="Profile" class="avatar-img">
+            </div>
+            <div class="od od1"></div>
+            <div class="od od2"></div>
+            <div class="ftag"><i class="fa-brands fa-react"></i>AI Integration</div>
+            <div class="ftag"><i class="fa-solid fa-pen-nib"></i>Figma</div>
+            <div class="ftag"><i class="fa-solid fa-gamepad"></i>Unity</div>
+            <div class="ftag"><i class="fa-solid fa-robot"></i>Web Dev</div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- ── QUICK LINKS ── -->
+    <section style="position:relative;z-index:2;padding-bottom:90px">
+      <div class="section-wrap" style="padding-top:0">
+        <div class="quick-grid">
+          <a href="pages/projects.html" class="gc quick-card reveal">
+            <div class="qc-icon"><i class="fa-solid fa-rocket"></i></div>
+            <div class="qc-title">My Projects</div>
+            <div class="qc-desc">Web apps, games, mobile — things I've actually shipped and deployed.</div>
+            <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Browse projects</div>
+          </a>
+          <a href="pages/skills.html" class="gc quick-card reveal">
+            <div class="qc-icon"><i class="fa-solid fa-brain"></i></div>
+            <div class="qc-title">Skills & Stack</div>
+            <div class="qc-desc">Full stack, design, game dev, AI integration — the whole arsenal.</div>
+            <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>View skills</div>
+          </a>
+          <a href="pages/interests.html" class="gc quick-card reveal">
+            <div class="qc-icon"><i class="fa-solid fa-heart"></i></div>
+            <div class="qc-title">Interests</div>
+            <div class="qc-desc">Anime, manhwa, movies, games — my whole personality, honestly.</div>
+            <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Explore</div>
+          </a>
+          <a href="pages/messages.html" class="gc quick-card reveal">
+            <div class="qc-icon"><i class="fa-solid fa-paper-plane"></i></div>
+            <div class="qc-title">Drop a Message</div>
+            <div class="qc-desc">Leave a note, share a thought, or just say hi on the public wall.</div>
+            <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Write something</div>
+          </a>
+        </div>
+      </div>
+    </section>
   </div>
-</section>
 
-<!-- ── QUICK LINKS ── -->
-<section style="position:relative;z-index:2;padding-bottom:90px">
-  <div class="section-wrap" style="padding-top:0">
-    <div class="quick-grid">
-      <a href="pages/projects.html" class="gc quick-card reveal">
-        <div class="qc-icon"><i class="fa-solid fa-rocket"></i></div>
-        <div class="qc-title">My Projects</div>
-        <div class="qc-desc">Web apps, games, mobile — things I've actually shipped and deployed.</div>
-        <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Browse projects</div>
-      </a>
-      <a href="pages/skills.html" class="gc quick-card reveal">
-        <div class="qc-icon"><i class="fa-solid fa-brain"></i></div>
-        <div class="qc-title">Skills & Stack</div>
-        <div class="qc-desc">Full stack, design, game dev, AI integration — the whole arsenal.</div>
-        <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>View skills</div>
-      </a>
-      <a href="pages/interests.html" class="gc quick-card reveal">
-        <div class="qc-icon"><i class="fa-solid fa-heart"></i></div>
-        <div class="qc-title">Interests</div>
-        <div class="qc-desc">Anime, manhwa, movies, games — my whole personality, honestly.</div>
-        <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Explore</div>
-      </a>
-      <a href="pages/messages.html" class="gc quick-card reveal">
-        <div class="qc-icon"><i class="fa-solid fa-paper-plane"></i></div>
-        <div class="qc-title">Drop a Message</div>
-        <div class="qc-desc">Leave a note, share a thought, or just say hi on the public wall.</div>
-        <div class="qc-arr"><i class="fa-solid fa-arrow-right"></i>Write something</div>
-      </a>
-    </div>
-  </div>
-</section>
-</div>
+  <footer>
+    <p>
+      <span class="accent">✦</span> · crafted by <span class="accent" title="Click 3x for Admin">nayl-aSpace</span> ·
+      <span class="accent">✦</span>
+      <a href="pages/admin.html"
+        style="opacity:0.1;color:inherit;text-decoration:none;margin-left:8px;font-size:0.7rem;transition:opacity 0.3s"
+        onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.1"><i class="fa-solid fa-lock"></i></a>
+    </p>
+  </footer>
+  <div id="toast"></div>
 
-<footer><p> <span class="accent">✦</span> · crafted by <span class="accent">nayl-aSpace</span> ·  <span class="accent">✦</span> </p></footer>
-<div id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/script.js"></script>
+  <script>
+    // Mobile Menu handled by script.js now
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/script.js"></script>
-<script>
-// Mobile Menu handled by script.js now
+    // Typing effect
+    const roles = ['Full Stack Developer', 'UI/UX Designer', 'Game Dev Enthusiast', 'Creative Technologist', 'AI Integrator'];
+    let ri = 0, ci = 0, del = false;
+    const tel = document.getElementById('typing');
+    (function type() {
+      const c = roles[ri];
+      tel.textContent = del ? c.slice(0, --ci) : c.slice(0, ++ci);
+      if (!del && ci === c.length) { del = true; setTimeout(type, 2000); return }
+      if (del && ci === 0) { del = false; ri = (ri + 1) % roles.length }
+      setTimeout(type, del ? 52 : 88);
+    })();
 
-// Typing effect
-const roles=['Full Stack Developer','UI/UX Designer','Game Dev Enthusiast','Creative Technologist','AI Integrator'];
-let ri=0,ci=0,del=false;
-const tel=document.getElementById('typing');
-(function type(){
-  const c=roles[ri];
-  tel.textContent=del?c.slice(0,--ci):c.slice(0,++ci);
-  if(!del&&ci===c.length){del=true;setTimeout(type,2000);return}
-  if(del&&ci===0){del=false;ri=(ri+1)%roles.length}
-  setTimeout(type,del?52:88);
-})();
+    // Update stat
+    const lp = LS.get('projects', []);
+    if (lp.length) document.getElementById('s-proj').textContent = lp.length + '+';
 
-// Update stat
-const lp=LS.get('projects',[]);
-if(lp.length) document.getElementById('s-proj').textContent=lp.length+'+';
-
-// Bio from LS
-const bio=localStorage.getItem('ns_bio');
-if(bio) document.getElementById('bio-text').textContent=bio;
-</script>
+    // Bio from LS
+    const bio = localStorage.getItem('ns_bio');
+    if (bio) document.getElementById('bio-text').textContent = bio;
+  </script>
 </body>
+
 </html>

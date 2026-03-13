@@ -1,178 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nayl-aSpace · Skills</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
-<link rel="stylesheet" href="../assets/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-.hero-band{padding:calc(var(--nav-h)+50px) 52px 50px;background:radial-gradient(ellipse at top, rgba(10,47,255,0.12), transparent 70%);position:relative;z-index:2}
-.skills-grid-wrap{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.skill-cat{
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-lg);padding:28px;transition:var(--trans);
-}
-.skill-cat:hover{border-color:var(--glass-b-hi);box-shadow:0 12px 48px rgba(0,40,200,.2);transform:translateY(-4px)}
-.cat-header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
-.cat-icon-wrap{
-  width:46px;height:46px;border-radius:13px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.15rem;border:1px solid var(--glass-b);
-}
-.cat-icon-web{background:linear-gradient(135deg,rgba(10,47,255,.35),rgba(0,212,255,.15));color:var(--blue-2)}
-.cat-icon-be{background:linear-gradient(135deg,rgba(0,150,80,.3),rgba(74,222,128,.1));color:#4ade80}
-.cat-icon-design{background:linear-gradient(135deg,rgba(236,72,153,.25),rgba(251,191,36,.1));color:#f472b6}
-.cat-icon-game{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(167,139,250,.1));color:#a78bfa}
-.cat-name{font-family:var(--f-display);font-size:1.05rem;font-weight:700}
-.chips{display:flex;flex-wrap:wrap;gap:9px}
-.skill-chip{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 13px;
-  background:rgba(10,47,255,.14);border:1px solid rgba(78,130,255,.18);
-  border-radius:var(--r-pill);
-  font-family:var(--f-mono);font-size:.7rem;color:var(--blue-3);
-  cursor:default;transition:var(--trans);
-}
-.skill-chip i{font-size:.72rem}
-.skill-chip:hover{background:rgba(10,47,255,.28);border-color:var(--cyan);color:var(--cyan);transform:scale(1.06)}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nayl-aSpace · Skills</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .hero-band {
+      padding: calc(var(--nav-h)+50px) 52px 50px;
+      background: radial-gradient(ellipse at top, rgba(10, 47, 255, 0.12), transparent 70%);
+      position: relative;
+      z-index: 2
+    }
 
-/* LEARNING */
-.learning-box{
-  margin-top:52px;padding:32px;
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-lg);backdrop-filter:blur(20px);
-}
-.learning-title{font-family:var(--f-display);font-size:1.15rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:10px}
-.learning-title i{color:var(--cyan);font-size:1rem}
-.learning-sub{font-family:var(--f-mono);font-size:.7rem;color:var(--cyan);margin-bottom:20px}
-.learning-list{display:flex;flex-wrap:wrap;gap:12px}
-.learn-item{
-  display:flex;align-items:center;gap:9px;
-  padding:9px 16px;
-  background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.16);
-  border-radius:var(--r-pill);font-family:var(--f-mono);font-size:.72rem;color:var(--cyan);
-}
-.learn-item i{font-size:.75rem}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:ping 2s ease infinite;flex-shrink:0}
+    .skills-grid-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px
+    }
 
-/* MOBILE NAV */
-.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.5rem;cursor:pointer;z-index:1001}
+    .skill-cat {
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-lg);
+      padding: 28px;
+      transition: var(--trans);
+    }
 
-@media(max-width:768px){
-  .hero-band{padding:0px 22px 0px}
-  .nav-right{display:none}
-  
-  .skills-grid-wrap{grid-template-columns:1fr}
-}
-</style>
+    .skill-cat:hover {
+      border-color: var(--glass-b-hi);
+      box-shadow: 0 12px 48px rgba(0, 40, 200, .2);
+      transform: translateY(-4px)
+    }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px
+    }
+
+    .cat-icon-wrap {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      border: 1px solid var(--glass-b);
+    }
+
+    .cat-icon-web {
+      background: linear-gradient(135deg, rgba(10, 47, 255, .35), rgba(0, 212, 255, .15));
+      color: var(--blue-2)
+    }
+
+    .cat-icon-be {
+      background: linear-gradient(135deg, rgba(0, 150, 80, .3), rgba(74, 222, 128, .1));
+      color: #4ade80
+    }
+
+    .cat-icon-design {
+      background: linear-gradient(135deg, rgba(236, 72, 153, .25), rgba(251, 191, 36, .1));
+      color: #f472b6
+    }
+
+    .cat-icon-game {
+      background: linear-gradient(135deg, rgba(124, 58, 237, .3), rgba(167, 139, 250, .1));
+      color: #a78bfa
+    }
+
+    .cat-name {
+      font-family: var(--f-display);
+      font-size: 1.05rem;
+      font-weight: 700
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px
+    }
+
+    .skill-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      background: rgba(10, 47, 255, .14);
+      border: 1px solid rgba(78, 130, 255, .18);
+      border-radius: var(--r-pill);
+      font-family: var(--f-mono);
+      font-size: .7rem;
+      color: var(--blue-3);
+      cursor: default;
+      transition: var(--trans);
+    }
+
+    .skill-chip i {
+      font-size: .72rem
+    }
+
+    .skill-chip:hover {
+      background: rgba(10, 47, 255, .28);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: scale(1.06)
+    }
+
+    /* LEARNING */
+    .learning-box {
+      margin-top: 52px;
+      padding: 32px;
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-lg);
+      backdrop-filter: blur(20px);
+    }
+
+    .learning-title {
+      font-family: var(--f-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .learning-title i {
+      color: var(--cyan);
+      font-size: 1rem
+    }
+
+    .learning-sub {
+      font-family: var(--f-mono);
+      font-size: .7rem;
+      color: var(--cyan);
+      margin-bottom: 20px
+    }
+
+    .learning-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .learn-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 16px;
+      background: rgba(0, 212, 255, .06);
+      border: 1px solid rgba(0, 212, 255, .16);
+      border-radius: var(--r-pill);
+      font-family: var(--f-mono);
+      font-size: .72rem;
+      color: var(--cyan);
+    }
+
+    .learn-item i {
+      font-size: .75rem
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: ping 2s ease infinite;
+      flex-shrink: 0
+    }
+
+    /* MOBILE NAV */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001
+    }
+
+    @media(max-width:768px) {
+      .hero-band {
+        padding: 0px 22px 0px
+      }
+
+      .nav-right {
+        display: none
+      }
+
+      .skills-grid-wrap {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="cursor"></div><div id="cursor-ring"></div>
-<canvas id="bg-canvas"></canvas>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <canvas id="bg-canvas"></canvas>
 
-<nav id="user-nav">
-  <a class="nav-logo" href="../index.html">nayl-aSpace</a>
-  <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
-    <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
-    <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
-    <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
-    <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
-  </ul>
-</nav>
+  <nav id="user-nav">
+    <a class="nav-logo" href="../index.html">nayl-aSpace</a>
+    <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+      <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
+      <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
+      <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
+    </ul>
+  </nav>
 
-<div class="page-content">
-<div class="hero-band">
-  <div style="max-width:1180px;margin:0 auto">
-    <p class="section-label reveal"><i class="fa-solid fa-brain"></i>What I Know</p>
-    <h1 class="section-title reveal"><span class="grad">Skills & Tech Stack</span></h1>
+  <div class="page-content">
+    <div class="hero-band">
+      <div style="max-width:1180px;margin:0 auto">
+        <p class="section-label reveal"><i class="fa-solid fa-brain"></i>What I Know</p>
+        <h1 class="section-title reveal"><span class="grad">Skills & Tech Stack</span></h1>
+      </div>
+    </div>
+
+    <div class="section-wrap" style="padding-top:0">
+      <div class="skills-grid-wrap">
+
+        <div class="skill-cat reveal">
+          <div class="cat-header">
+            <div class="cat-icon-wrap cat-icon-web"><i class="fa-solid fa-globe"></i></div>
+            <div class="cat-name">Web Development</div>
+          </div>
+          <div class="chips">
+            <span class="skill-chip"><i class="fa-brands fa-html5"></i>HTML</span>
+            <span class="skill-chip"><i class="fa-brands fa-css3-alt"></i>CSS</span>
+            <span class="skill-chip"><i class="fa-brands fa-js"></i>JavaScript</span>
+            <span class="skill-chip"><i class="fa-brands fa-php"></i>PHP</span>
+            <span class="skill-chip"><i class="fa-solid fa-n"></i>Next.js</span>
+            <span class="skill-chip"><i class="fa-brands fa-react"></i>React</span>
+            <span class="skill-chip"><i class="fa-brands fa-vuejs"></i>Vue</span>
+          </div>
+        </div>
+
+        <div class="skill-cat reveal">
+          <div class="cat-header">
+            <div class="cat-icon-wrap cat-icon-be"><i class="fa-solid fa-server"></i></div>
+            <div class="cat-name">Backend & Data</div>
+          </div>
+          <div class="chips">
+            <span class="skill-chip"><i class="fa-brands fa-node-js"></i>Node.js</span>
+            <span class="skill-chip"><i class="fa-brands fa-python"></i>Python</span>
+            <span class="skill-chip"><i class="fa-solid fa-database"></i>SQL</span>
+            <span class="skill-chip"><i class="fa-solid fa-bolt"></i>Supabase</span>
+            <span class="skill-chip"><i class="fa-solid fa-plug"></i>REST API</span>
+            <span class="skill-chip"><i class="fa-solid fa-robot"></i>AI Integration</span>
+          </div>
+        </div>
+
+        <div class="skill-cat reveal">
+          <div class="cat-header">
+            <div class="cat-icon-wrap cat-icon-design"><i class="fa-solid fa-pen-ruler"></i></div>
+            <div class="cat-name">Design</div>
+          </div>
+          <div class="chips">
+            <span class="skill-chip"><i class="fa-brands fa-figma"></i>Figma</span>
+            <span class="skill-chip"><i class="fa-solid fa-palette"></i>Canva</span>
+            <span class="skill-chip"><i class="fa-solid fa-layer-group"></i>UI/UX</span>
+            <span class="skill-chip"><i class="fa-solid fa-vector-square"></i>Graphic Design</span>
+            <span class="skill-chip"><i class="fa-solid fa-pencil"></i>Drawing</span>
+            <span class="skill-chip"><i class="fa-solid fa-object-group"></i>Interface Design</span>
+          </div>
+        </div>
+
+        <div class="skill-cat reveal">
+          <div class="cat-header">
+            <div class="cat-icon-wrap cat-icon-game"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="cat-name">Mobile & Game Dev</div>
+          </div>
+          <div class="chips">
+            <span class="skill-chip"><i class="fa-brands fa-android"></i>Kotlin</span>
+            <span class="skill-chip"><i class="fa-solid fa-mobile-screen"></i>Android Dev</span>
+            <span class="skill-chip"><i class="fa-solid fa-cube"></i>Unity</span>
+            <span class="skill-chip"><i class="fa-solid fa-hashtag"></i>C#</span>
+            <span class="skill-chip"><i class="fa-solid fa-dice"></i>Game Dev</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="learning-box reveal">
+        <div class="learning-title"><i class="fa-solid fa-graduation-cap"></i>Currently Exploring</div>
+        <div class="learning-sub">// always leveling up — these are on the radar</div>
+        <div class="learning-list">
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="fa-solid fa-brain"></i>Advanced AI Integration
+          </div>
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="fa-solid fa-cube"></i>Three.js / WebGL
+          </div>
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="fa-solid fa-diagram-project"></i>System Design
+          </div>
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="fa-solid fa-gears"></i>DevOps & CI/CD
+          </div>
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="fa-solid fa-users"></i>Multiplayer Game Dev
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="section-wrap" style="padding-top:0">
-  <div class="skills-grid-wrap">
-
-    <div class="skill-cat reveal">
-      <div class="cat-header">
-        <div class="cat-icon-wrap cat-icon-web"><i class="fa-solid fa-globe"></i></div>
-        <div class="cat-name">Web Development</div>
-      </div>
-      <div class="chips">
-        <span class="skill-chip"><i class="fa-brands fa-html5"></i>HTML</span>
-        <span class="skill-chip"><i class="fa-brands fa-css3-alt"></i>CSS</span>
-        <span class="skill-chip"><i class="fa-brands fa-js"></i>JavaScript</span>
-        <span class="skill-chip"><i class="fa-brands fa-php"></i>PHP</span>
-        <span class="skill-chip"><i class="fa-solid fa-n"></i>Next.js</span>
-        <span class="skill-chip"><i class="fa-brands fa-react"></i>React</span>
-        <span class="skill-chip"><i class="fa-brands fa-vuejs"></i>Vue</span>
-      </div>
-    </div>
-
-    <div class="skill-cat reveal">
-      <div class="cat-header">
-        <div class="cat-icon-wrap cat-icon-be"><i class="fa-solid fa-server"></i></div>
-        <div class="cat-name">Backend & Data</div>
-      </div>
-      <div class="chips">
-        <span class="skill-chip"><i class="fa-brands fa-node-js"></i>Node.js</span>
-        <span class="skill-chip"><i class="fa-brands fa-python"></i>Python</span>
-        <span class="skill-chip"><i class="fa-solid fa-database"></i>SQL</span>
-        <span class="skill-chip"><i class="fa-solid fa-bolt"></i>Supabase</span>
-        <span class="skill-chip"><i class="fa-solid fa-plug"></i>REST API</span>
-        <span class="skill-chip"><i class="fa-solid fa-robot"></i>AI Integration</span>
-      </div>
-    </div>
-
-    <div class="skill-cat reveal">
-      <div class="cat-header">
-        <div class="cat-icon-wrap cat-icon-design"><i class="fa-solid fa-pen-ruler"></i></div>
-        <div class="cat-name">Design</div>
-      </div>
-      <div class="chips">
-        <span class="skill-chip"><i class="fa-brands fa-figma"></i>Figma</span>
-        <span class="skill-chip"><i class="fa-solid fa-palette"></i>Canva</span>
-        <span class="skill-chip"><i class="fa-solid fa-layer-group"></i>UI/UX</span>
-        <span class="skill-chip"><i class="fa-solid fa-vector-square"></i>Graphic Design</span>
-        <span class="skill-chip"><i class="fa-solid fa-pencil"></i>Drawing</span>
-        <span class="skill-chip"><i class="fa-solid fa-object-group"></i>Interface Design</span>
-      </div>
-    </div>
-
-    <div class="skill-cat reveal">
-      <div class="cat-header">
-        <div class="cat-icon-wrap cat-icon-game"><i class="fa-solid fa-gamepad"></i></div>
-        <div class="cat-name">Mobile & Game Dev</div>
-      </div>
-      <div class="chips">
-        <span class="skill-chip"><i class="fa-brands fa-android"></i>Kotlin</span>
-        <span class="skill-chip"><i class="fa-solid fa-mobile-screen"></i>Android Dev</span>
-        <span class="skill-chip"><i class="fa-solid fa-cube"></i>Unity</span>
-        <span class="skill-chip"><i class="fa-solid fa-hashtag"></i>C#</span>
-        <span class="skill-chip"><i class="fa-solid fa-dice"></i>Game Dev</span>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="learning-box reveal">
-    <div class="learning-title"><i class="fa-solid fa-graduation-cap"></i>Currently Exploring</div>
-    <div class="learning-sub">// always leveling up — these are on the radar</div>
-    <div class="learning-list">
-      <div class="learn-item"><div class="live-dot"></div><i class="fa-solid fa-brain"></i>Advanced AI Integration</div>
-      <div class="learn-item"><div class="live-dot"></div><i class="fa-solid fa-cube"></i>Three.js / WebGL</div>
-      <div class="learn-item"><div class="live-dot"></div><i class="fa-solid fa-diagram-project"></i>System Design</div>
-      <div class="learn-item"><div class="live-dot"></div><i class="fa-solid fa-gears"></i>DevOps & CI/CD</div>
-      <div class="learn-item"><div class="live-dot"></div><i class="fa-solid fa-users"></i>Multiplayer Game Dev</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<footer><p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p></footer>
-<div id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/script.js"></script>
+  <footer>
+    <p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p>
+  </footer>
+  <div id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/script.js"></script>
 </body>
+
 </html>

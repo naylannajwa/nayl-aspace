@@ -6,10 +6,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let sb = null, sbReady = false;
 
 function initSB() {
-  if (SUPABASE_URL !== 'https://lbdonhwjewekgjdzirxp.supabase.co' && window.supabase) {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    sbReady = true;
-  }
+  // UPDATE YOUR SUPABASE CREDENTIALS HERE
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  sbReady = true;
+  console.log('✅ Supabase Ready:', sbReady);
 }
 
 // ── STORAGE HELPERS ─────────────────────────────────────
@@ -28,6 +28,7 @@ const DB = {
     const map = {
       'public_messages': { t:'public_messages', o:'created_at', d:false },
       'projects':        { t:'projects', o:'created_at', d:false },
+      'interests':       { t:'interests', o:'created_at', d:false }, // Tambahan: Fetch semua interest
       'interests_manhwa':{ t:'interests', c:'manhwa' },
       'interests_anime': { t:'interests', c:'anime' },
       'interests_movies':{ t:'interests', c:'movies' },
@@ -56,6 +57,7 @@ const DB = {
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',
+      'interests': 'interests', // Tambahan: Support save ke tabel interests umum
       'interests_manhwa':'interests',
       'interests_anime': 'interests',
       'interests_movies':'interests',
@@ -352,21 +354,43 @@ function initAdminTrigger() {
 
   if (adminTrigger) {
     adminTrigger.style.cursor = 'pointer';
-    adminTrigger.title = '...';
+    adminTrigger.title = 'Click 3x to unlock Admin';
 
-    adminTrigger.addEventListener('click', () => {
+    adminTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
       adminClickCount++;
       clearTimeout(adminClickTimer);
-      adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 1500);
+      adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 2000);
 
-      if (adminClickCount === 4) {
-        const isIndex = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
-        const adminPath = isIndex ? 'pages/admin.html' : 'admin.html';
-        toast('Admin portal unlocked!', 'ok', 'fa-key');
-        setTimeout(() => { window.location.href = adminPath; }, 800);
+      // Visual Feedback
+      adminTrigger.style.opacity = '0.5';
+      setTimeout(()=> adminTrigger.style.opacity = '1', 100);
+
+      if (adminClickCount >= 3) {
+        goToAdmin();
       }
     });
   }
+
+  // Shortcut: Ctrl + Shift + A
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      goToAdmin();
+    }
+  });
+}
+
+function goToAdmin() {
+  const isIndex = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
+  const isInPages = window.location.pathname.includes('/pages/');
+  
+  // Tentukan path relatif yang benar
+  let adminPath = 'pages/admin.html';
+  if (isInPages) adminPath = 'admin.html'; // jika dari pages/projects.html dll
+  else if (isIndex) adminPath = 'pages/admin.html'; 
+  
+  toast('Opening Admin Portal...', 'ok', 'fa-unlock');
+  setTimeout(() => { window.location.href = adminPath; }, 500);
 }
 
 // ── SOUND FX (SUBTLE POP) ─────────────────────────────────

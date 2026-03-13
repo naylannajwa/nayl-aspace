@@ -1,452 +1,1284 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nayl-aSpace · Interests</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
-<link rel="stylesheet" href="../assets/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-.hero-band{padding:calc(var(--nav-h)-50px) -52px -44px;background:radial-gradient(ellipse at top, rgba(10,47,255,0.12), transparent 70%);position:relative;z-index:2}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nayl-aSpace · Interests</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <style>
+    /* ── HERO ── */
+    .hero-band {
+      padding: calc(var(--nav-h) + 20px) 28px 0;
+      background: radial-gradient(ellipse at top, rgba(10, 47, 255, 0.12), transparent 70%);
+      position: relative;
+      z-index: 2;
+    }
 
-/* L2: TITLE CARD GRID */
-.titles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
-.title-card{
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-lg);overflow:hidden;
-  cursor:pointer;transition:var(--trans);position:relative;
-}
-.title-card:hover{border-color:var(--glass-b-hi);box-shadow:0 14px 48px rgba(0,40,200,.28);transform:translateY(-5px) scale(1.02)}
-.tc-thumb{
-  height:155px;
-  background:linear-gradient(135deg,var(--bg-mid),rgba(10,47,255,.38));
-  display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-.tc-thumb-bg{
-  position:absolute;inset:0;
-  background-image:repeating-linear-gradient(45deg,transparent,transparent 18px,rgba(30,92,255,.04) 18px,rgba(30,92,255,.04) 19px);
-}
-.tc-thumb-glow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,212,255,.1),transparent 70%)}
-.tc-icon{
-  position:relative;z-index:1;
-  width:64px;height:64px;border-radius:18px;
-  background:rgba(10,47,255,.25);border:1px solid rgba(78,130,255,.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.6rem;color:var(--blue-3);
-  transition:var(--trans);
-}
-.title-card:hover .tc-icon{background:rgba(10,47,255,.4);border-color:rgba(0,212,255,.3);color:var(--cyan)}
-.tc-badge{
-  position:absolute;top:10px;right:10px;z-index:2;
-  padding:3px 9px;background:rgba(5,15,50,.8);border:1px solid var(--glass-b);
-  border-radius:var(--r-pill);font-family:var(--f-mono);font-size:.6rem;color:var(--cyan);
-  backdrop-filter:blur(8px);display:flex;align-items:center;gap:4px;
-}
-.tc-badge i{font-size:.6rem}
-.tc-body{padding:14px}
-.tc-title{font-family:var(--f-display);font-size:.92rem;font-weight:700;margin-bottom:4px;line-height:1.3}
-.tc-meta{font-family:var(--f-mono);font-size:.66rem;color:var(--blue-3)}
+    /* ── CAT TABS ── */
+    .cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 24px;
+    }
 
-/* L3: DETAIL VIEW */
-#detail-view{display:none}
-#detail-view.open{display:block;animation:fadeUp .35s ease both}
-.detail-back{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:9px 18px;background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-pill);color:var(--white-dim);
-  font-family:var(--f-mono);font-size:.72rem;cursor:pointer;transition:var(--trans);
-  margin-bottom:28px;
-}
-.detail-back:hover{border-color:var(--cyan);color:var(--cyan)}
-.detail-layout{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:start}
-.detail-cover{
-  aspect-ratio:3/4;max-height:400px;
-  background:linear-gradient(135deg,var(--bg-mid),rgba(10,47,255,.45));
-  border-radius:var(--r-lg);border:1px solid var(--glass-b);
-  display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-.detail-cover-bg{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(30,92,255,.05) 20px,rgba(30,92,255,.05) 21px)}
-.detail-cover-glow{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(transparent,rgba(4,10,40,.85))}
-.detail-cover-icon{
-  position:relative;z-index:1;
-  width:90px;height:90px;border-radius:24px;
-  background:rgba(10,47,255,.28);border:1px solid rgba(78,130,255,.22);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.5rem;color:var(--blue-3);
-  animation:glow 3s ease-in-out infinite;
-}
-.detail-cover-imgs{margin-top:16px;display:flex;flex-direction:column;gap:8px}
-.detail-cover-img{
-  width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;
-  border:1px solid var(--glass-b);cursor:pointer;transition:var(--trans);
-}
-.detail-cover-img:hover{border-color:var(--glass-b-hi);transform:scale(1.02)}
-.detail-cover-img img{width:100%;height:100%;object-fit:cover}
+    /* ── TITLE CARDS GRID ── */
+    .titles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+    }
 
-.detail-title{font-family:var(--f-display);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
-.detail-title .grad{background:linear-gradient(135deg,#fff,var(--blue-3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.detail-meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.meta-item{font-family:var(--f-mono);font-size:.7rem;color:var(--white-dim);display:flex;align-items:center;gap:5px}
-.meta-item i{font-size:.68rem;color:var(--blue-3)}
-.meta-sep{color:rgba(140,180,255,.25)}
-.stars{display:flex;gap:2px}
-.stars i{font-size:.88rem}
-.star-full{color:#fbbf24}.star-empty{color:rgba(251,191,36,.2)}
+    .title-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--trans);
+      position: relative;
+    }
 
-.detail-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+    .title-card:hover {
+      border-color: var(--glass-b-hi);
+      box-shadow: 0 14px 48px rgba(0, 40, 200, .28);
+      transform: translateY(-5px) scale(1.02);
+    }
 
-/* FEEL SECTION */
-.feel-box{
-  padding:22px 24px;
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r);margin-bottom:22px;
-  position:relative;overflow:hidden;
-}
-.feel-box::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--cyan),var(--blue-2))}
-.feel-label{
-  font-family:var(--f-mono);font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:6px;
-}
-.feel-label i{font-size:.7rem}
-.feel-text{font-size:.92rem;color:var(--white-dim);line-height:1.82;font-style:italic}
-.feel-qmark{font-family:var(--f-display);font-size:3.5rem;color:rgba(0,212,255,.1);line-height:.5;float:left;margin-right:8px;margin-top:10px}
+    .tc-thumb {
+      height: 155px;
+      background: linear-gradient(135deg, var(--bg-mid), rgba(10, 47, 255, .38));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* MOMENTS */
-.moments-wrap{margin-bottom:22px}
-.moments-title{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--white-dim);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.moments-title i{font-size:.7rem;color:var(--blue-3)}
-.moment-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--glass-b)}
-.moment-row:last-child{border-bottom:none}
-.moment-num{font-family:var(--f-mono);font-size:.66rem;color:var(--cyan);width:22px;flex-shrink:0;padding-top:2px}
-.moment-txt{font-size:.84rem;color:var(--white-dim);line-height:1.65}
-.moment-txt strong{color:var(--white);font-weight:600}
+    .tc-thumb-bg {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(30, 92, 255, .04) 18px, rgba(30, 92, 255, .04) 19px);
+    }
 
-/* GALLERY GRID */
-.gallery-wrap{margin-top:28px}
-.gallery-label{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--white-dim);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.gallery-label i{font-size:.7rem;color:var(--blue-3)}
-.gallery-imgs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.gallery-cell{
-  aspect-ratio:1;border-radius:10px;overflow:hidden;
-  background:linear-gradient(135deg,var(--bg-mid),rgba(10,47,255,.3));
-  border:1px solid var(--glass-b);cursor:pointer;transition:var(--trans);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.9rem;color:var(--blue-3);position:relative;
-}
-.gallery-cell img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.gallery-cell:hover{border-color:var(--glass-b-hi);transform:scale(1.04)}
-.gallery-cell-lbl{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:5px;background:linear-gradient(transparent,rgba(4,10,40,.9));
-  font-family:var(--f-mono);font-size:.58rem;color:var(--white-dim);
-  text-align:center;opacity:0;transition:opacity .2s;
-}
-.gallery-cell:hover .gallery-cell-lbl{opacity:1}
+    .tc-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
 
-/* LIGHTBOX */
-#lb{position:fixed;inset:0;z-index:999;background:rgba(2,8,24,.95);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center}
-#lb.open{display:flex;animation:fadeIn .2s ease}
-#lb img{max-width:90vw;max-height:88vh;border-radius:12px;object-fit:contain}
-#lb-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:40px;height:40px;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans)}
-#lb-close:hover{background:rgba(255,255,255,.2)}
+    .tc-thumb-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0, 212, 255, .1), transparent 70%);
+    }
 
-/* MOBILE NAV & RESPONSIVE */
-.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.5rem;cursor:pointer;z-index:1001}
+    .tc-icon {
+      position: relative;
+      z-index: 1;
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: rgba(10, 47, 255, .25);
+      border: 1px solid rgba(78, 130, 255, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--blue-3);
+      transition: var(--trans);
+    }
 
-@media(max-width:900px){.detail-layout{grid-template-columns:1fr}} 
-@media(max-width:768px){
-  .hero-band{padding:0px 22px 0px}
-  .gallery-imgs-grid{grid-template-columns:repeat(2,1fr)}
-  .nav-right{display:none}
-  
-  /* Interests Specific */
-  .detail-title{font-size:1.8rem}
-  .detail-cover{max-height:300px}
-}
-</style>
+    .title-card:hover .tc-icon {
+      background: rgba(10, 47, 255, .4);
+      border-color: rgba(0, 212, 255, .3);
+      color: var(--cyan);
+    }
+
+    .tc-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      padding: 3px 9px;
+      background: rgba(5, 15, 50, .8);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-pill);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      color: var(--cyan);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tc-status-dot {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 2;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .tc-status-dot.finished {
+      background: #4ade80;
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    }
+
+    .tc-status-dot.ongoing {
+      background: #fbbf24;
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+    }
+
+    .tc-status-dot.dropped {
+      background: #f87171;
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+    }
+
+    .tc-body {
+      padding: 14px;
+    }
+
+    .tc-title {
+      font-family: 'Fraunces', serif;
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .tc-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .66rem;
+      color: var(--blue-3);
+    }
+
+    .tc-rating {
+      display: flex;
+      gap: 2px;
+      margin-top: 6px;
+    }
+
+    .tc-rating i {
+      font-size: 0.65rem;
+      color: #fbbf24;
+    }
+
+    .tc-rating i.empty {
+      color: rgba(251, 191, 36, 0.2);
+    }
+
+    /* ── DETAIL VIEW ── */
+    #detail-view {
+      display: none;
+    }
+
+    #detail-view.open {
+      display: block;
+      animation: fadeUp .35s ease both;
+    }
+
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-pill);
+      color: var(--white-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      cursor: pointer;
+      transition: var(--trans);
+      margin-bottom: 36px;
+    }
+
+    .detail-back:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ─── HERO STRIP ─── */
+    .det-hero {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      min-height: 280px;
+      display: flex;
+      align-items: flex-end;
+      background: linear-gradient(135deg, #040a28, #0a1a5c);
+      border: 1px solid var(--glass-b);
+    }
+
+    .det-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(30, 92, 255, .03) 30px, rgba(30, 92, 255, .03) 31px);
+    }
+
+    .det-hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+    }
+
+    .det-hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(4, 10, 40, 0.95) 30%, transparent 70%), linear-gradient(0deg, rgba(4, 10, 40, 0.7) 0%, transparent 50%);
+    }
+
+    .det-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 40px 48px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 36px;
+    }
+
+    .det-hero-icon-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      flex-shrink: 0;
+      background: rgba(10, 47, 255, .3);
+      border: 1px solid rgba(78, 130, 255, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      color: var(--blue-3);
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    .det-hero-info {
+      flex: 1;
+    }
+
+    .det-hero-cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .det-hero-cat::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    .det-hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 40%, var(--blue-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .det-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .det-meta-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: rgba(200, 220, 255, 0.8);
+    }
+
+    .det-meta-chip i {
+      font-size: 0.65rem;
+      color: var(--blue-3);
+    }
+
+    .det-meta-chip.status-finished {
+      border-color: rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+    }
+
+    .det-meta-chip.status-ongoing {
+      border-color: rgba(251, 191, 36, 0.3);
+      color: #fbbf24;
+    }
+
+    .det-meta-chip.status-dropped {
+      border-color: rgba(248, 113, 113, 0.3);
+      color: #f87171;
+    }
+
+    .det-hero-stars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .det-hero-stars i {
+      font-size: 1rem;
+      color: #fbbf24;
+    }
+
+    .det-hero-stars i.empty {
+      color: rgba(251, 191, 36, 0.15);
+    }
+
+    .det-hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .det-badge {
+      padding: 4px 12px;
+      background: rgba(78, 130, 255, 0.12);
+      border: 1px solid rgba(78, 130, 255, 0.25);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--blue-3);
+    }
+
+    /* ─── DETAIL BODY GRID ─── */
+    .det-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .det-body-wide {
+      grid-column: 1 / -1;
+    }
+
+    /* ─── INFO CARDS ─── */
+    .det-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .det-card:hover {
+      border-color: var(--glass-b-hi);
+    }
+
+    .det-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .det-card-label i {
+      font-size: 0.7rem;
+    }
+
+    /* Color accent bar top */
+    .det-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--cyan)), transparent);
+      opacity: 0.5;
+    }
+
+    /* FEEL / REVIEW CARD */
+    .card-feel {
+      --card-accent: #00d4ff;
+    }
+
+    .feel-quote-mark {
+      font-family: 'Fraunces', serif;
+      font-size: 5rem;
+      line-height: 0.5;
+      color: rgba(0, 212, 255, 0.1);
+      float: left;
+      margin-right: 10px;
+      margin-top: 18px;
+    }
+
+    .feel-text {
+      font-size: 0.92rem;
+      line-height: 1.85;
+      color: rgba(200, 220, 255, 0.8);
+      font-style: italic;
+    }
+
+    .feel-text p {
+      margin-bottom: 10px;
+    }
+
+    .feel-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* FAVORITE QUOTE CARD */
+    .card-quote {
+      --card-accent: #a78bfa;
+    }
+
+    .fav-quote-wrap {
+      padding: 16px 20px;
+      background: rgba(167, 139, 250, 0.06);
+      border: 1px solid rgba(167, 139, 250, 0.15);
+      border-radius: 12px;
+      border-left: 3px solid rgba(167, 139, 250, 0.5);
+    }
+
+    .fav-quote-text {
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: rgba(220, 210, 255, 0.9);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .fav-quote-from {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: rgba(167, 139, 250, 0.6);
+    }
+
+    .fav-quote-from::before {
+      content: '— ';
+    }
+
+    /* MOMENTS CARD */
+    .card-moments {
+      --card-accent: #4ade80;
+    }
+
+    .moment-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--glass-b);
+    }
+
+    .moment-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .moment-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: #4ade80;
+    }
+
+    .moment-body {}
+
+    .moment-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .moment-desc {
+      font-size: 0.82rem;
+      color: rgba(200, 220, 255, 0.6);
+      line-height: 1.6;
+    }
+
+    /* GALLERY VIBES CARD */
+    .card-gallery {
+      --card-accent: #f472b6;
+    }
+
+    .gallery-vibe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .gallery-vibe-cell {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--bg-mid), rgba(10, 47, 255, .3));
+      border: 1px solid var(--glass-b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--trans);
+      position: relative;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .gallery-vibe-cell img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-vibe-cell-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 40%, rgba(4, 10, 40, 0.85));
+    }
+
+    .gallery-vibe-cell:hover {
+      border-color: var(--glass-b-hi);
+      transform: scale(1.04);
+    }
+
+    .gallery-vibe-icon {
+      font-size: 1.4rem;
+      color: var(--blue-3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .gallery-vibe-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(200, 220, 255, 0.7);
+      text-align: center;
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* STATS / INFO MINI CARD */
+    .card-stats {
+      --card-accent: #fbbf24;
+    }
+
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass-b);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-row-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(140, 180, 255, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .stat-row-key i {
+      font-size: 0.65rem;
+      color: var(--blue-3);
+    }
+
+    .stat-row-val {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: rgba(220, 230, 255, 0.9);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .rec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .rec-must {
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+    }
+
+    .rec-good {
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: #fbbf24;
+    }
+
+    .rec-niche {
+      background: rgba(167, 139, 250, 0.12);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      color: #a78bfa;
+    }
+
+    .rec-skip {
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: #f87171;
+    }
+
+    /* COVER IMAGES CARD */
+    .card-imgs {
+      --card-accent: #60a5fa;
+    }
+
+    .imgs-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .imgs-scroll::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .imgs-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .imgs-scroll::-webkit-scrollbar-thumb {
+      background: rgba(78, 130, 255, 0.3);
+      border-radius: 2px;
+    }
+
+    .imgs-scroll-item {
+      flex-shrink: 0;
+      width: 140px;
+      height: 100px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--glass-b);
+      cursor: pointer;
+      transition: var(--trans);
+    }
+
+    .imgs-scroll-item:hover {
+      border-color: var(--glass-b-hi);
+      transform: scale(1.03);
+    }
+
+    .imgs-scroll-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* TAGS CARD */
+    .card-tags {
+      --card-accent: #38bdf8;
+    }
+
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.07);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: rgba(186, 230, 255, 0.8);
+    }
+
+    .tag-item i {
+      font-size: 0.65rem;
+      color: #38bdf8;
+    }
+
+    /* LIGHTBOX */
+    #lb {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(2, 8, 24, .95);
+      backdrop-filter: blur(16px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lb.open {
+      display: flex;
+      animation: fadeIn .2s ease;
+    }
+
+    #lb img {
+      max-width: 90vw;
+      max-height: 88vh;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    #lb-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--trans);
+    }
+
+    #lb-close:hover {
+      background: rgba(255, 255, 255, .2);
+    }
+
+    /* CAT PANEL */
+    .cat-panel {
+      display: none;
+    }
+
+    .cat-panel.active {
+      display: block;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .det-body {
+        grid-template-columns: 1fr;
+      }
+
+      .det-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 24px;
+      }
+
+      .gallery-vibe-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .titles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .det-hero {
+        min-height: 220px;
+      }
+
+      .det-hero-title {
+        font-size: 1.6rem;
+      }
+
+      .gallery-vibe-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="cursor"></div><div id="cursor-ring"></div>
-<canvas id="bg-canvas"></canvas>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <canvas id="bg-canvas"></canvas>
 
-<nav id="user-nav">
-  <a class="nav-logo" href="../index.html">nayl-aSpace</a>
-  <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
-    <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
-    <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
-    <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
-    <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
-  </ul>
-</nav>
+  <nav id="user-nav">
+    <a class="nav-logo" href="../index.html">nayl-aSpace</a>
+    <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+      <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
+      <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
+      <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
+    </ul>
+  </nav>
 
-<div class="page-content">
-<div class="hero-band">
-  <div style="max-width:1180px;margin:0 auto">
-    <p class="section-label reveal"><i class="fa-solid fa-heart"></i>What I'm Into (Fun Fact About Me Lol)</p>
-    <h1 class="section-title reveal"><span class="grad">My Interests ✦</span></h1>
-    <div class="search-box reveal">
-      <input type="text" class="search-input" id="search-input" placeholder="Search interests..." oninput="buildGrids()">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+  <div class="page-content">
+    <div class="section-wrap">
+      <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>What I'm Into (Fun Fact About Me LOL)</p>
+      <h1 class="section-title reveal"><span class="grad">Interests ✦</span></h1>
+      <div class="search-box reveal visible">
+        <input type="text" class="search-input" id="search-input" placeholder="Search interests..." oninput="buildGrids()">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      </div>
+
+        <!-- CAT VIEW -->
+        <div id="cat-view">
+          <div class="cat-tabs reveal" id="cat-tabs"></div>
+          <div id="panels-container"></div>
+        </div>
+
+        <!-- DETAIL VIEW -->
+        <div id="detail-view">
+          <div class="breadcrumb" id="det-breadcrumb"></div>
+          <button class="detail-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i>Back to list</button>
+          <div id="det-content"></div>
+        </div>
+
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="section-wrap" style="padding-top:0" id="interests-root">
+    <!-- LIGHTBOX -->
+    <div id="lb">
+      <button id="lb-close" onclick="document.getElementById('lb').classList.remove('open')"><i
+          class="fa-solid fa-xmark"></i></button>
+      <img id="lb-img" src="" alt="">
+    </div>
 
-  <!-- CAT VIEW -->
-  <div id="cat-view">
-    <div class="cat-tabs reveal" id="cat-tabs"></div>
-    <div id="panel-all" class="cat-panel"><div class="titles-grid" id="grid-all"></div></div>
-    <div id="panel-manhwa" class="cat-panel"><div class="titles-grid" id="grid-manhwa"></div></div>
-    <div id="panel-anime" class="cat-panel"><div class="titles-grid" id="grid-anime"></div></div>
-    <div id="panel-movies" class="cat-panel"><div class="titles-grid" id="grid-movies"></div></div>
-    <div id="panel-misc" class="cat-panel"><div class="titles-grid" id="grid-misc"></div></div>
-  </div>
+    <footer>
+      <p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p>
+    </footer>
+    <div id="toast"></div>
 
-  <!-- DETAIL VIEW -->
-  <div id="detail-view">
-    <div class="breadcrumb" id="det-breadcrumb"></div>
-    <button class="detail-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i>Back to list</button>
-    <div id="det-content"></div>
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/script.js"></script>
+    <script>
+      /* ══════════════════════════════════════════
+         STATIC SAMPLE DATA (will merge with DB)
+      ══════════════════════════════════════════ */
+      const STATIC_DATA = [
+        {
+          id: 'aot', title: 'Attack on Titan', icon: 'fa-solid fa-shield',
+          category: 'Anime', meta: '2013–2023 · Isayama', rating: 5,
+          genre: 'Dark Fantasy · Action', status: 'Finished',
+          recommendation: 'Must Watch',
+          fav_quote: 'If you win, you live. If you lose, you die.', fav_quote_from: 'Eren Yeager',
+          badges: ['Masterpiece', 'Dark', 'Emotional'],
+          tags: ['Dark', 'Political', 'Action', 'Philosophical'],
+          feel: `AoT hit me like a truck I didn't see coming. The moment the walls fell, something shifted — this wasn't action for action's sake, it was a statement about freedom, sacrifice, and the brutal cost of both.\n\nI finished this series feeling genuinely conflicted about every character. Eren's arc destroyed me in the best possible way. Hiroyuki Sawano's score became the permanent OST of my late-night coding sessions.`,
+          moments: [
+            { t: 'The Fall of Wall Maria', d: 'The opening 10 minutes that establish the tone of the entire series — no build-up, just immediate despair.' },
+            { t: 'Eren vs. Annie - Stohess Arc', d: 'First time the scale of individual power vs institutional rot becomes clear.' },
+            { t: 'Eren\'s basement reveal', d: 'Four seasons of foreshadowing paid off in a single conversation. Perfect storytelling.' },
+            { t: 'The Rumbling begins', d: 'The moment Eren becomes the villain. Watching the world react was chilling.' },
+          ],
+          gallery: [
+            { icon: 'fa-solid fa-music', lbl: 'Sawano OST hits different' },
+            { icon: 'fa-solid fa-chess', lbl: 'Political complexity' },
+            { icon: 'fa-solid fa-eye', lbl: 'Titan character design' },
+            { icon: 'fa-solid fa-heart-crack', lbl: 'Emotional manipulation' },
+          ],
+          images: []
+        },
+        {
+          id: 'sl', title: 'Solo Leveling', icon: 'fa-solid fa-crown',
+          category: 'Manhwa', meta: '2018–2021 · Chugong/Dubu', rating: 5,
+          genre: 'Action · Power Fantasy', status: 'Finished',
+          recommendation: 'Must Read',
+          fav_quote: 'I alone level up.', fav_quote_from: 'Sung Jinwoo',
+          badges: ['Iconic', 'Cinematic', 'Power Fantasy'],
+          tags: ['Action', 'System', 'Solo', 'Art'],
+          feel: `Solo Leveling is the manhwa that brought the medium mainstream, and for good reason. Jinwoo's progression from absolute weakest to walking god is genuinely satisfying because Chugong makes you feel every milestone.\n\nThe art by Dubu is cinematic — full color, perfect framing, action sequences that feel like film storyboards. Read it in one weekend. Zero regrets, ruined sleep schedule.`,
+          moments: [
+            { t: 'Double Dungeon — The Shadow Monarch\'s first call', d: 'The tonal shift from generic isekai to something genuinely mythic.' },
+            { t: 'Igris becomes the first shadow knight', d: 'Establishing that shadows aren\'t just NPCs — they have personality.' },
+            { t: 'Ant King fight', d: 'The most brutal extended sequence in the series. Artistically jaw-dropping.' },
+          ],
+          gallery: [
+            { icon: 'fa-solid fa-palette', lbl: 'Dubu\'s art style' },
+            { icon: 'fa-solid fa-bolt', lbl: 'System UI aesthetics' },
+            { icon: 'fa-solid fa-skull', lbl: 'Shadow Army vibes' },
+            { icon: 'fa-solid fa-fire', lbl: 'Power fantasy peak' },
+          ],
+          images: []
+        },
+        {
+          id: 'interstellar', title: 'Interstellar', icon: 'fa-solid fa-satellite',
+          category: 'Movies', meta: '2014 · Christopher Nolan', rating: 5,
+          genre: 'Sci-Fi · Drama', status: 'Watched',
+          recommendation: 'Must Watch',
+          fav_quote: 'Love is the one thing that transcends time and space.', fav_quote_from: 'Dr. Brand',
+          badges: ['Emotional', 'Mind-bending', 'Cinematic'],
+          tags: ['Space', 'Time', 'Love', 'Physics'],
+          feel: `Interstellar hit me at exactly the right moment — deep in physics and astronomy rabbit holes. The science is ambitious enough to feel real, and the emotional core (a father separated from his daughter by time) is devastating.\n\nHans Zimmer's score isn't a soundtrack, it's a co-author. The docking scene with "No Time for Caution" playing is the most technically and emotionally intense 4 minutes in cinema.`,
+          moments: [
+            { t: 'Docking scene on the Endurance', d: 'Hans Zimmer + perfect editing = heart attack inducing. Best action scene with no weapons.' },
+            { t: 'The 23 years of messages', d: 'Cooper watching decades of his kids grow up in minutes is the most devastating scene I\'ve watched.' },
+            { t: 'Tesseract sequence', d: 'Love as a fifth-dimensional force rendered visually. Insane idea, perfect execution.' },
+          ],
+          gallery: [
+            { icon: 'fa-solid fa-planet-ringed', lbl: 'Gargantua black hole' },
+            { icon: 'fa-solid fa-music', lbl: 'Zimmer\'s pipe organ score' },
+            { icon: 'fa-solid fa-clock', lbl: 'Time dilation concept' },
+            { icon: 'fa-solid fa-hand-holding-heart', lbl: 'Father-daughter bond' },
+          ],
+          images: []
+        },
+        {
+          id: 'gamedev', title: 'Game Development', icon: 'fa-solid fa-gamepad',
+          category: 'Misc', meta: 'Unity · C# · Design', rating: 5,
+          genre: 'Creative Tech', status: 'Ongoing',
+          recommendation: 'Niche Passion',
+          fav_quote: '', fav_quote_from: '',
+          badges: ['Passion', 'Creating', 'Building'],
+          tags: ['Unity', 'C#', 'Game Design', 'Procedural'],
+          feel: `Game dev is what first got me into programming, and it still feels the most magical. You're creating an entire reality — you decide the physics, the rules, the aesthetics, the narrative.\n\nUnity and C# clicked for me in a way that felt like the code was storytelling. Every system I build (enemy AI, procedural levels, dialogue trees) is just world-building through logic.`,
+          moments: [
+            { t: 'First "Hello World" game', d: 'A terrible pong clone that took 3 weeks. Best 3 weeks of my life.' },
+            { t: 'Procedural level gen working', d: 'Watching an algorithm generate playable spaces felt like watching life emerge from chaos.' },
+            { t: 'Enemy AI pathfinding clicked', d: 'A* and navmesh finally making sense at 2am. Worth every hour.' },
+          ],
+          gallery: [
+            { icon: 'fa-solid fa-cube', lbl: '3D level design' },
+            { icon: 'fa-solid fa-code', lbl: 'System architecture' },
+            { icon: 'fa-solid fa-sitemap', lbl: 'Game loops' },
+            { icon: 'fa-solid fa-wand-magic-sparkles', lbl: 'Particle effects' },
+          ],
+          images: []
+        }
+      ];
 
-</div>
-</div>
+      /* ══════════════════════════════════════════
+         STATE
+      ══════════════════════════════════════════ */
+      let activeCat = 'all';
+      let allItems = [];
 
-<!-- LIGHTBOX -->
-<div id="lb" onclick="this.classList.remove('open')">
-  <button id="lb-close"><i class="fa-solid fa-xmark"></i></button>
-  <img id="lb-img" src="" alt="">
-</div>
+      /* ══════════════════════════════════════════
+         LOAD & MERGE DATA
+      ══════════════════════════════════════════ */
+      async function loadAllInterests() {
+        let dbItems = [];
+        try { dbItems = await DB.get('interests'); } catch (e) { }
+        // Merge: DB items override static by ID
+        const merged = [...STATIC_DATA];
+        dbItems.forEach(di => {
+          const idx = merged.findIndex(s => s.id === di.id);
+          if (idx >= 0) merged[idx] = di;
+          else merged.push(di);
+        });
+        allItems = merged;
+        buildCatTabs();
+        buildGrids();
+        switchCat('all');
+      }
 
-<footer><p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p></footer>
-<div id="toast"></div>
+      /* ══════════════════════════════════════════
+         BUILD TABS (dynamic categories)
+      ══════════════════════════════════════════ */
+      function buildCatTabs() {
+        const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
+        const bar = document.getElementById('cat-tabs');
+        const container = document.getElementById('panels-container');
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/script.js"></script>
-<script>
-// ── DATA ───────────────────────────────────────────────────────────────────
-const CATS = {
-  manhwa: { label:'Manhwa',  icon:'fa-solid fa-book-open', faIcon:'<i class="fa-solid fa-book-open"></i>' },
-  anime:  { label:'Anime',   icon:'fa-solid fa-sword',    faIcon:'<i class="fa-solid fa-user-ninja"></i>' },
-  movies: { label:'Movies',  icon:'fa-solid fa-film',      faIcon:'<i class="fa-solid fa-film"></i>' },
-  misc:   { label:'Misc',    icon:'fa-solid fa-star',      faIcon:'<i class="fa-solid fa-star"></i>' },
-};
-// Overwriting the const CATS with this order in the code below.
+        bar.innerHTML = cats.map((cat, idx) => {
+          const count = cat === 'all' ? allItems.length : allItems.filter(i => (i.category || 'Misc') === cat).length;
+          const icons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
+          const icon = cat === 'all' ? 'fa-solid fa-border-all' : (icons[cat] || 'fa-solid fa-tag');
+          return `<button class="filter-btn ${idx === 0 ? 'active' : ''}" data-cat="${cat}" onclick="switchCat('${cat}',this)">
+        <i class="${icon}"></i>${cat === 'all' ? 'All' : cat}<span class="cat-count">${count}</span>
+      </button>`;
+        }).join('');
 
-const DATA = {
-  anime:[
-    {id:'aot',title:'Attack on Titan',icon:'fa-solid fa-shield',meta:'2013–2023 · Isayama',rating:5,genre:'Dark Fantasy',badges:['Masterpiece','Dark'],
-     feel:`Reading AoT hit me like a truck I didn't see coming. The moment the walls fell, something shifted — this wasn't action for action's sake, it was a statement about freedom, sacrifice, and the brutal cost of both. I finished this series feeling genuinely conflicted about every character. Eren's arc destroyed me in the best possible way. Hiroyuki Sawano's score became the permanent OST of my late-night coding sessions.`,images:[]},
+        // Build panels
+        container.innerHTML = cats.map((cat, idx) => `
+      <div class="cat-panel ${idx === 0 ? 'active' : ''}" id="panel-${cat.toLowerCase().replace(/\s+/g, '-')}">
+        <div class="titles-grid" id="grid-${cat.toLowerCase().replace(/\s+/g, '-')}"></div>
+      </div>
+    `).join('');
+      }
 
-    {id:'sg',title:'Steins;Gate',icon:'fa-solid fa-flask',meta:'2011 · 5pb./White Fox',rating:5,genre:'Sci-Fi Thriller',badges:['Mind-bending','Emotional'],
-     feel:`Steins;Gate is the only piece of media that made me feel like a programmer while watching it. The logic of time loops, the weight of every choice, the dread of knowing what has to happen. Okabe Rintaro is one of the best written protagonists ever. And Mayuri's fate... I actually teared up. This is what fiction should do — make the impossible feel real and consequential.`,images:[]},
+      /* ══════════════════════════════════════════
+         BUILD GRIDS
+      ══════════════════════════════════════════ */
+      function buildGrids() {
+        const q = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
+        const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
 
-    {id:'hxh',title:'Hunter x Hunter',icon:'fa-solid fa-sparkles',meta:'2011 · Togashi / Madhouse',rating:5,genre:'Action/Psychological',badges:['Masterpiece','Subversive'],
-     feel:`HxH consistently subverts every shonen trope it sets up — that's what makes it transcendent. Gon is a protagonist who's genuinely terrifying under the surface. Killua's arc is the emotional core. The Chimera Ant arc is the longest, strangest, most philosophical thing I've watched in animation — and somehow it's the best arc. Togashi writing commentary on death, evolution, and humanity through giant ants? Unhinged genius.`,images:[]},
-  ],
+        cats.forEach(cat => {
+          const gridId = 'grid-' + cat.toLowerCase().replace(/\s+/g, '-');
+          const grid = document.getElementById(gridId);
+          if (!grid) return;
 
-  manhwa:[
-    {id:'sl',title:'Solo Leveling',icon:'fa-solid fa-crown',meta:'2018–2021 · Chugong/Dubu',rating:5,genre:'Action/Fantasy',badges:['Power Fantasy','Iconic'],
-     feel:`Solo Leveling is the manhwa that brought the medium mainstream, and for good reason. Jinwoo's progression from absolute weakest to walking god is genuinely satisfying because Chugong makes you feel every milestone. The art by Dubu is cinematic — full color, perfect framing, action sequences that feel like film storyboards. Read it in one weekend sitting. Zero regrets, ruined sleep schedule.`,images:[]},
+          let items = cat === 'all' ? allItems : allItems.filter(i => (i.category || 'Misc') === cat);
+          if (q) items = items.filter(i => i.title.toLowerCase().includes(q) || (i.meta || '').toLowerCase().includes(q) || (i.genre || '').toLowerCase().includes(q));
 
-    {id:'orv',title:'Omniscient Reader',icon:'fa-solid fa-book',meta:'2020– · sing N song/UMI',rating:5,genre:'Meta Fantasy',badges:['Meta','Emotional'],
-     feel:`ORV is something I was not prepared for. It starts as meta-fiction about a reader who knows every plot beat of a novel, then slowly destroys you emotionally because Kim Dokja's whole thing is that he's spent his life knowing how stories go but never being the protagonist. The climax reveals made me stare at the ceiling. Dokja and Joongkil's dynamic is the best in all of manhwa, full stop.`,images:[]},
-  ],
+          if (!items.length) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace;font-size:0.8rem">No results for "${q}"</div>`;
+            return;
+          }
+          grid.innerHTML = items.map(item => renderTitleCard(item)).join('');
+        });
+        setTimeout(initReveal, 50);
+      }
 
-  movies:[
-    {id:'interstellar',title:'Interstellar',icon:'fa-solid fa-planet-ringed',meta:'2014 · Christopher Nolan',rating:5,genre:'Sci-Fi Drama',badges:['Emotional','Mind-bending'],
-     feel:`Interstellar hit me at exactly the right moment — deep in physics and astronomy rabbit holes. The science is ambitious enough to feel real, and the emotional core (a father separated from his daughter by time) is devastating. Hans Zimmer's score isn't a soundtrack, it's a co-author. The docking scene with No Time for Caution playing is the most technically and emotionally intense 4 minutes in cinema. I sat in my car for 20 minutes after the theater.`,images:[]},
+      function renderTitleCard(item) {
+        const statusClass = { Finished: 'finished', Watched: 'finished', Ongoing: 'ongoing', Reading: 'ongoing', Dropped: 'dropped' };
+        const sc = statusClass[item.status] || '';
+        const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
+        const thumbImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" loading="lazy">` : '';
 
-    {id:'exmachina',title:'Ex Machina',icon:'fa-solid fa-robot',meta:'2014 · Alex Garland',rating:5,genre:'Sci-Fi Thriller',badges:['Unsettling','Brilliant'],
-     feel:`Ex Machina as a developer who works with AI is genuinely uncomfortable — and that's exactly why I love it. Garland's script is a Turing test conducted on the audience. By the end you're not sure who was being manipulated. Alicia Vikander's Ava is the best AI portrayal in film history. The final sequence destroyed me. This film made me think deeply about anthropomorphization, consciousness, and the ethics of creating intelligence. Required viewing if you code.`,images:[]},
-  ],
-
-  misc:[
-    {id:'gamedev',title:'Game Development',icon:'fa-solid fa-gamepad',meta:'Unity · C# · Design',rating:5,genre:'Creative Tech',badges:['Passion','Creating'],
-     feel:`Game dev is what first got me into programming, and it still feels the most magical. You're creating an entire reality — you decide the physics, the rules, the aesthetics, the narrative. Unity and C# clicked for me in a way that felt like the code was storytelling. Every system I build (enemy AI, procedural levels, dialogue trees) is just world-building through logic. I enjoy the pain of debugging physics colliders at 2am. Character development fr.`,images:[]},
-
-    {id:'drawing',title:'Digital Art',icon:'fa-solid fa-pencil',meta:'Illustration · Character Design',rating:4,genre:'Visual Art',badges:['Therapeutic','Creative'],
-     feel:`Drawing is how I decompress when code has been messy all day. There's no compiler error in art — just choices. I started learning digital illustration to make better UI mockups and it became its own thing. Character design is fascinating because you're communicating personality entirely through visual shorthand. It's made me a significantly better UI designer — you develop a feel for visual weight and composition that transfers directly.`,images:[]},
-  ],
-};
-
-// ── STATE ─────────────────────────────────────────────────
-let activeCat='all', prevCat='all';
-
-// ── BUILD ─────────────────────────────────────────────────
-function buildCatTabs(){
-  const bar=document.getElementById('cat-tabs');
-  
-  let totalItems = 0;
-  Object.keys(CATS).forEach(key => {
-    totalItems += [...(DATA[key] || []), ...(LS.get('interests_'+key,[]))].length;
-  });
-
-  let buttonsHTML = `<button class="filter-btn active" onclick="switchCat('all',this)">
-    <i class="fa-solid fa-border-all"></i>All<span class="cat-count">${totalItems}</span>
-  </button>`;
-
-  const order = ['manhwa', 'anime', 'movies', 'misc'];
-  buttonsHTML += order.map(key=>{
-    const c = CATS[key];
-    const items=[...DATA[key],...(LS.get('interests_'+key,[]))];
-    return `<button class="filter-btn" onclick="switchCat('${key}',this)">
-      <i class="${c.icon}"></i>${c.label}<span class="cat-count">${items.length}</span>
-    </button>`;
-  }).join('');
-
-  bar.innerHTML = buttonsHTML;
-}
-
-function buildGrids(){
-  const query=document.getElementById('search-input')?.value.toLowerCase().trim() || '';
-  let allItemsWithCat = [];
-  Object.entries(DATA).forEach(([key,items])=>{
-    const ls=LS.get('interests_'+key,[]);
-    const all=[...items,...ls];
-    const filtered = all.filter(item => !query || item.title.toLowerCase().includes(query) || (item.meta||'').toLowerCase().includes(query));
-    
-    filtered.forEach(item => allItemsWithCat.push({ ...item, _cat: key }));
-    
-    const grid=document.getElementById('grid-'+key);
-    if(!grid) return;
-    grid.innerHTML=filtered.map(item=>renderTitleCard(key, item)).join('');
-    // Show empty state if needed? For now just empty grid.
-  });
-
-  const allGrid = document.getElementById('grid-all');
-  if (allGrid) {
-    allGrid.innerHTML = allItemsWithCat.map(item => renderTitleCard(item._cat, item)).join('');
-    if(!allItemsWithCat.length) allGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:rgba(255,255,255,.4)">No interests found matching "${query}"</div>`;
-  }
-}
-
-function renderTitleCard(catKey, item) {
-  return `
-    <div class="title-card reveal" onclick="openDetail('${catKey}','${item.id}')">
+        return `<div class="title-card reveal" onclick="openDetail('${item.id}')">
       <div class="tc-thumb">
-        <div class="tc-thumb-bg"></div><div class="tc-thumb-glow"></div>
-        <div class="tc-icon"><i class="${item.icon||'fa-solid fa-star'}"></i></div>
-        ${item.badges?.[0]?`<div class="tc-badge"><i class="fa-solid fa-tag"></i>${item.badges[0]}</div>`:''}
+        <div class="tc-thumb-bg"></div>
+        ${thumbImg}
+        <div class="tc-thumb-glow"></div>
+        <!-- Icon removed per user request -->
+        ${item.badges?.[0] ? `<div class="tc-badge"><i class="fa-solid fa-tag"></i>${item.badges[0]}</div>` : ''}
+        ${sc ? `<div class="tc-status-dot ${sc}"></div>` : ''}
       </div>
       <div class="tc-body">
         <div class="tc-title">${item.title}</div>
-        <div class="tc-meta">${item.meta||''}</div>
+        <div class="tc-meta">${item.meta || ''}</div>
+        <div class="tc-rating">${stars}</div>
       </div>
     </div>`;
-}
+      }
 
-function switchCat(key, btn){
-  activeCat=key;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  else document.querySelectorAll('.filter-btn')[Object.keys(CATS).indexOf(key)+1]?.classList.add('active');
-  document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+key)?.classList.add('active');
-  setTimeout(initReveal,50);
-}
+      function switchCat(cat, btn) {
+        activeCat = cat;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+        document.querySelectorAll('.cat-panel').forEach(p => p.classList.remove('active'));
+        const panelId = 'panel-' + cat.toLowerCase().replace(/\s+/g, '-');
+        document.getElementById(panelId)?.classList.add('active');
+        setTimeout(initReveal, 50);
+      }
 
-function openDetail(catKey,itemId){
-  prevCat=catKey;
-  const ls=LS.get('interests_'+catKey,[]);
-  const item=[...(DATA[catKey]||[]),...ls].find(i=>i.id===itemId);
-  if(!item) return;
+      /* ══════════════════════════════════════════
+         DETAIL VIEW
+      ══════════════════════════════════════════ */
+      function openDetail(itemId) {
+        const item = allItems.find(i => i.id === itemId);
+        if (!item) return;
 
-  // breadcrumb
-  document.getElementById('det-breadcrumb').innerHTML=`
-    <a href="interests.html"><i class="fa-solid fa-house"></i>Interests</a>
-    <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i></span>
-    <a href="#" onclick="goBack();return false;"><i class="${CATS[catKey]?.icon||'fa-solid fa-star'}"></i>${CATS[catKey]?.label}</a>
-    <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i></span>
-    <span class="curr">${item.title}</span>
-  `;
+        const cat = item.category || 'Misc';
+        const catIcons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
 
-  const imgs=item.images||[];
-  const stars='★'.repeat(item.rating||5)+'☆'.repeat(5-(item.rating||5));
-  const starHTML=[...stars].map((s,i)=>`<i class="fa-solid fa-star ${i<(item.rating||5)?'star-full':'star-empty'}"></i>`).join('');
+        // Breadcrumb
+        document.getElementById('det-breadcrumb').innerHTML = `
+      <a href="interests.html"><i class="fa-solid fa-house"></i>Interests</a>
+      <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i></span>
+      <a href="#" onclick="goBack();return false;"><i class="${catIcons[cat] || 'fa-solid fa-star'}"></i>${cat}</a>
+      <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i></span>
+      <span class="curr">${item.title}</span>
+    `;
 
-  document.getElementById('det-content').innerHTML=`
-    <div class="detail-layout">
-      <div>
-        <div class="detail-cover">
-          <div class="detail-cover-bg"></div>
-          <div class="detail-cover-icon"><i class="${item.icon||'fa-solid fa-star'}"></i></div>
-          <div class="detail-cover-glow"></div>
+        const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
+        const statusClass = { Finished: 'status-finished', Watched: 'status-finished', Ongoing: 'status-ongoing', Reading: 'status-ongoing', Dropped: 'status-dropped' };
+        const sc = statusClass[item.status] || '';
+        const statusIcon = { Finished: 'fa-solid fa-circle-check', Watched: 'fa-solid fa-circle-check', Ongoing: 'fa-solid fa-spinner', Reading: 'fa-solid fa-spinner', Dropped: 'fa-solid fa-circle-xmark' };
+        const si = statusIcon[item.status] || 'fa-solid fa-circle';
+        const recClass = { 'Must Watch': 'rec-must', 'Must Read': 'rec-must', 'Good': 'rec-good', 'Niche Passion': 'rec-niche', 'Skip': 'rec-skip' };
+        const rc = recClass[item.recommendation] || 'rec-good';
+
+        // Hero image
+        const heroImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" class="det-hero-img">` : '';
+
+        // Feel text — split into paragraphs
+        const feelParas = (item.feel || 'No description yet.').split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
+
+        document.getElementById('det-content').innerHTML = `
+      <!-- HERO STRIP -->
+      <div class="det-hero">
+        <div class="det-hero-bg"></div>
+        ${heroImg}
+        <div class="det-hero-gradient"></div>
+        <div class="det-hero-content">
+          <div class="det-hero-icon-wrap"><i class="${item.icon || 'fa-solid fa-star'}"></i></div>
+          <div class="det-hero-info">
+            <div class="det-hero-cat"><i class="${catIcons[cat] || 'fa-solid fa-tag'}"></i>${cat}</div>
+            <h2 class="det-hero-title">${item.title}</h2>
+            <div class="det-hero-meta">
+              ${item.meta ? `<div class="det-meta-chip"><i class="fa-solid fa-calendar"></i>${item.meta}</div>` : ''}
+              ${item.genre ? `<div class="det-meta-chip"><i class="fa-solid fa-tag"></i>${item.genre}</div>` : ''}
+              ${item.status ? `<div class="det-meta-chip ${sc}"><i class="${si}"></i>${item.status}</div>` : ''}
+              <div class="det-hero-stars">${stars}</div>
+            </div>
+            <div class="det-hero-badges">
+              ${(item.badges || []).map(b => `<span class="det-badge">${b}</span>`).join('')}
+              ${item.recommendation ? `<span class="rec-badge ${rc}"><i class="fa-solid fa-thumbs-up"></i>${item.recommendation}</span>` : ''}
+            </div>
+          </div>
         </div>
-        ${imgs.length?`<div class="detail-cover-imgs">
-          ${imgs.map(url=>`<div class="detail-cover-img" onclick="openLB('${url}')"><img src="${url}" alt="${item.title}" loading="lazy"></div>`).join('')}
-        </div>`:''}
       </div>
-      <div>
-        <h2 class="detail-title"><span class="grad">${item.title}</span></h2>
-        <div class="detail-meta-row">
-          <span class="meta-item"><i class="fa-solid fa-calendar"></i>${item.meta||''}</span>
-          <span class="meta-sep">·</span>
-          <span class="meta-item"><i class="fa-solid fa-tag"></i>${item.genre||''}</span>
-          <span class="meta-sep">·</span>
-          <span class="stars">${starHTML}</span>
-        </div>
-        <div class="detail-pills">${(item.badges||[]).map(b=>`<span class="pill"><i class="fa-solid fa-circle-dot" style="font-size:.55rem"></i>${b}</span>`).join('')}</div>
 
-        <div class="feel-box">
-          <div class="feel-label"><i class="fa-solid fa-heart-pulse"></i>my feel reading / watching this</div>
-          <p class="feel-text"><span class="feel-qmark">"</span>${item.feel||'No description yet.'}</p>
+      <!-- BODY GRID -->
+      <div class="det-body">
+
+        <!-- FEEL / REVIEW -->
+        <div class="det-card card-feel det-body-wide">
+          <div class="det-card-label" style="color:#00d4ff"><i class="fa-solid fa-heart-pulse" style="color:#00d4ff"></i>My Feel & Review</div>
+          <div class="feel-quote-mark">"</div>
+          <div class="feel-text">${feelParas}</div>
         </div>
 
-        ${item.moments?.length?`<div class="moments-wrap">
-          <div class="moments-title"><i class="fa-solid fa-list-check"></i>standout moments</div>
-          ${item.moments.map((m,i)=>`
-            <div class="moment-row">
-              <div class="moment-num">0${i+1}</div>
-              <div class="moment-txt"><strong>${m.t}</strong> — ${m.d}</div>
+        ${item.fav_quote ? `
+        <!-- FAV QUOTE -->
+        <div class="det-card card-quote">
+          <div class="det-card-label" style="color:#a78bfa"><i class="fa-solid fa-quote-left" style="color:#a78bfa"></i>Favorite Quote</div>
+          <div class="fav-quote-wrap">
+            <div class="fav-quote-text">"${item.fav_quote}"</div>
+            ${item.fav_quote_from ? `<div class="fav-quote-from">${item.fav_quote_from}</div>` : ''}
+          </div>
+        </div>` : ''}
+
+        <!-- INFO / STATS -->
+        <div class="det-card card-stats">
+          <div class="det-card-label" style="color:#fbbf24"><i class="fa-solid fa-circle-info" style="color:#fbbf24"></i>Info</div>
+          <div class="stats-list">
+            ${item.genre ? `<div class="stat-row"><div class="stat-row-key"><i class="fa-solid fa-tag"></i>Genre</div><div class="stat-row-val">${item.genre}</div></div>` : ''}
+            ${item.meta ? `<div class="stat-row"><div class="stat-row-key"><i class="fa-solid fa-calendar"></i>Info</div><div class="stat-row-val">${item.meta}</div></div>` : ''}
+            ${item.status ? `<div class="stat-row"><div class="stat-row-key"><i class="fa-solid fa-circle-half-stroke"></i>Status</div><div class="stat-row-val ${sc}">${item.status}</div></div>` : ''}
+            ${item.recommendation ? `<div class="stat-row"><div class="stat-row-key"><i class="fa-solid fa-thumbs-up"></i>Rec Level</div><div class="stat-row-val"><span class="rec-badge ${rc}">${item.recommendation}</span></div></div>` : ''}
+            <div class="stat-row"><div class="stat-row-key"><i class="fa-solid fa-star"></i>My Rating</div><div class="stat-row-val">${'★'.repeat(item.rating || 5)}${'☆'.repeat(5 - (item.rating || 5))} (${item.rating || 5}/5)</div></div>
+          </div>
+        </div>
+
+        ${(item.tags || []).length ? `
+        <!-- TAGS -->
+        <div class="det-card card-tags">
+          <div class="det-card-label" style="color:#38bdf8"><i class="fa-solid fa-hashtag" style="color:#38bdf8"></i>Tags & Vibes</div>
+          <div class="tags-cloud">
+            ${(item.tags || []).map(t => `<span class="tag-item"><i class="fa-solid fa-hash"></i>${t}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+        ${(item.moments || []).length ? `
+        <!-- MOMENTS -->
+        <div class="det-card card-moments det-body-wide">
+          <div class="det-card-label" style="color:#4ade80"><i class="fa-solid fa-list-check" style="color:#4ade80"></i>Standout Moments</div>
+          ${item.moments.map((m, i) => `
+            <div class="moment-item">
+              <div class="moment-num">0${i + 1}</div>
+              <div class="moment-body">
+                <div class="moment-title">${m.t}</div>
+                <div class="moment-desc">${m.d}</div>
+              </div>
             </div>
           `).join('')}
-        </div>`:''}
-      </div>
-    </div>
+        </div>` : ''}
 
-    ${item.gallery?.length?`<div class="gallery-wrap">
-      <div class="gallery-label"><i class="fa-solid fa-images"></i>gallery & vibes</div>
-      <div class="gallery-imgs-grid">
-        ${item.gallery.map(g=>`
-          <div class="gallery-cell">
-            <i class="${g.icon||'fa-solid fa-star'}"></i>
-            <div class="gallery-cell-lbl">${g.lbl||''}</div>
+        ${(item.gallery || []).length ? `
+        <!-- GALLERY VIBES -->
+        <div class="det-card card-gallery det-body-wide">
+          <div class="det-card-label" style="color:#f472b6"><i class="fa-solid fa-images" style="color:#f472b6"></i>Gallery & Vibes</div>
+          <div class="gallery-vibe-grid">
+            ${(item.gallery_images || []).map(url => `
+              <div class="gallery-vibe-cell" onclick="openLB('${url}')">
+                <img src="${url}" alt="Gallery Image">
+                <div class="gallery-vibe-cell-overlay"></div>
+                <div class="gallery-vibe-lbl">View Image</div>
+              </div>
+            `).join('')}
           </div>
-        `).join('')}
-        ${imgs.map(url=>`<div class="gallery-cell" onclick="openLB('${url}')"><img src="${url}" alt=""><div class="gallery-cell-lbl">Photo</div></div>`).join('')}
+        </div>` : ''}
+
+        ${(item.images || []).length > 1 ? `
+        <!-- COVER IMAGES -->
+        <div class="det-card card-imgs det-body-wide">
+          <div class="det-card-label" style="color:#60a5fa"><i class="fa-solid fa-photo-film" style="color:#60a5fa"></i>Images</div>
+          <div class="imgs-scroll">
+            ${item.images.map(url => `
+              <div class="imgs-scroll-item" onclick="openLB('${url}')">
+                <img src="${url}" alt="${item.title}" loading="lazy">
+              </div>
+            `).join('')}
+          </div>
+        </div>` : ''}
+
       </div>
-    </div>`:''}
-  `;
+    `;
 
-  document.getElementById('cat-view').style.display='none';
-  document.getElementById('detail-view').classList.add('open');
-  scrollTo({top:0,behavior:'smooth'});
-}
+        document.getElementById('cat-view').style.display = 'none';
+        document.getElementById('detail-view').classList.add('open');
+        scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
-function goBack(){
-  document.getElementById('cat-view').style.display='block';
-  document.getElementById('detail-view').classList.remove('open');
-  switchCat(prevCat);
-  scrollTo({top:0,behavior:'smooth'});
-}
+      function goBack() {
+        document.getElementById('cat-view').style.display = 'block';
+        document.getElementById('detail-view').classList.remove('open');
+        switchCat(activeCat);
+        scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
-function openLB(url){
-  document.getElementById('lb-img').src=url;
-  document.getElementById('lb').classList.add('open');
-}
-document.getElementById('lb').addEventListener('click',e=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+      function openLB(url) {
+        document.getElementById('lb-img').src = url;
+        document.getElementById('lb').classList.add('open');
+      }
+      document.getElementById('lb').addEventListener('click', e => {
+        if (e.target === e.currentTarget || e.target === document.getElementById('lb-img')) e.currentTarget.classList.remove('open');
+      });
 
-// ── INIT ─────────────────────────────────────────────────
-buildCatTabs();
-buildGrids();
-switchCat('all'); // Set default to first in order
-</script>
+      /* ── INIT ── */
+      loadAllInterests();
+    </script>
 </body>
+
 </html>
