@@ -64,17 +64,22 @@ const DB = {
       return true;
     }
     
-    // FIX: Hapus ID dan Date manual saat kirim ke Supabase
-    // Biarkan database yang mengurus UUID dan created_at
+    // CRITICAL FIX: Siapkan payload bersih untuk Supabase
+    const payload = { ...item }; // Copy object agar item asli tidak berubah
+    delete payload.id; // Hapus ID manual, biarkan Supabase generate UUID
+
     if (key === 'public_messages') {
-      delete item.id;
-      delete item.date;
+      // Fix field mismatch: 'text' -> 'message' sesuai schema
+      if (payload.text) { payload.message = payload.text; delete payload.text; }
+      // Hapus date manual, Supabase pakai created_at default now()
+      delete payload.date; 
     }
 
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',
       'interests': 'interests', // Tambahan: Support save ke tabel interests umum
+      'interests': 'interests',
       'interests_manhwa':'interests',
       'interests_anime': 'interests',
       'interests_movies':'interests',
@@ -83,8 +88,9 @@ const DB = {
     const table = map[key];
     if (!table) return false;
 
-    const { error } = await sb.from(table).insert(item);
-    if (error) console.error(error);
+    // FIX: Gunakan payload (yang sudah dibersihkan), bukan item.
+    const { error } = await sb.from(table).insert(payload);
+    if (error) console.error('Supabase insert error:', error);
     return !error;
   },
 
@@ -99,6 +105,7 @@ const DB = {
 
     // Mapping key ke nama tabel Supabase
     const map = {
+      'public_messages': 'public_messages',
       'projects': 'projects',
       'interests': 'interests'
     };

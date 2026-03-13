@@ -1666,11 +1666,17 @@ async function loadMsgList() {
   if (!msgs.length) { el.innerHTML = '<div class="list-empty"><i class="fa-solid fa-paper-plane"></i>Belum ada pesan.</div>'; return; }
   el.innerHTML = msgs.map(m => {
     const rot = (Math.random()*5 - 2.5).toFixed(1);
+    
+    // FIX: Handle kolom Supabase (message, created_at) vs LocalStorage (text, date)
+    const displayMsg = m.message || m.text || '';
+    const displayDate = m.created_at ? new Date(m.created_at).toLocaleDateString() : (m.date || '');
+    const displayId = m.id; // UUID atau timestamp
+
     return `<div class="msg-note" style="transform:rotate(${rot}deg)">
       <div class="msg-note-pin"></div>
-      <div class="msg-note-head"><span class="msg-note-name">${m.name}</span><button class="btn-del-msg" onclick="deleteMessage(${m.id})" title="Delete"><i class="fa-solid fa-trash"></i></button></div>
-      <div class="msg-note-body">${m.text}</div>
-      <div class="msg-note-foot"><span class="msg-note-time">${m.date}</span></div>
+      <div class="msg-note-head"><span class="msg-note-name">${m.name}</span><button class="btn-del-msg" onclick="deleteMessage('${displayId}')" title="Delete"><i class="fa-solid fa-trash"></i></button></div>
+      <div class="msg-note-body">${displayMsg}</div>
+      <div class="msg-note-foot"><span class="msg-note-time">${displayDate}</span></div>
     </div>`;
   }).join('');
 }
