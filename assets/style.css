@@ -399,7 +399,7 @@ nav#admin-nav{
 .sl-9 {top:90%; right:-220px; transform:rotate(8deg);   animation-delay:.4s}  /* Tele */
 .sl-10{top:30%; right:-240px; transform:rotate(-5deg);  animation-delay:.9s}  /* Spotify */
 .sl-11{top:5%; right:-150px; transform:rotate(10deg);  animation-delay:1.4s} /* YT */
-.sl-13 {top:65%; right:-130px; transform:rotate(-5deg);  animation-delay:.7s}  /* Locket */
+.sl-13 {top:65%; right:-130px; transform:rotate(-5deg);  animation-delay:.7s}  /* Threads */
 
 /* Mobile Responsive: Stack them neatly below instead of scattering (messy on small screens) */
 @media(max-width:960px){
@@ -408,7 +408,7 @@ nav#admin-nav{
   
   .social-grid {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-    max-width: 320px; /* Constrain width to force 6 items per row approx */
+    max-width: 360px; /* Constrain width to force 6 items per row approx */
   }
   .scat-link{
     position:static;transform:none!important;animation:none;
