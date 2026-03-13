@@ -424,7 +424,7 @@
       const imgs = p.images || [];
       if (imgs.length) {
         return `<div class="proj-thumb">
-      <img class="proj-thumb-img" src="${imgs[0]}" alt="${p.name}" loading="lazy">
+      <img class="proj-thumb-img" src="${imgs[0]}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">
       ${imgs.length > 1 ? `<div class="img-count-badge"><i class="fa-solid fa-images"></i>${imgs.length} photos</div>` : ''}
       ${renderStatus(p)}
     </div>`;

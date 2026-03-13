@@ -26,8 +26,8 @@ const DB = {
     if (!sbReady) return LS.get(key);
     
   const map = {
-'public_messages': { t:'public_messages', select: 'id,name,message,created_at', o:'created_at', d:false },
-      'projects':        { t:'projects', o:'created_at', d:false },
+      'public_messages': { t:'public_messages', select: 'id,name,message,created_at', o:'created_at', d:false },
+      'projects':        { t:'projects', select: 'id,name,description,tags,icon,github_url,live_url,images,created_at', o:'created_at', d:false },
       'interests':       { t:'interests', o:'created_at', d:false },
       'interests_manhwa':{ t:'interests', c:'manhwa' },
       'interests_anime': { t:'interests', c:'anime' },

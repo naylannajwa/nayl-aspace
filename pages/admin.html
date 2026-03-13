@@ -869,9 +869,9 @@ body::before {
           <div id="p-editor"></div>
         </div>
 
-        <!-- Images -->
+        <!-- All Images -->
         <div class="fg">
-          <label class="fl"><i class="fa-solid fa-images"></i>Foto / Screenshot Project</label>
+          <label class="fl"><i class="fa-solid fa-images"></i>Additional Images</label>
           <div class="upload-zone" id="p-upload-zone">
             <input type="file" accept="image/*" multiple>
             <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
@@ -1089,14 +1089,14 @@ body::before {
           <button type="button" class="btn-sm btn-edit" id="btn-add-moment" onclick="addMomentRow()" style="margin-top:8px"><i class="fa-solid fa-plus"></i>Tambah Moment</button>
         </div>
 
-        <!-- Gallery & Vibes Images -->
+        <!-- HIghlight Images -->
         <div class="fg">
-          <label class="fl"><i class="fa-solid fa-images"></i>Gallery & Vibes Images <span style="font-weight:400;color:var(--ink-3)">(max 6)</span></label>
+          <label class="fl"><i class="fa-solid fa-images"></i>Highlight Images</span></label>
           <div class="upload-zone" id="i-gallery-upload-zone">
             <input type="file" accept="image/*" multiple>
             <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-            <div class="upload-zone-text">Upload images for Gallery & Vibes</div>
-            <div class="upload-zone-sub">PNG, JPG, WEBP up to 6 images (separate from cover)</div>
+            <div class="upload-zone-text">Drop gambar di sini atau klik untuk pilih</div>
+            <div class="upload-zone-sub">PNG, JPG, WEBP — bisa multiple file</div>
           </div>
           <div class="img-preview-grid" id="i-gallery-img-preview"></div>
         </div>
@@ -1104,7 +1104,7 @@ body::before {
         <!-- Images -->
         <div class="form-section"><div class="form-section-line"></div><div class="form-section-label">Gambar</div><div class="form-section-line"></div></div>
         <div class="fg">
-          <label class="fl"><i class="fa-solid fa-images"></i>Cover Art / Screenshots</label>
+          <label class="fl"><i class="fa-solid fa-images"></i>Additional Images</label>
           <div class="upload-zone" id="i-upload-zone">
             <input type="file" accept="image/*" multiple>
             <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
@@ -1951,6 +1951,22 @@ async function editInterest(id) {
   (item.moments || []).forEach(m => addMomentRow(m));
   // Gallery images handled by upload state (no rows to populate)
   
+  // FIX: Load existing Gallery Images to preview
+  const galleryState = window._intGalleryImgState;
+  if (galleryState) {
+    galleryState.files = (item.gallery_images||[]).map(url => ({ url, dataUrl: url, name: 'existing' }));
+    const previewEl = document.getElementById('i-gallery-img-preview');
+    previewEl.innerHTML = '';
+    galleryState.files.forEach((f, i) => {
+      const itemEl = document.createElement('div'); itemEl.className = 'img-preview-item';
+      const img = document.createElement('img'); img.src = f.dataUrl || f.url || '';
+      const rm = document.createElement('button'); rm.className='img-preview-remove';
+      rm.innerHTML='<i class="fa-solid fa-xmark"></i>';
+      rm.onclick = e => { e.stopPropagation(); galleryState.files.splice(i,1); itemEl.remove(); };
+      itemEl.append(img, rm); previewEl.appendChild(itemEl);
+    });
+  }
+
   const state = window._intImgState;
   if (state) {
     state.files = (item.images||[]).map(url => ({ url, dataUrl: url, name: 'existing' }));
