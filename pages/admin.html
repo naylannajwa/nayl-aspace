@@ -1111,7 +1111,7 @@ body::before {
           <div class="f-3col">
             <div class="fg"><label class="fl"><i class="fa-solid fa-layer-group"></i>Category</label>
               <select class="fsel" id="i-cat">
-                <option value="anime">Anime</option><option value="manhwa">Manhwa</option>
+                <option value="manhwa">Manhwa</option><option value="anime">Anime</option>
                 <option value="movies">Movies</option><option value="misc">Misc</option>
               </select>
             </div>
@@ -1454,7 +1454,7 @@ async function refreshDash() {
   const projs = await DB.get('projects');
   let intCount = 0;
   const msgs = await DB.get('public_messages');
-  for(const c of ['anime','manhwa','movies','misc']) { const items = await DB.get('interests_'+c); intCount += items.length; }
+  for(const c of ['manhwa','anime','movies','misc']) { const items = await DB.get('interests_'+c); intCount += items.length; }
   
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-rocket"></i></span><div class="stat-num" id="dc-proj">0</div><div class="stat-label">Projects</div></div>
@@ -1664,7 +1664,7 @@ async function saveInterest() {
 }
 async function loadIntList() {
   let all = [];
-  for (const c of ['anime','manhwa','movies','misc']) {
+  for (const c of ['manhwa','anime','movies','misc']) {
     const items = await DB.get('interests_'+c);
     items.forEach(i => all.push({...i, _cat: c}));
   }
@@ -1717,7 +1717,7 @@ async function deleteInterest(cat, id) {
 }
 function clearIntForm() {
   ['i-edit-id','i-title','i-meta','i-genre'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('i-cat').value = 'anime';
+  document.getElementById('i-cat').value = 'manhwa';
   document.getElementById('i-icon').value = 'fa-solid fa-star';
   document.getElementById('i-icon-preview-i').className = 'fa-solid fa-star';
   document.getElementById('i-icon-preview-name').textContent = 'fa-solid fa-star';

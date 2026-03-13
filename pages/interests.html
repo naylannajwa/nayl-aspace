@@ -9,28 +9,6 @@
 <style>
 .hero-band{padding:calc(var(--nav-h)-50px) -52px -44px;background:radial-gradient(ellipse at top, rgba(10,47,255,0.12), transparent 70%);position:relative;z-index:2}
 
-/* L1: CATEGORY TABS */
-.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:44px}
-.cat-tab{
-  display:flex;align-items:center;gap:9px;
-  padding:11px 22px;
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-pill);
-  color:var(--white-dim);font-family:var(--f-display);font-size:.9rem;font-weight:600;
-  cursor:pointer;transition:var(--trans);
-}
-.cat-tab i{font-size:.9rem}
-.cat-tab:hover{border-color:var(--blue-2);color:var(--white)}
-.cat-tab.active{
-  background:linear-gradient(135deg,var(--blue-0),var(--blue-2));
-  border-color:transparent;color:#fff;box-shadow:0 4px 22px var(--glow-blue);
-}
-.cat-count{
-  padding:2px 8px;background:rgba(255,255,255,.14);
-  border-radius:var(--r-pill);font-family:var(--f-mono);font-size:.62rem;
-}
-.cat-panel{display:none}
-.cat-panel.active{display:block;animation:fadeUp .4s ease both}
 
 /* L2: TITLE CARD GRID */
 .titles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
@@ -180,13 +158,11 @@
 
 @media(max-width:900px){.detail-layout{grid-template-columns:1fr}} 
 @media(max-width:768px){
-  .hero-band{padding:100px 22px 40px}
+  .hero-band{padding:0px 22px 0px}
   .gallery-imgs-grid{grid-template-columns:repeat(2,1fr)}
   .nav-right{display:none}
   
   /* Interests Specific */
-  .cat-tabs{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:10px}
-  .cat-tab{flex-shrink:0}
   .detail-title{font-size:1.8rem}
   .detail-cover{max-height:300px}
 }
@@ -221,8 +197,9 @@
   <!-- CAT VIEW -->
   <div id="cat-view">
     <div class="cat-tabs reveal" id="cat-tabs"></div>
-    <div id="panel-anime" class="cat-panel"><div class="titles-grid" id="grid-anime"></div></div>
+    <div id="panel-all" class="cat-panel"><div class="titles-grid" id="grid-all"></div></div>
     <div id="panel-manhwa" class="cat-panel"><div class="titles-grid" id="grid-manhwa"></div></div>
+    <div id="panel-anime" class="cat-panel"><div class="titles-grid" id="grid-anime"></div></div>
     <div id="panel-movies" class="cat-panel"><div class="titles-grid" id="grid-movies"></div></div>
     <div id="panel-misc" class="cat-panel"><div class="titles-grid" id="grid-misc"></div></div>
   </div>
@@ -251,11 +228,12 @@
 <script>
 // ── DATA ───────────────────────────────────────────────────────────────────
 const CATS = {
-  anime:  { label:'Anime',   icon:'fa-solid fa-sword',    faIcon:'<i class="fa-solid fa-user-ninja"></i>' },
   manhwa: { label:'Manhwa',  icon:'fa-solid fa-book-open', faIcon:'<i class="fa-solid fa-book-open"></i>' },
+  anime:  { label:'Anime',   icon:'fa-solid fa-sword',    faIcon:'<i class="fa-solid fa-user-ninja"></i>' },
   movies: { label:'Movies',  icon:'fa-solid fa-film',      faIcon:'<i class="fa-solid fa-film"></i>' },
   misc:   { label:'Misc',    icon:'fa-solid fa-star',      faIcon:'<i class="fa-solid fa-star"></i>' },
 };
+// Overwriting the const CATS with this order in the code below.
 
 const DATA = {
   anime:[
@@ -313,47 +291,70 @@ const DATA = {
 };
 
 // ── STATE ─────────────────────────────────────────────────
-let activeCat='anime', prevCat='anime';
+let activeCat='all', prevCat='all';
 
 // ── BUILD ─────────────────────────────────────────────────
 function buildCatTabs(){
   const bar=document.getElementById('cat-tabs');
-  bar.innerHTML=Object.entries(CATS).map(([key,c])=>{
+  
+  let totalItems = 0;
+  Object.keys(CATS).forEach(key => {
+    totalItems += [...(DATA[key] || []), ...(LS.get('interests_'+key,[]))].length;
+  });
+
+  let buttonsHTML = `<button class="filter-btn active" onclick="switchCat('all',this)">
+    <i class="fa-solid fa-border-all"></i>All<span class="cat-count">${totalItems}</span>
+  </button>`;
+
+  const order = ['manhwa', 'anime', 'movies', 'misc'];
+  buttonsHTML += order.map(key=>{
+    const c = CATS[key];
     const items=[...DATA[key],...(LS.get('interests_'+key,[]))];
-    return `<button class="cat-tab ${key===activeCat?'active':''}" onclick="switchCat('${key}',this)">
+    return `<button class="filter-btn" onclick="switchCat('${key}',this)">
       <i class="${c.icon}"></i>${c.label}<span class="cat-count">${items.length}</span>
     </button>`;
   }).join('');
+
+  bar.innerHTML = buttonsHTML;
 }
 
 function buildGrids(){
+  let allItemsWithCat = [];
   Object.entries(DATA).forEach(([key,items])=>{
     const ls=LS.get('interests_'+key,[]);
     const all=[...items,...ls];
+    all.forEach(item => allItemsWithCat.push({ ...item, _cat: key }));
     const grid=document.getElementById('grid-'+key);
     if(!grid) return;
-    grid.innerHTML=all.map(item=>`
-      <div class="title-card reveal" onclick="openDetail('${key}','${item.id}')">
-        <div class="tc-thumb">
-          <div class="tc-thumb-bg"></div>
-          <div class="tc-thumb-glow"></div>
-          <div class="tc-icon"><i class="${item.icon||'fa-solid fa-star'}"></i></div>
-          ${item.badges?.[0]?`<div class="tc-badge"><i class="fa-solid fa-tag"></i>${item.badges[0]}</div>`:''}
-        </div>
-        <div class="tc-body">
-          <div class="tc-title">${item.title}</div>
-          <div class="tc-meta">${item.meta||''}</div>
-        </div>
-      </div>
-    `).join('');
+    grid.innerHTML=all.map(item=>renderTitleCard(key, item)).join('');
   });
+
+  const allGrid = document.getElementById('grid-all');
+  if (allGrid) {
+    allGrid.innerHTML = allItemsWithCat.map(item => renderTitleCard(item._cat, item)).join('');
+  }
+}
+
+function renderTitleCard(catKey, item) {
+  return `
+    <div class="title-card reveal" onclick="openDetail('${catKey}','${item.id}')">
+      <div class="tc-thumb">
+        <div class="tc-thumb-bg"></div><div class="tc-thumb-glow"></div>
+        <div class="tc-icon"><i class="${item.icon||'fa-solid fa-star'}"></i></div>
+        ${item.badges?.[0]?`<div class="tc-badge"><i class="fa-solid fa-tag"></i>${item.badges[0]}</div>`:''}
+      </div>
+      <div class="tc-body">
+        <div class="tc-title">${item.title}</div>
+        <div class="tc-meta">${item.meta||''}</div>
+      </div>
+    </div>`;
 }
 
 function switchCat(key, btn){
   activeCat=key;
-  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  else document.querySelectorAll('.cat-tab')[Object.keys(CATS).indexOf(key)]?.classList.add('active');
+  else document.querySelectorAll('.filter-btn')[Object.keys(CATS).indexOf(key)+1]?.classList.add('active');
   document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+key)?.classList.add('active');
   setTimeout(initReveal,50);
@@ -453,7 +454,7 @@ document.getElementById('lb').addEventListener('click',e=>{ if(e.target===e.curr
 // ── INIT ─────────────────────────────────────────────────
 buildCatTabs();
 buildGrids();
-switchCat('anime');
+switchCat('all'); // Set default to first in order
 </script>
 </body>
 </html>

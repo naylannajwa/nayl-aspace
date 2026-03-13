@@ -28,8 +28,8 @@ const DB = {
     const map = {
       'public_messages': { t:'public_messages', o:'created_at', d:false },
       'projects':        { t:'projects', o:'created_at', d:false },
-      'interests_anime': { t:'interests', c:'anime' },
       'interests_manhwa':{ t:'interests', c:'manhwa' },
+      'interests_anime': { t:'interests', c:'anime' },
       'interests_movies':{ t:'interests', c:'movies' },
       'interests_misc':  { t:'interests', c:'misc' }
     };
@@ -56,8 +56,8 @@ const DB = {
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',
-      'interests_anime': 'interests',
       'interests_manhwa':'interests',
+      'interests_anime': 'interests',
       'interests_movies':'interests',
       'interests_misc':  'interests'
     };

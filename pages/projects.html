@@ -8,17 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 .hero-band{padding:calc(var(--nav-h)) -52px -50px;background:radial-gradient(ellipse at top, rgba(10,47,255,0.12), transparent 70%);position:relative;z-index:2}
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px}
-.filter-btn{
-  display:flex;align-items:center;gap:7px;
-  padding:8px 18px;background:transparent;
-  border:1px solid var(--glass-b);border-radius:var(--r-pill);
-  color:var(--white-dim);font-family:var(--f-mono);font-size:.72rem;
-  cursor:pointer;transition:var(--trans);
-}
-.filter-btn i{font-size:.72rem}
-.filter-btn:hover{border-color:var(--blue-2);color:var(--white)}
-.filter-btn.active{background:var(--glass);border-color:var(--glass-b-hi);color:var(--cyan)}
 
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
 .proj-card{
@@ -114,14 +103,11 @@
 /* MOBILE NAV & RESPONSIVE */
 .nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.5rem;cursor:pointer;z-index:1001}
 
-@media(max-width:768px){.hero-band{padding:100px 22px 40px}}
+@media(max-width:768px){.hero-band{padding:0px 22px 0px}}
 @media(max-width:768px){
   .nav-right{display:none}
   
   /* Project Specific Mobile */
-  .filter-bar{overflow-x:auto;padding-bottom:10px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-  .filter-bar::-webkit-scrollbar{display:none}
-  .filter-btn{flex-shrink:0;white-space:nowrap}
   .proj-detail-imgs{grid-template-columns:1fr}
   .modal-title{font-size:1.4rem}
 }
@@ -148,12 +134,12 @@
   <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>My Projects</p>
   <h1 class="section-title reveal"><span class="grad">Things I've Built</span></h1>
   <div class="filter-bar reveal" id="filter-bar">
-    <button class="filter-btn active" onclick="filterProj('all',this)"><i class="fa-solid fa-border-all"></i>All</button>
-    <button class="filter-btn" onclick="filterProj('web',this)"><i class="fa-solid fa-globe"></i>Web</button>
-    <button class="filter-btn" onclick="filterProj('mobile',this)"><i class="fa-solid fa-mobile-screen"></i>Mobile</button>
-    <button class="filter-btn" onclick="filterProj('game',this)"><i class="fa-solid fa-gamepad"></i>Game</button>
-    <button class="filter-btn" onclick="filterProj('design',this)"><i class="fa-solid fa-pen-ruler"></i>Design</button>
-    <button class="filter-btn" onclick="filterProj('ai',this)"><i class="fa-solid fa-robot"></i>AI</button>
+    <button class="filter-btn active" onclick="filterProj('all',this)"><i class="fa-solid fa-border-all"></i>All<span class="cat-count" id="c-all">0</span></button>
+    <button class="filter-btn" onclick="filterProj('web',this)"><i class="fa-solid fa-globe"></i>Web<span class="cat-count" id="c-web">0</span></button>
+    <button class="filter-btn" onclick="filterProj('mobile',this)"><i class="fa-solid fa-mobile-screen"></i>Mobile<span class="cat-count" id="c-mobile">0</span></button>
+    <button class="filter-btn" onclick="filterProj('game',this)"><i class="fa-solid fa-gamepad"></i>Game<span class="cat-count" id="c-game">0</span></button>
+    <button class="filter-btn" onclick="filterProj('design',this)"><i class="fa-solid fa-pen-ruler"></i>Design<span class="cat-count" id="c-design">0</span></button>
+    <button class="filter-btn" onclick="filterProj('ai',this)"><i class="fa-solid fa-robot"></i>AI<span class="cat-count" id="c-ai">0</span></button>
   </div>
   <div class="projects-grid reveal" id="projects-grid"></div>
 </div>
@@ -432,6 +418,15 @@ function filterProj(cat,btn){
 function loadProjects(){
   const ls=LS.get('projects',[]);
   allProjects=ls.length?ls:DEFAULT_PROJECTS;
+  
+  // Update Counts
+  document.getElementById('c-all').textContent = allProjects.length;
+  ['web','mobile','game','design','ai'].forEach(c => {
+    const count = allProjects.filter(p => (p.category||'').includes(c) || (p.tags||[]).some(t=>t.toLowerCase().includes(c))).length;
+    const el = document.getElementById('c-'+c);
+    if(el) el.textContent = count;
+  });
+  
   renderProjects();
 }
 
