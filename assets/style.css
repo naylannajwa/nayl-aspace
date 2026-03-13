@@ -401,20 +401,17 @@ nav#admin-nav{
 
 /* Mobile Responsive: Stack them neatly below instead of scattering (messy on small screens) */
 @media(max-width:960px){
-  .msg-scatter-wrap{display:flex;flex-direction:column;gap:30px}
+  .msg-scatter-wrap{display:flex;flex-direction:column;gap:24px;align-items:center}
+  .msg-input-box { margin-bottom: 0; width: 100%; }
+  
+  .social-grid {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    max-width: 320px; /* Constrain width to force 6 items per row approx */
+  }
   .scat-link{
     position:static;transform:none!important;animation:none;
-    width:40px;height:40px;font-size:1.1rem;
+    width:42px;height:42px;font-size:1.1rem;margin:0;
   }
-  /* Wrap links in a flex container via CSS only by targeting them */
-  .msg-scatter-wrap {
-    display: grid; 
-    grid-template-areas: "form" "socials";
-  }
-  .msg-input-box { grid-area: form; margin-bottom: 0; }
-  /* Use a pseudo-grid logic or just simpler: make them flow */
-  .msg-scatter-wrap { display:block; text-align:center }
-  .scat-link { display:inline-flex; margin:5px; position:static; }
 }
 
 /* ── PAGINATION BAR ─────────────────────── */
