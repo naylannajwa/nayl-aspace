@@ -560,11 +560,12 @@
     .gallery-vibe-cell {
       /* Natural height for masonry feel */
       aspect-ratio: auto;
-      display: inline-block; /* Penting untuk column layout */
+      display: inline-block;
+      /* Penting untuk column layout */
       width: 100%;
       margin-bottom: 12px;
       break-inside: avoid;
-      
+
       border-radius: 12px;
       background: linear-gradient(135deg, var(--bg-mid), rgba(10, 47, 255, .3));
       border: 1px solid var(--glass-b);
@@ -572,12 +573,13 @@
       transition: var(--trans);
       position: relative;
       overflow: hidden;
-      padding: 0; /* Hapus padding agar gambar full */
+      padding: 0;
+      /* Hapus padding agar gambar full */
     }
 
     .gallery-vibe-cell img {
       /* Relative agar tinggi menyesuaikan gambar */
-      position: relative; 
+      position: relative;
       width: 100%;
       height: auto;
       display: block;
@@ -588,14 +590,16 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(transparent 40%, rgba(4, 10, 40, 0.85));
-      opacity: 0; transition: opacity .3s; /* Hide overlay by default */
+      opacity: 0;
+      transition: opacity .3s;
+      /* Hide overlay by default */
     }
 
     .gallery-vibe-cell:hover {
       border-color: var(--glass-b-hi);
       transform: scale(1.04);
     }
-    
+
     .gallery-vibe-cell:hover .gallery-vibe-cell-overlay {
       opacity: 1;
     }
@@ -613,10 +617,14 @@
       color: rgba(200, 220, 255, 0.7);
       text-align: center;
       position: absolute;
-      bottom: 10px; left:0; right:0;
+      bottom: 10px;
+      left: 0;
+      right: 0;
       z-index: 1;
-      opacity: 0; transition: opacity .3s;
+      opacity: 0;
+      transition: opacity .3s;
     }
+
     .gallery-vibe-cell:hover .gallery-vibe-lbl {
       opacity: 1;
     }
@@ -843,7 +851,8 @@
       }
 
       .gallery-vibe-grid {
-        column-count: 2; /* Responsive Masonry */
+        column-count: 2;
+        /* Responsive Masonry */
       }
     }
 
@@ -890,217 +899,218 @@
       <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>What I'm Into (Fun Fact About Me LOL)</p>
       <h1 class="section-title reveal"><span class="grad">Interests ✦</span></h1>
       <div class="search-box reveal visible">
-        <input type="text" class="search-input" id="search-input" placeholder="Search interests..." oninput="buildGrids()">
+        <input type="text" class="search-input" id="search-input" placeholder="Search interests..."
+          oninput="buildGrids()">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
       </div>
 
-        <!-- CAT VIEW -->
-        <div id="cat-view">
-          <div class="cat-tabs reveal" id="cat-tabs"></div>
-          <div id="panels-container"></div>
-        </div>
-
-        <!-- DETAIL VIEW -->
-        <div id="detail-view">
-          <div class="breadcrumb" id="det-breadcrumb"></div>
-          <button class="detail-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i>Back to list</button>
-          <div id="det-content"></div>
-        </div>
-
+      <!-- CAT VIEW -->
+      <div id="cat-view">
+        <div class="cat-tabs reveal" id="cat-tabs"></div>
+        <div id="panels-container"></div>
       </div>
+
+      <!-- DETAIL VIEW -->
+      <div id="detail-view">
+        <div class="breadcrumb" id="det-breadcrumb"></div>
+        <button class="detail-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i>Back to list</button>
+        <div id="det-content"></div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- LIGHTBOX -->
-    <div id="lb">
-      <button id="lb-close" onclick="document.getElementById('lb').classList.remove('open')"><i
-          class="fa-solid fa-xmark"></i></button>
-      <img id="lb-img" src="" alt="">
-    </div>
+  <!-- LIGHTBOX -->
+  <div id="lb">
+    <button id="lb-close" onclick="document.getElementById('lb').classList.remove('open')"><i
+        class="fa-solid fa-xmark"></i></button>
+    <img id="lb-img" src="" alt="">
+  </div>
 
-    <footer>
-      <p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p>
-    </footer>
-    <div id="toast"></div>
+  <footer>
+    <p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p>
+  </footer>
+  <div id="toast"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/script.js"></script>
-    <script>
-      /* ══════════════════════════════════════════
-         STATIC SAMPLE DATA (will merge with DB)
-      ══════════════════════════════════════════ */
-      const STATIC_DATA = [
-        {
-          id: 'aot', title: 'Attack on Titan', icon: 'fa-solid fa-shield',
-          category: 'Anime', meta: '2013–2023 · Isayama', rating: 5,
-          genre: 'Dark Fantasy · Action', status: 'Finished',
-          recommendation: 'Must Watch',
-          fav_quote: 'If you win, you live. If you lose, you die.', fav_quote_from: 'Eren Yeager',
-          badges: ['Masterpiece', 'Dark', 'Emotional'],
-          tags: ['Dark', 'Political', 'Action', 'Philosophical'],
-          feel: `AoT hit me like a truck I didn't see coming. The moment the walls fell, something shifted — this wasn't action for action's sake, it was a statement about freedom, sacrifice, and the brutal cost of both.\n\nI finished this series feeling genuinely conflicted about every character. Eren's arc destroyed me in the best possible way. Hiroyuki Sawano's score became the permanent OST of my late-night coding sessions.`,
-          moments: [
-            { t: 'The Fall of Wall Maria', d: 'The opening 10 minutes that establish the tone of the entire series — no build-up, just immediate despair.' },
-            { t: 'Eren vs. Annie - Stohess Arc', d: 'First time the scale of individual power vs institutional rot becomes clear.' },
-            { t: 'Eren\'s basement reveal', d: 'Four seasons of foreshadowing paid off in a single conversation. Perfect storytelling.' },
-            { t: 'The Rumbling begins', d: 'The moment Eren becomes the villain. Watching the world react was chilling.' },
-          ],
-          gallery: [
-            { icon: 'fa-solid fa-music', lbl: 'Sawano OST hits different' },
-            { icon: 'fa-solid fa-chess', lbl: 'Political complexity' },
-            { icon: 'fa-solid fa-eye', lbl: 'Titan character design' },
-            { icon: 'fa-solid fa-heart-crack', lbl: 'Emotional manipulation' },
-          ],
-          images: []
-        },
-        {
-          id: 'sl', title: 'Solo Leveling', icon: 'fa-solid fa-crown',
-          category: 'Manhwa', meta: '2018–2021 · Chugong/Dubu', rating: 5,
-          genre: 'Action · Power Fantasy', status: 'Finished',
-          recommendation: 'Must Read',
-          fav_quote: 'I alone level up.', fav_quote_from: 'Sung Jinwoo',
-          badges: ['Iconic', 'Cinematic', 'Power Fantasy'],
-          tags: ['Action', 'System', 'Solo', 'Art'],
-          feel: `Solo Leveling is the manhwa that brought the medium mainstream, and for good reason. Jinwoo's progression from absolute weakest to walking god is genuinely satisfying because Chugong makes you feel every milestone.\n\nThe art by Dubu is cinematic — full color, perfect framing, action sequences that feel like film storyboards. Read it in one weekend. Zero regrets, ruined sleep schedule.`,
-          moments: [
-            { t: 'Double Dungeon — The Shadow Monarch\'s first call', d: 'The tonal shift from generic isekai to something genuinely mythic.' },
-            { t: 'Igris becomes the first shadow knight', d: 'Establishing that shadows aren\'t just NPCs — they have personality.' },
-            { t: 'Ant King fight', d: 'The most brutal extended sequence in the series. Artistically jaw-dropping.' },
-          ],
-          gallery: [
-            { icon: 'fa-solid fa-palette', lbl: 'Dubu\'s art style' },
-            { icon: 'fa-solid fa-bolt', lbl: 'System UI aesthetics' },
-            { icon: 'fa-solid fa-skull', lbl: 'Shadow Army vibes' },
-            { icon: 'fa-solid fa-fire', lbl: 'Power fantasy peak' },
-          ],
-          images: []
-        },
-        {
-          id: 'interstellar', title: 'Interstellar', icon: 'fa-solid fa-satellite',
-          category: 'Movies', meta: '2014 · Christopher Nolan', rating: 5,
-          genre: 'Sci-Fi · Drama', status: 'Watched',
-          recommendation: 'Must Watch',
-          fav_quote: 'Love is the one thing that transcends time and space.', fav_quote_from: 'Dr. Brand',
-          badges: ['Emotional', 'Mind-bending', 'Cinematic'],
-          tags: ['Space', 'Time', 'Love', 'Physics'],
-          feel: `Interstellar hit me at exactly the right moment — deep in physics and astronomy rabbit holes. The science is ambitious enough to feel real, and the emotional core (a father separated from his daughter by time) is devastating.\n\nHans Zimmer's score isn't a soundtrack, it's a co-author. The docking scene with "No Time for Caution" playing is the most technically and emotionally intense 4 minutes in cinema.`,
-          moments: [
-            { t: 'Docking scene on the Endurance', d: 'Hans Zimmer + perfect editing = heart attack inducing. Best action scene with no weapons.' },
-            { t: 'The 23 years of messages', d: 'Cooper watching decades of his kids grow up in minutes is the most devastating scene I\'ve watched.' },
-            { t: 'Tesseract sequence', d: 'Love as a fifth-dimensional force rendered visually. Insane idea, perfect execution.' },
-          ],
-          gallery: [
-            { icon: 'fa-solid fa-planet-ringed', lbl: 'Gargantua black hole' },
-            { icon: 'fa-solid fa-music', lbl: 'Zimmer\'s pipe organ score' },
-            { icon: 'fa-solid fa-clock', lbl: 'Time dilation concept' },
-            { icon: 'fa-solid fa-hand-holding-heart', lbl: 'Father-daughter bond' },
-          ],
-          images: []
-        },
-        {
-          id: 'gamedev', title: 'Game Development', icon: 'fa-solid fa-gamepad',
-          category: 'Misc', meta: 'Unity · C# · Design', rating: 5,
-          genre: 'Creative Tech', status: 'Ongoing',
-          recommendation: 'Niche Passion',
-          fav_quote: '', fav_quote_from: '',
-          badges: ['Passion', 'Creating', 'Building'],
-          tags: ['Unity', 'C#', 'Game Design', 'Procedural'],
-          feel: `Game dev is what first got me into programming, and it still feels the most magical. You're creating an entire reality — you decide the physics, the rules, the aesthetics, the narrative.\n\nUnity and C# clicked for me in a way that felt like the code was storytelling. Every system I build (enemy AI, procedural levels, dialogue trees) is just world-building through logic.`,
-          moments: [
-            { t: 'First "Hello World" game', d: 'A terrible pong clone that took 3 weeks. Best 3 weeks of my life.' },
-            { t: 'Procedural level gen working', d: 'Watching an algorithm generate playable spaces felt like watching life emerge from chaos.' },
-            { t: 'Enemy AI pathfinding clicked', d: 'A* and navmesh finally making sense at 2am. Worth every hour.' },
-          ],
-          gallery: [
-            { icon: 'fa-solid fa-cube', lbl: '3D level design' },
-            { icon: 'fa-solid fa-code', lbl: 'System architecture' },
-            { icon: 'fa-solid fa-sitemap', lbl: 'Game loops' },
-            { icon: 'fa-solid fa-wand-magic-sparkles', lbl: 'Particle effects' },
-          ],
-          images: []
-        }
-      ];
-
-      /* ══════════════════════════════════════════
-         STATE
-      ══════════════════════════════════════════ */
-      let activeCat = 'all';
-      let allItems = [];
-
-      /* ══════════════════════════════════════════
-         LOAD & MERGE DATA
-      ══════════════════════════════════════════ */
-      async function loadAllInterests() {
-        let dbItems = [];
-        try { dbItems = await DB.get('interests'); } catch (e) { }
-        // Merge: DB items override static by ID
-        const merged = [...STATIC_DATA];
-        dbItems.forEach(di => {
-          const idx = merged.findIndex(s => s.id === di.id);
-          if (idx >= 0) merged[idx] = di;
-          else merged.push(di);
-        });
-        allItems = merged;
-        buildCatTabs();
-        buildGrids();
-        switchCat('all');
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/script.js"></script>
+  <script>
+    /* ══════════════════════════════════════════
+       STATIC SAMPLE DATA (will merge with DB)
+    ══════════════════════════════════════════ */
+    const STATIC_DATA = [
+      {
+        id: 'aot', title: 'Attack on Titan', icon: 'fa-solid fa-shield',
+        category: 'Anime', meta: '2013–2023 · Isayama', rating: 5,
+        genre: 'Dark Fantasy · Action', status: 'Finished',
+        recommendation: 'Must Watch',
+        fav_quote: 'If you win, you live. If you lose, you die.', fav_quote_from: 'Eren Yeager',
+        badges: ['Masterpiece', 'Dark', 'Emotional'],
+        tags: ['Dark', 'Political', 'Action', 'Philosophical'],
+        feel: `AoT hit me like a truck I didn't see coming. The moment the walls fell, something shifted — this wasn't action for action's sake, it was a statement about freedom, sacrifice, and the brutal cost of both.\n\nI finished this series feeling genuinely conflicted about every character. Eren's arc destroyed me in the best possible way. Hiroyuki Sawano's score became the permanent OST of my late-night coding sessions.`,
+        moments: [
+          { t: 'The Fall of Wall Maria', d: 'The opening 10 minutes that establish the tone of the entire series — no build-up, just immediate despair.' },
+          { t: 'Eren vs. Annie - Stohess Arc', d: 'First time the scale of individual power vs institutional rot becomes clear.' },
+          { t: 'Eren\'s basement reveal', d: 'Four seasons of foreshadowing paid off in a single conversation. Perfect storytelling.' },
+          { t: 'The Rumbling begins', d: 'The moment Eren becomes the villain. Watching the world react was chilling.' },
+        ],
+        gallery: [
+          { icon: 'fa-solid fa-music', lbl: 'Sawano OST hits different' },
+          { icon: 'fa-solid fa-chess', lbl: 'Political complexity' },
+          { icon: 'fa-solid fa-eye', lbl: 'Titan character design' },
+          { icon: 'fa-solid fa-heart-crack', lbl: 'Emotional manipulation' },
+        ],
+        images: []
+      },
+      {
+        id: 'sl', title: 'Solo Leveling', icon: 'fa-solid fa-crown',
+        category: 'Manhwa', meta: '2018–2021 · Chugong/Dubu', rating: 5,
+        genre: 'Action · Power Fantasy', status: 'Finished',
+        recommendation: 'Must Read',
+        fav_quote: 'I alone level up.', fav_quote_from: 'Sung Jinwoo',
+        badges: ['Iconic', 'Cinematic', 'Power Fantasy'],
+        tags: ['Action', 'System', 'Solo', 'Art'],
+        feel: `Solo Leveling is the manhwa that brought the medium mainstream, and for good reason. Jinwoo's progression from absolute weakest to walking god is genuinely satisfying because Chugong makes you feel every milestone.\n\nThe art by Dubu is cinematic — full color, perfect framing, action sequences that feel like film storyboards. Read it in one weekend. Zero regrets, ruined sleep schedule.`,
+        moments: [
+          { t: 'Double Dungeon — The Shadow Monarch\'s first call', d: 'The tonal shift from generic isekai to something genuinely mythic.' },
+          { t: 'Igris becomes the first shadow knight', d: 'Establishing that shadows aren\'t just NPCs — they have personality.' },
+          { t: 'Ant King fight', d: 'The most brutal extended sequence in the series. Artistically jaw-dropping.' },
+        ],
+        gallery: [
+          { icon: 'fa-solid fa-palette', lbl: 'Dubu\'s art style' },
+          { icon: 'fa-solid fa-bolt', lbl: 'System UI aesthetics' },
+          { icon: 'fa-solid fa-skull', lbl: 'Shadow Army vibes' },
+          { icon: 'fa-solid fa-fire', lbl: 'Power fantasy peak' },
+        ],
+        images: []
+      },
+      {
+        id: 'interstellar', title: 'Interstellar', icon: 'fa-solid fa-satellite',
+        category: 'Movies', meta: '2014 · Christopher Nolan', rating: 5,
+        genre: 'Sci-Fi · Drama', status: 'Watched',
+        recommendation: 'Must Watch',
+        fav_quote: 'Love is the one thing that transcends time and space.', fav_quote_from: 'Dr. Brand',
+        badges: ['Emotional', 'Mind-bending', 'Cinematic'],
+        tags: ['Space', 'Time', 'Love', 'Physics'],
+        feel: `Interstellar hit me at exactly the right moment — deep in physics and astronomy rabbit holes. The science is ambitious enough to feel real, and the emotional core (a father separated from his daughter by time) is devastating.\n\nHans Zimmer's score isn't a soundtrack, it's a co-author. The docking scene with "No Time for Caution" playing is the most technically and emotionally intense 4 minutes in cinema.`,
+        moments: [
+          { t: 'Docking scene on the Endurance', d: 'Hans Zimmer + perfect editing = heart attack inducing. Best action scene with no weapons.' },
+          { t: 'The 23 years of messages', d: 'Cooper watching decades of his kids grow up in minutes is the most devastating scene I\'ve watched.' },
+          { t: 'Tesseract sequence', d: 'Love as a fifth-dimensional force rendered visually. Insane idea, perfect execution.' },
+        ],
+        gallery: [
+          { icon: 'fa-solid fa-planet-ringed', lbl: 'Gargantua black hole' },
+          { icon: 'fa-solid fa-music', lbl: 'Zimmer\'s pipe organ score' },
+          { icon: 'fa-solid fa-clock', lbl: 'Time dilation concept' },
+          { icon: 'fa-solid fa-hand-holding-heart', lbl: 'Father-daughter bond' },
+        ],
+        images: []
+      },
+      {
+        id: 'gamedev', title: 'Game Development', icon: 'fa-solid fa-gamepad',
+        category: 'Misc', meta: 'Unity · C# · Design', rating: 5,
+        genre: 'Creative Tech', status: 'Ongoing',
+        recommendation: 'Niche Passion',
+        fav_quote: '', fav_quote_from: '',
+        badges: ['Passion', 'Creating', 'Building'],
+        tags: ['Unity', 'C#', 'Game Design', 'Procedural'],
+        feel: `Game dev is what first got me into programming, and it still feels the most magical. You're creating an entire reality — you decide the physics, the rules, the aesthetics, the narrative.\n\nUnity and C# clicked for me in a way that felt like the code was storytelling. Every system I build (enemy AI, procedural levels, dialogue trees) is just world-building through logic.`,
+        moments: [
+          { t: 'First "Hello World" game', d: 'A terrible pong clone that took 3 weeks. Best 3 weeks of my life.' },
+          { t: 'Procedural level gen working', d: 'Watching an algorithm generate playable spaces felt like watching life emerge from chaos.' },
+          { t: 'Enemy AI pathfinding clicked', d: 'A* and navmesh finally making sense at 2am. Worth every hour.' },
+        ],
+        gallery: [
+          { icon: 'fa-solid fa-cube', lbl: '3D level design' },
+          { icon: 'fa-solid fa-code', lbl: 'System architecture' },
+          { icon: 'fa-solid fa-sitemap', lbl: 'Game loops' },
+          { icon: 'fa-solid fa-wand-magic-sparkles', lbl: 'Particle effects' },
+        ],
+        images: []
       }
+    ];
 
-      /* ══════════════════════════════════════════
-         BUILD TABS (dynamic categories)
-      ══════════════════════════════════════════ */
-      function buildCatTabs() {
-        const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
-        const bar = document.getElementById('cat-tabs');
-        const container = document.getElementById('panels-container');
+    /* ══════════════════════════════════════════
+       STATE
+    ══════════════════════════════════════════ */
+    let activeCat = 'all';
+    let allItems = [];
 
-        bar.innerHTML = cats.map((cat, idx) => {
-          const count = cat === 'all' ? allItems.length : allItems.filter(i => (i.category || 'Misc') === cat).length;
-          const icons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
-          const icon = cat === 'all' ? 'fa-solid fa-border-all' : (icons[cat] || 'fa-solid fa-tag');
-          return `<button class="filter-btn ${idx === 0 ? 'active' : ''}" data-cat="${cat}" onclick="switchCat('${cat}',this)">
+    /* ══════════════════════════════════════════
+       LOAD & MERGE DATA
+    ══════════════════════════════════════════ */
+    async function loadAllInterests() {
+      let dbItems = [];
+      try { dbItems = await DB.get('interests'); } catch (e) { }
+      // Merge: DB items override static by ID
+      const merged = [...STATIC_DATA];
+      dbItems.forEach(di => {
+        const idx = merged.findIndex(s => s.id === di.id);
+        if (idx >= 0) merged[idx] = di;
+        else merged.push(di);
+      });
+      allItems = merged;
+      buildCatTabs();
+      buildGrids();
+      switchCat('all');
+    }
+
+    /* ══════════════════════════════════════════
+       BUILD TABS (dynamic categories)
+    ══════════════════════════════════════════ */
+    function buildCatTabs() {
+      const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
+      const bar = document.getElementById('cat-tabs');
+      const container = document.getElementById('panels-container');
+
+      bar.innerHTML = cats.map((cat, idx) => {
+        const count = cat === 'all' ? allItems.length : allItems.filter(i => (i.category || 'Misc') === cat).length;
+        const icons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
+        const icon = cat === 'all' ? 'fa-solid fa-border-all' : (icons[cat] || 'fa-solid fa-tag');
+        return `<button class="filter-btn ${idx === 0 ? 'active' : ''}" data-cat="${cat}" onclick="switchCat('${cat}',this)">
         <i class="${icon}"></i>${cat === 'all' ? 'All' : cat}<span class="cat-count">${count}</span>
       </button>`;
-        }).join('');
+      }).join('');
 
-        // Build panels
-        container.innerHTML = cats.map((cat, idx) => `
+      // Build panels
+      container.innerHTML = cats.map((cat, idx) => `
       <div class="cat-panel ${idx === 0 ? 'active' : ''}" id="panel-${cat.toLowerCase().replace(/\s+/g, '-')}">
         <div class="titles-grid" id="grid-${cat.toLowerCase().replace(/\s+/g, '-')}"></div>
       </div>
     `).join('');
-      }
+    }
 
-      /* ══════════════════════════════════════════
-         BUILD GRIDS
-      ══════════════════════════════════════════ */
-      function buildGrids() {
-        const q = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
-        const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
+    /* ══════════════════════════════════════════
+       BUILD GRIDS
+    ══════════════════════════════════════════ */
+    function buildGrids() {
+      const q = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
+      const cats = ['all', ...new Set(allItems.map(i => i.category || 'Misc'))];
 
-        cats.forEach(cat => {
-          const gridId = 'grid-' + cat.toLowerCase().replace(/\s+/g, '-');
-          const grid = document.getElementById(gridId);
-          if (!grid) return;
+      cats.forEach(cat => {
+        const gridId = 'grid-' + cat.toLowerCase().replace(/\s+/g, '-');
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
 
-          let items = cat === 'all' ? allItems : allItems.filter(i => (i.category || 'Misc') === cat);
-          if (q) items = items.filter(i => i.title.toLowerCase().includes(q) || (i.meta || '').toLowerCase().includes(q) || (i.genre || '').toLowerCase().includes(q));
+        let items = cat === 'all' ? allItems : allItems.filter(i => (i.category || 'Misc') === cat);
+        if (q) items = items.filter(i => i.title.toLowerCase().includes(q) || (i.meta || '').toLowerCase().includes(q) || (i.genre || '').toLowerCase().includes(q));
 
-          if (!items.length) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.3);font-family:var(--f-mono);font-size:0.8rem">No results for "${q}"</div>`;
-            return;
-          }
-          grid.innerHTML = items.map(item => renderTitleCard(item)).join('');
-        });
-        setTimeout(initReveal, 50);
-      }
+        if (!items.length) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.3);font-family:var(--f-mono);font-size:0.8rem">No results for "${q}"</div>`;
+          return;
+        }
+        grid.innerHTML = items.map(item => renderTitleCard(item)).join('');
+      });
+      setTimeout(initReveal, 50);
+    }
 
-      function renderTitleCard(item) {
-        const statusClass = { Finished: 'finished', Watched: 'finished', Ongoing: 'ongoing', Reading: 'ongoing', Dropped: 'dropped' };
-        const sc = statusClass[item.status] || '';
-        const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
-        const thumbImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" loading="lazy">` : '';
+    function renderTitleCard(item) {
+      const statusClass = { Finished: 'finished', Watched: 'finished', Ongoing: 'ongoing', Reading: 'ongoing', Dropped: 'dropped' };
+      const sc = statusClass[item.status] || '';
+      const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
+      const thumbImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" loading="lazy">` : '';
 
-        return `<div class="title-card reveal" onclick="openDetail('${item.id}')">
+      return `<div class="title-card reveal" onclick="openDetail('${item.id}')">
       <div class="tc-thumb">
         <div class="tc-thumb-bg"></div>
         ${thumbImg}
@@ -1115,29 +1125,29 @@
         <div class="tc-rating">${stars}</div>
       </div>
     </div>`;
-      }
+    }
 
-      function switchCat(cat, btn) {
-        activeCat = cat;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
-        document.querySelectorAll('.cat-panel').forEach(p => p.classList.remove('active'));
-        const panelId = 'panel-' + cat.toLowerCase().replace(/\s+/g, '-');
-        document.getElementById(panelId)?.classList.add('active');
-        setTimeout(initReveal, 50);
-      }
+    function switchCat(cat, btn) {
+      activeCat = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+      document.querySelectorAll('.cat-panel').forEach(p => p.classList.remove('active'));
+      const panelId = 'panel-' + cat.toLowerCase().replace(/\s+/g, '-');
+      document.getElementById(panelId)?.classList.add('active');
+      setTimeout(initReveal, 50);
+    }
 
-      /* ══════════════════════════════════════════
-         DETAIL VIEW
-      ══════════════════════════════════════════ */
-      function openDetail(itemId) {
-        const item = allItems.find(i => i.id === itemId);
-        if (!item) return;
+    /* ══════════════════════════════════════════
+       DETAIL VIEW
+    ══════════════════════════════════════════ */
+    function openDetail(itemId) {
+      const item = allItems.find(i => i.id === itemId);
+      if (!item) return;
 
-        const cat = item.category || 'Misc';
-        const catIcons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
+      const cat = item.category || 'Misc';
+      const catIcons = { Manhwa: 'fa-solid fa-book-open', Anime: 'fa-solid fa-user-ninja', Movies: 'fa-solid fa-film', Misc: 'fa-solid fa-star' };
 
-        // Breadcrumb
-        document.getElementById('det-breadcrumb').innerHTML = `
+      // Breadcrumb
+      document.getElementById('det-breadcrumb').innerHTML = `
       <a href="interests.html"><i class="fa-solid fa-house"></i>Interests</a>
       <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i></span>
       <a href="#" onclick="goBack();return false;"><i class="${catIcons[cat] || 'fa-solid fa-star'}"></i>${cat}</a>
@@ -1145,21 +1155,21 @@
       <span class="curr">${item.title}</span>
     `;
 
-        const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
-        const statusClass = { Finished: 'status-finished', Watched: 'status-finished', Ongoing: 'status-ongoing', Reading: 'status-ongoing', Dropped: 'status-dropped' };
-        const sc = statusClass[item.status] || '';
-        const statusIcon = { Finished: 'fa-solid fa-circle-check', Watched: 'fa-solid fa-circle-check', Ongoing: 'fa-solid fa-spinner', Reading: 'fa-solid fa-spinner', Dropped: 'fa-solid fa-circle-xmark' };
-        const si = statusIcon[item.status] || 'fa-solid fa-circle';
-        const recClass = { 'Must Watch': 'rec-must', 'Must Read': 'rec-must', 'Good': 'rec-good', 'Niche Passion': 'rec-niche', 'Skip': 'rec-skip' };
-        const rc = recClass[item.recommendation] || 'rec-good';
+      const stars = Array.from({ length: 5 }, (_, i) => `<i class="fa-solid fa-star ${i < (item.rating || 5) ? '' : 'empty'}"></i>`).join('');
+      const statusClass = { Finished: 'status-finished', Watched: 'status-finished', Ongoing: 'status-ongoing', Reading: 'status-ongoing', Dropped: 'status-dropped' };
+      const sc = statusClass[item.status] || '';
+      const statusIcon = { Finished: 'fa-solid fa-circle-check', Watched: 'fa-solid fa-circle-check', Ongoing: 'fa-solid fa-spinner', Reading: 'fa-solid fa-spinner', Dropped: 'fa-solid fa-circle-xmark' };
+      const si = statusIcon[item.status] || 'fa-solid fa-circle';
+      const recClass = { 'Must Watch': 'rec-must', 'Must Read': 'rec-must', 'Good': 'rec-good', 'Niche Passion': 'rec-niche', 'Skip': 'rec-skip' };
+      const rc = recClass[item.recommendation] || 'rec-good';
 
-        // Hero image
-        const heroImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" class="det-hero-img">` : '';
+      // Hero image
+      const heroImg = item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.title}" class="det-hero-img">` : '';
 
-        // Feel text — split into paragraphs
-        const feelParas = (item.feel || 'No description yet.').split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
+      // Feel text — split into paragraphs
+      const feelParas = (item.feel || 'No description yet.').split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
 
-        document.getElementById('det-content').innerHTML = `
+      document.getElementById('det-content').innerHTML = `
       <!-- HERO STRIP -->
       <div class="det-hero">
         <div class="det-hero-bg"></div>
@@ -1271,31 +1281,31 @@
       </div>
     `;
 
-        document.getElementById('cat-view').style.display = 'none';
-        document.getElementById('detail-view').classList.add('open');
-        scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      document.getElementById('cat-view').style.display = 'none';
+      document.getElementById('detail-view').classList.add('open');
+      scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-      function goBack() {
-        document.getElementById('cat-view').style.display = 'block';
-        document.getElementById('detail-view').classList.remove('open');
-        switchCat(activeCat);
-        scrollTo({ top: 0, behavior: 'smooth' });
-      }
+    function goBack() {
+      document.getElementById('cat-view').style.display = 'block';
+      document.getElementById('detail-view').classList.remove('open');
+      switchCat(activeCat);
+      scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-      function openLB(url) {
-        document.getElementById('lb-img').src = url;
-        document.getElementById('lb').classList.add('open');
-      }
-      document.getElementById('lb').addEventListener('click', e => {
-        if (e.target === e.currentTarget || e.target === document.getElementById('lb-img')) e.currentTarget.classList.remove('open');
-      });
+    function openLB(url) {
+      document.getElementById('lb-img').src = url;
+      document.getElementById('lb').classList.add('open');
+    }
+    document.getElementById('lb').addEventListener('click', e => {
+      if (e.target === e.currentTarget || e.target === document.getElementById('lb-img')) e.currentTarget.classList.remove('open');
+    });
 
-      /* ── INIT ── */
-      document.addEventListener('DOMContentLoaded', () => {
-        loadAllInterests();
-      });
-    </script>
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAllInterests();
+    });
+  </script>
 </body>
 
 </html>

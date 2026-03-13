@@ -236,23 +236,7 @@
       <div class="learning-box reveal">
         <div class="learning-title"><i class="fa-solid fa-graduation-cap"></i>Currently Exploring</div>
         <div class="learning-sub">// always leveling up — these are on the radar</div>
-        <div class="learning-list">
-          <div class="learn-item">
-            <div class="live-dot"></div><i class="fa-solid fa-brain"></i>Advanced AI Integration
-          </div>
-          <div class="learn-item">
-            <div class="live-dot"></div><i class="fa-solid fa-cube"></i>Three.js / WebGL
-          </div>
-          <div class="learn-item">
-            <div class="live-dot"></div><i class="fa-solid fa-diagram-project"></i>System Design
-          </div>
-          <div class="learn-item">
-            <div class="live-dot"></div><i class="fa-solid fa-gears"></i>DevOps & CI/CD
-          </div>
-          <div class="learn-item">
-            <div class="live-dot"></div><i class="fa-solid fa-users"></i>Multiplayer Game Dev
-          </div>
-        </div>
+        <div class="learning-list" id="learning-list"></div>
       </div>
     </div>
   </div>
@@ -301,6 +285,17 @@
         </div>`;
       }).join('');
       
+      // Handle Learning (Currently Exploring)
+      const learnContainer = document.getElementById('learning-list');
+      if (learnContainer) {
+        const learningItems = cats['Learning'] || [];
+        learnContainer.innerHTML = learningItems.map(s => `
+          <div class="learn-item">
+            <div class="live-dot"></div><i class="${s.icon}"></i>${s.name}
+          </div>
+        `).join('') || '<div style="color:rgba(255,255,255,0.4);font-size:0.8rem;padding:10px 0;">Nothing in the queue right now.</div>';
+      }
+
       // Re-trigger animations
       setTimeout(initReveal, 100);
     }

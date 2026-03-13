@@ -34,7 +34,8 @@ const DB = {
       'interests_movies':{ t:'interests', c:'movies' },
       'interests_misc':  { t:'interests', c:'misc' },
       'skills':          { t:'skills', o:'created_at', d:false },
-      'socials':         { t:'socials', o:'created_at', d:false }
+      'socials':         { t:'socials', o:'created_at', d:false },
+      'activities':      { t:'activities', o:'created_at', d:false }
     };
     
     const m = map[key];
@@ -87,7 +88,8 @@ const DB = {
       'interests_movies':'interests',
       'interests_misc':  'interests',
       'skills':          'skills',
-      'socials':         'socials'
+      'socials':         'socials',
+      'activities':      'activities'
     };
     const table = map[key];
     if (!table) return false;
@@ -113,7 +115,8 @@ const DB = {
       'projects': 'projects',
       'interests': 'interests',
       'skills': 'skills',
-      'socials': 'socials'
+      'socials': 'socials',
+      'activities': 'activities'
     };
     const table = map[key];
     if (!table) return false;
@@ -141,7 +144,8 @@ const DB = {
       'projects': 'projects',
       'interests': 'interests',
       'skills': 'skills',
-      'socials': 'socials'
+      'socials': 'socials',
+      'activities': 'activities'
     };
     const table = map[key];
     if (!table) return false;
@@ -244,14 +248,40 @@ function initReveal() {
 
 // ── TOAST ─────────────────────────────────────────────────
 function toast(msg, type='ok', icon='') {
-  let t = document.getElementById('toast');
-  if (!t) { t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
-  const icons = {ok:'fa-circle-check',err:'fa-circle-xmark',warn:'fa-triangle-exclamation'};
+  // Buat container jika belum ada
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  // Icon mapping
+  const icons = {
+    ok: 'fa-circle-check',
+    err: 'fa-circle-xmark',
+    warn: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+  };
   const ic = icon || icons[type] || icons.ok;
-  t.innerHTML = `<i class="fa-solid ${ic}"></i><span>${msg}</span>`;
-  t.className = type==='err'?'err show': type==='warn'?'warn show':'show';
-  clearTimeout(t._t);
-  t._t = setTimeout(()=>t.classList.remove('show'), 3400);
+  
+  // Buat elemen toast baru
+  const el = document.createElement('div');
+  el.className = `toast-item t-${type}`;
+  el.innerHTML = `
+    <div class="t-icon"><i class="fa-solid ${ic}"></i></div>
+    <div class="t-msg">${msg}</div>
+    <div class="t-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></div>
+    <div class="t-progress"></div>
+  `;
+
+  container.appendChild(el);
+  
+  // Hapus otomatis setelah 4 detik
+  setTimeout(() => {
+    el.style.animation = 'toastOut 0.4s forwards';
+    el.addEventListener('animationend', () => el.remove());
+  }, 1000); // 3 detik (sebentar)
 }
 
 // ── IMAGE UPLOAD HELPER ────────────────────────────────────
