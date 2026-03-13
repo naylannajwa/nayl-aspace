@@ -869,6 +869,17 @@ body::before {
 }
 .mob-nav-btn i { font-size: 1rem; }
 .mob-nav-btn.active { color: var(--accent); background: var(--accent-soft); }
+
+/* ── EXTRA LINKS DRAG & DROP ── */
+.extra-link-row {
+  display: flex; gap: 8px; align-items: center;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 8px; border-radius: var(--r); margin-bottom: 8px;
+  transition: var(--trans);
+}
+.extra-link-row.dragging { opacity: 0.5; border: 2px dashed var(--accent); background: var(--bg-card); }
+.drag-handle { cursor: grab; color: var(--ink-3); padding: 4px; display: flex; align-items: center; }
+.drag-handle:active { cursor: grabbing; }
 @media (max-width: 860px) {
   .mobile-nav { display: flex; }
   .app-body { padding-bottom: 70px; }
@@ -1016,6 +1027,15 @@ body::before {
           <div class="f-row">
             <div class="fg"><label class="fl"><i class="fa-brands fa-github"></i>GitHub URL</label><input class="fi" id="p-github" placeholder="https://github.com/..."></div>
             <div class="fg"><label class="fl"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live URL</label><input class="fi" id="p-live" placeholder="https://..."></div>
+          </div>
+
+          <!-- EXTRA LINKS SECTION -->
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-link"></i>Extra Links (Max 3)</label>
+            <div id="extra-links-container">
+              <!-- Dynamic Rows Here -->
+            </div>
+            <button type="button" class="btn-sm btn-edit" id="btn-add-link" onclick="addExtraLinkRow()" style="margin-top:8px"><i class="fa-solid fa-plus"></i> Add Link</button>
           </div>
 
           <div class="fg">
@@ -1201,51 +1221,169 @@ body::before {
 
 /* ── ICONS ── */
 const ICONS = [
-  'fa-solid fa-rocket','fa-solid fa-globe','fa-solid fa-gamepad','fa-solid fa-mobile-screen',
-  'fa-solid fa-robot','fa-solid fa-pen-ruler','fa-solid fa-code','fa-solid fa-database',
-  'fa-solid fa-server','fa-solid fa-brain','fa-solid fa-wand-magic-sparkles',
-  'fa-solid fa-cube','fa-solid fa-star','fa-solid fa-heart','fa-solid fa-fire',
-  'fa-solid fa-bolt','fa-solid fa-crown','fa-solid fa-shield','fa-solid fa-book',
-  'fa-solid fa-film','fa-solid fa-music','fa-solid fa-palette','fa-solid fa-pencil',
-  'fa-solid fa-flask','fa-solid fa-microscope','fa-solid fa-chart-line',
-  'fa-solid fa-layer-group','fa-solid fa-infinity','fa-solid fa-laptop-code',
-  'fa-solid fa-terminal','fa-solid fa-microchip',
-  'fa-brands fa-github','fa-brands fa-react','fa-brands fa-node-js',
-  'fa-brands fa-python','fa-brands fa-android','fa-brands fa-figma',
-  'fa-solid fa-user-ninja','fa-solid fa-user-astronaut','fa-solid fa-dragon',
-  'fa-solid fa-gem','fa-solid fa-trophy','fa-solid fa-medal',
+  // Socials & Brands
+  'fa-brands fa-youtube', 'fa-brands fa-instagram', 'fa-brands fa-tiktok',
+  'fa-brands fa-twitter', 'fa-brands fa-x-twitter', 'fa-brands fa-linkedin',
+  'fa-brands fa-github', 'fa-brands fa-discord', 'fa-brands fa-spotify',
+  'fa-brands fa-twitch', 'fa-brands fa-facebook', 'fa-brands fa-whatsapp',
+  'fa-brands fa-telegram', 'fa-brands fa-pinterest', 'fa-brands fa-behance',
+  'fa-brands fa-dribbble', 'fa-brands fa-medium', 'fa-brands fa-figma',
+  'fa-brands fa-google-play', 'fa-brands fa-app-store', 'fa-brands fa-steam',
+  'fa-brands fa-itch-io', 'fa-brands fa-unity', 'fa-brands fa-gitlab',
+  // Generics
+  'fa-solid fa-link', 'fa-solid fa-globe', 'fa-solid fa-paper-plane',
+  'fa-solid fa-book', 'fa-solid fa-file-pdf', 'fa-solid fa-video',
+  'fa-solid fa-image', 'fa-solid fa-music', 'fa-solid fa-gamepad',
+  'fa-solid fa-shop', 'fa-solid fa-bag-shopping', 'fa-solid fa-download',
+  'fa-solid fa-rocket', 'fa-solid fa-code', 'fa-solid fa-star'
 ];
 
-function buildIconGrid(popId, hiddenId, previewI, previewName, currentVal) {
-  const pop = document.getElementById(popId);
+function buildIconGrid(popEl, inputEl, previewI, previewName, currentVal) {
+  // popEl is the .icon-grid-pop element
   pop.innerHTML = ICONS.map(ic => `
-    <button class="icon-grid-btn ${ic===currentVal?'sel':''}" onclick="selectIcon('${popId}','${hiddenId}','${previewI}','${previewName}','${ic}')">
+    <button type="button" class="icon-grid-btn ${ic===currentVal?'sel':''}" onclick="selectIcon(this, '${ic}')">
       <i class="${ic}"></i>
     </button>
   `).join('');
 }
-function selectIcon(popId, hiddenId, previewIId, previewNameId, ic) {
-  document.getElementById(hiddenId).value = ic;
-  document.getElementById(previewIId).className = ic;
-  document.getElementById(previewNameId).textContent = ic;
-  document.getElementById(popId).classList.remove('open');
-  buildIconGrid(popId, hiddenId, previewIId, previewNameId, ic);
+function selectIcon(btn, ic) {
+  const wrapper = btn.closest('.icon-picker-wrap');
+  const pop = wrapper.querySelector('.icon-grid-pop');
+  const hidden = wrapper.querySelector('input[type=hidden]');
+  const prevI = wrapper.querySelector('.icon-preview i:first-child');
+  const prevName = wrapper.querySelector('.icon-preview-name');
+
+  hidden.value = ic;
+  prevI.className = ic;
+  if(prevName) prevName.textContent = ic;
+  
+  pop.classList.remove('open');
+  // Rebuild to update 'sel' class
+  pop.innerHTML = ICONS.map(icon => `
+    <button type="button" class="icon-grid-btn ${icon===ic?'sel':''}" onclick="selectIcon(this, '${icon}')">
+      <i class="${icon}"></i>
+    </button>
+  `).join('');
 }
 function toggleIconPicker(which) {
-  const map = {
-    proj: { pop: 'proj-icon-pop', hid: 'p-icon', pi: 'p-icon-preview-i', pn: 'p-icon-preview-name' },
-    int:  { pop: 'int-icon-pop',  hid: 'i-icon', pi: 'i-icon-preview-i', pn: 'i-icon-preview-name' }
-  };
-  const m = map[which];
-  const pop = document.getElementById(m.pop);
+  let pop;
+  if (typeof which === 'string') {
+     // Legacy support for main forms
+     const map = {
+       proj: { pop: 'proj-icon-pop', hid: 'p-icon' },
+       int:  { pop: 'int-icon-pop',  hid: 'i-icon' }
+     };
+     pop = document.getElementById(map[which].pop);
+     const val = document.getElementById(map[which].hid).value;
+     // Initial build if empty
+     if(!pop.hasChildNodes()) {
+        pop.innerHTML = ICONS.map(icon => `
+          <button type="button" class="icon-grid-btn ${icon===val?'sel':''}" onclick="selectIcon(this, '${icon}')">
+            <i class="${icon}"></i>
+          </button>
+        `).join('');
+     }
+  } else {
+     // Dynamic element support
+     const wrapper = which.closest('.icon-picker-wrap');
+     pop = wrapper.querySelector('.icon-grid-pop');
+     const val = wrapper.querySelector('input[type=hidden]').value;
+     if(!pop.hasChildNodes()) {
+        pop.innerHTML = ICONS.map(icon => `
+          <button type="button" class="icon-grid-btn ${icon===val?'sel':''}" onclick="selectIcon(this, '${icon}')">
+            <i class="${icon}"></i>
+          </button>
+        `).join('');
+     }
+  }
+  
   const isOpen = pop.classList.contains('open');
+  // Close others
+  document.querySelectorAll('.icon-grid-pop').forEach(p => p !== pop && p.classList.remove('open'));
   pop.classList.toggle('open');
-  if (!isOpen) buildIconGrid(m.pop, m.hid, m.pi, m.pn, document.getElementById(m.hid).value);
 }
 document.addEventListener('click', e => {
-  if (!e.target.closest('#proj-icon-wrap')) document.getElementById('proj-icon-pop')?.classList.remove('open');
-  if (!e.target.closest('#int-icon-wrap'))  document.getElementById('int-icon-pop')?.classList.remove('open');
+  if (!e.target.closest('.icon-picker-wrap')) {
+    document.querySelectorAll('.icon-grid-pop').forEach(el => el.classList.remove('open'));
+  }
 });
+
+/* ── EXTRA LINKS DYNAMIC ── */
+function addExtraLinkRow(data = { icon: 'fa-solid fa-link', label: '', url: '' }) {
+  const container = document.getElementById('extra-links-container');
+  if (container.children.length >= 3) return;
+
+  const div = document.createElement('div');
+  div.className = 'extra-link-row';
+  div.draggable = true;
+  div.innerHTML = `
+    <div class="drag-handle"><i class="fa-solid fa-grip-lines"></i></div>
+    <div style="width:70px" class="icon-picker-wrap">
+      <div class="icon-preview" onclick="toggleIconPicker(this)" style="padding:10px;justify-content:center">
+        <i class="${data.icon}"></i>
+      </div>
+      <div class="icon-grid-pop" style="width:280px"></div>
+      <input type="hidden" class="ex-icon" value="${data.icon}">
+    </div>
+    <div style="flex:1"><input class="fi ex-label" placeholder="Label" value="${data.label}"></div>
+    <div style="flex:2"><input class="fi ex-url" placeholder="URL" value="${data.url}"></div>
+    <button type="button" class="btn-sm btn-del" onclick="removeExtraLinkRow(this)"><i class="fa-solid fa-trash"></i></button>
+  `;
+
+  // DnD Events
+  div.addEventListener('dragstart', handleDragStart);
+  div.addEventListener('dragover', handleDragOver);
+  div.addEventListener('drop', handleDrop);
+  div.addEventListener('dragend', handleDragEnd);
+
+  container.appendChild(div);
+  updateAddLinkBtn();
+}
+
+function removeExtraLinkRow(btn) {
+  btn.closest('.extra-link-row').remove();
+  updateAddLinkBtn();
+}
+
+function updateAddLinkBtn() {
+  const count = document.getElementById('extra-links-container').children.length;
+  document.getElementById('btn-add-link').style.display = count >= 3 ? 'none' : 'inline-flex';
+}
+
+let dragSrcEl = null;
+function handleDragStart(e) {
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+  this.classList.add('dragging');
+}
+function handleDragOver(e) {
+  if (e.preventDefault) e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+function handleDrop(e) {
+  if (e.stopPropagation) e.stopPropagation();
+  if (dragSrcEl !== this) {
+    // Swap DOM logic: insert dragSrcEl before this, or after... 
+    // Simple swap content approach or node move. Node move is better for event listeners.
+    // Get all rows
+    const container = document.getElementById('extra-links-container');
+    const rows = [...container.querySelectorAll('.extra-link-row')];
+    const srcIndex = rows.indexOf(dragSrcEl);
+    const targetIndex = rows.indexOf(this);
+    
+    if (srcIndex < targetIndex) {
+      this.after(dragSrcEl);
+    } else {
+      this.before(dragSrcEl);
+    }
+  }
+  return false;
+}
+function handleDragEnd() {
+  this.classList.remove('dragging');
+}
 
 /* ── QUILL ── */
 let qProj = null, qInt = null;
@@ -1343,6 +1481,16 @@ async function saveProject() {
   let existingImgs = [];
   if (id) { const projs = await DB.get('projects'); const ex = projs.find(p => p.id === id); existingImgs = ex?.images || []; }
   const allImgs = [...existingImgs.filter(u => !state.files.some(f => f.url === u)), ...urls];
+
+  // Collect Extra Links
+  const extra_links = Array.from(document.querySelectorAll('#extra-links-container .extra-link-row')).map(row => {
+    return {
+      icon: row.querySelector('.ex-icon').value,
+      label: row.querySelector('.ex-label').value.trim() || 'Link',
+      url: row.querySelector('.ex-url').value.trim()
+    };
+  }).filter(l => l.url); // Filter empty URLs
+
   const data = {
     id: id || Date.now().toString(),
     name: document.getElementById('p-name').value.trim(),
@@ -1352,6 +1500,7 @@ async function saveProject() {
     status: document.getElementById('p-status').value,
     github_url: document.getElementById('p-github').value.trim(),
     live_url: document.getElementById('p-live').value.trim(),
+    extra_links: extra_links,
     description: descHTML,
     images: allImgs,
     created_at: new Date().toISOString(),
@@ -1399,6 +1548,12 @@ async function editProject(id) {
   document.getElementById('p-icon-preview-i').className = ic;
   document.getElementById('p-icon-preview-name').textContent = ic;
   if (qProj) qProj.root.innerHTML = p.description || '';
+
+  // Populate Extra Links
+  document.getElementById('extra-links-container').innerHTML = '';
+  const el = p.extra_links || [];
+  el.forEach(link => addExtraLinkRow(link));
+  updateAddLinkBtn();
   
   // Fix image preview loading
   const state = window._projImgState; 
@@ -1437,6 +1592,9 @@ async function deleteProject(id) {
 }
 function clearProjForm() {
   ['p-edit-id','p-name','p-tags','p-github','p-live'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('extra-links-container').innerHTML = '';
+  updateAddLinkBtn();
+  
   document.getElementById('p-icon').value = 'fa-solid fa-rocket';
   document.getElementById('p-icon-preview-i').className = 'fa-solid fa-rocket';
   document.getElementById('p-icon-preview-name').textContent = 'fa-solid fa-rocket';

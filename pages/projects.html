@@ -116,20 +116,11 @@
 
 @media(max-width:768px){.hero-band{padding:100px 22px 40px}}
 @media(max-width:768px){
-  .nav-toggle{display:block}
-  .nav-links{
-    position:fixed;inset:0;
-    background:rgba(4,6,26,.85);backdrop-filter:blur(24px);
-    flex-direction:column;justify-content:center;align-items:center;gap:30px;
-    transform:translateY(-100%);transition:transform .4s cubic-bezier(.16,1,.3,1);
-    z-index:1000;
-  }
-  .nav-links.active{transform:translateY(0)}
-  .nav-links a{font-size:1.4rem;font-weight:600}
   .nav-right{display:none}
   
   /* Project Specific Mobile */
-  .filter-bar{overflow-x:auto;padding-bottom:10px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .filter-bar{overflow-x:auto;padding-bottom:10px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .filter-bar::-webkit-scrollbar{display:none}
   .filter-btn{flex-shrink:0;white-space:nowrap}
   .proj-detail-imgs{grid-template-columns:1fr}
   .modal-title{font-size:1.4rem}
@@ -153,14 +144,9 @@
 </nav>
 
 <div class="page-content">
-<div class="hero-band">
-  <div style="max-width:1180px;margin:0 auto">
-    <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>My Projects</p>
-    <h1 class="section-title reveal"><span class="grad">Things I've Built</span></h1>
-  </div>
-</div>
-
-<div class="section-wrap" style="padding-top:0">
+<div class="section-wrap">
+  <p class="section-label reveal"><i class="fa-solid fa-rocket"></i>My Projects</p>
+  <h1 class="section-title reveal"><span class="grad">Things I've Built</span></h1>
   <div class="filter-bar reveal" id="filter-bar">
     <button class="filter-btn active" onclick="filterProj('all',this)"><i class="fa-solid fa-border-all"></i>All</button>
     <button class="filter-btn" onclick="filterProj('web',this)"><i class="fa-solid fa-globe"></i>Web</button>
@@ -174,9 +160,8 @@
 </div>
 
 <!-- PROJECT DETAIL MODAL -->
-<div class="modal-overlay" id="proj-modal">
+<div class="modal-overlay" id="proj-modal" onclick="if(event.target===this){this.classList.remove('open');document.body.style.overflow='';}">
   <div class="modal-box" style="max-width:780px">
-    <button class="modal-close" onclick="document.getElementById('proj-modal').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
     <div id="proj-modal-content"></div>
   </div>
 </div>
@@ -272,36 +257,159 @@ function openProjModal(id){
   
   // Main image for story background (first image or placeholder logic)
   const bgImg = imgs.length ? imgs[0] : '';
+  const otherImgs = imgs;
+  
+  // Collect all links to unified array for uniform grid layout
+  const links = [];
+  if(p.live_url) links.push({ url:p.live_url, icon:'fa-solid fa-arrow-up-right-from-square', label:'View Live', cls:'pm-btn-primary' });
+  if(p.github_url) links.push({ url:p.github_url, icon:'fa-brands fa-github', label:'Source Code', cls:'pm-btn-ghost' });
+  if(p.extra_links) p.extra_links.forEach(l => links.push({ url:l.url, icon:l.icon, label:l.label, cls:'pm-btn-ghost' }));
 
   document.getElementById('proj-modal-content').innerHTML=`
-    <!-- Story Media Background (Visible on Mobile) -->
-    <div class="story-media">
-      ${bgImg ? `<img src="${bgImg}" alt="Story Cover">` : `<div style="width:100%;height:100%;background:var(--bg-mid)"></div>`}
-    </div>
-
     <!-- Content -->
     <div class="story-content">
-      <div style="margin-bottom:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <div class="modal-title"><span class="grad">${p.name}</span></div>
-        <div class="proj-status-badge ${s.cls}" style="position:static"><i class="fa-solid ${s.icon}"></i>${s.label}</div>
+      <!-- Desktop Cover (Tetap ada tapi hidden via CSS di mobile) -->
+      ${bgImg ? `<div class="proj-cover-desktop"><img src="${bgImg}" alt="Cover"></div>` : ''}
+      
+      <div style="margin-bottom:12px">
+        <div class="modal-title" style="margin-bottom:6px"><span class="grad">${p.name}</span></div>
+        <div style="font-family:var(--f-mono);font-size:0.75rem;color:var(--white-dim);display:flex;align-items:center;gap:8px">
+           <span class="proj-status-badge ${s.cls}" style="position:static;display:inline-flex"><i class="fa-solid ${s.icon}"></i>${s.label}</span>
+           <span>—</span>
+           <span>${p.category || 'Project'}</span>
+        </div>
       </div>
-      
-      <div class="modal-sub"><i class="fa-solid fa-tag"></i>${(p.tags||[]).join(' · ')}</div>
-      
-      ${imgs.length?`
-      <div class="proj-detail-imgs">
-        ${imgs.map(url=>`<div class="proj-detail-img" onclick="openLightbox('${url}')"><img src="${url}" alt="${p.name}" loading="lazy"></div>`).join('')}
-      </div>`:''}
-      
-      <div class="rich-content" style="margin-bottom:24px">${p.description||''}</div>
-      
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px">
-        ${p.github_url?`<a class="btn-ghost" href="${p.github_url}" target="_blank"><i class="fa-brands fa-github"></i>GitHub</a>`:''}
-        ${p.live_url?`<a class="btn-primary" href="${p.live_url}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Live</a>`:''}
+
+      <div class="pm-layout">
+        
+        <!-- LEFT: MAIN CONTENT -->
+        <div class="pm-main" style="width:100%">
+           <!-- ACTIONS (Uniform Grid Layout) -->
+           <div class="pm-actions" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(145px, 1fr)); gap:12px; margin-bottom:28px; width:100%">
+             ${links.map(l => `
+               <a href="${l.url}" target="_blank" class="pm-btn ${l.cls}" style="width:100%; justify-content:center; text-align:center">
+                 <i class="${l.icon}"></i>${l.label}
+               </a>
+             `).join('')}
+           </div>
+
+           <!-- TECH STACK (With Label) -->
+           <div style="margin-bottom:28px">
+             <div class="pm-group-lbl"><i class="fa-solid fa-microchip"></i>Tech Stack</div>
+             <div class="pm-tags">
+               ${(p.tags||[]).map(t=>`<span class="pm-tag">${t}</span>`).join('')}
+             </div>
+           </div>
+
+           <div class="pm-group-lbl"><i class="fa-solid fa-align-left"></i>Overview</div>
+           <div class="rich-content" style="margin-bottom:32px">${p.description||'<p>No description available.</p>'}</div>
+
+           ${otherImgs.length ? `
+             <div class="pm-group-lbl"><i class="fa-solid fa-images"></i>Gallery</div>
+             <div class="proj-detail-imgs">
+               ${otherImgs.map(url=>`<div class="proj-detail-img" onclick="openLightbox('${url}')"><img src="${url}" alt="${p.name}" loading="lazy"></div>`).join('')}
+             </div>
+           `:''}
+        </div>
       </div>
     </div>
   `;
+  
+  const mb = document.querySelector('.modal-box');
+  mb.style.transform = ''; // Hapus transform inline sebelumnya
+  mb.classList.remove('sheet-full');
+  mb.classList.add('sheet-half');
+
   document.getElementById('proj-modal').classList.add('open');
+  document.body.style.overflow = 'hidden'; // Kunci scroll halaman belakang
+
+  // ── SWIPE DOWN GESTURE LOGIC ──
+  initSheetGestures();
+}
+
+function initSheetGestures() {
+  const content = document.querySelector('.story-content');
+  const box = document.querySelector('.modal-box');
+  const modal = document.getElementById('proj-modal');
+  if (!content || !modal || !box) return;
+
+  // Cegah listener ditambahkan berulang kali
+  if (box.dataset.gesturesInitialized) return;
+  box.dataset.gesturesInitialized = 'true';
+
+  let startY = 0, currentY = 0, isDragging = false, startTranslateY = 0;
+  let sheetState = 'half';
+
+  // 1. Touch Start
+  const onTouchStart = (e) => {
+    if (content.scrollTop > 0) { isDragging = false; return; }
+    
+    isDragging = true;
+    startY = e.touches[0].clientY;
+    sheetState = box.classList.contains('sheet-full') ? 'full' : 'half';
+    
+    const style = window.getComputedStyle(box);
+    const matrix = new WebKitCSSMatrix(style.transform);
+    startTranslateY = matrix.m42;
+    
+    box.style.transition = 'none';
+  };
+
+  // 2. Touch Move
+  const onTouchMove = (e) => {
+    if (!isDragging) return;
+    
+    currentY = e.touches[0].clientY;
+    const delta = currentY - startY;
+
+    if (sheetState === 'full' && delta < 0) return;
+    
+    if (e.cancelable) e.preventDefault();
+
+    let newY = startTranslateY + delta;
+    if (newY < 0) newY *= 0.3; // Efek tahanan saat ditarik ke atas
+    
+    box.style.transform = `translateY(${newY}px)`;
+  };
+
+  // 3. Touch End
+  const onTouchEnd = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    box.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    
+    const delta = currentY - startY;
+
+    if (sheetState === 'half') {
+      if (delta < -80) snapTo('full');
+      else if (delta > 100) closeModal();
+      else snapTo('half');
+    } else { // 'full' state
+      if (delta > 120) snapTo('half');
+      else snapTo('full');
+    }
+  };
+
+  const snapTo = (state) => {
+    box.style.transform = '';
+    if (state === 'full') {
+      box.classList.remove('sheet-half');
+      box.classList.add('sheet-full');
+    } else {
+      box.classList.remove('sheet-full');
+      box.classList.add('sheet-half');
+    }
+  };
+
+  const closeModal = () => {
+    if (navigator.vibrate) navigator.vibrate(50);
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  content.addEventListener('touchstart', onTouchStart, { passive: true });
+  content.addEventListener('touchmove', onTouchMove, { passive: false });
+  content.addEventListener('touchend', onTouchEnd);
 }
 
 function openLightbox(url){
