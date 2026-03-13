@@ -231,69 +231,7 @@
     </div>
 
     <div class="section-wrap" style="padding-top:0">
-      <div class="skills-grid-wrap">
-
-        <div class="skill-cat reveal">
-          <div class="cat-header">
-            <div class="cat-icon-wrap cat-icon-web"><i class="fa-solid fa-globe"></i></div>
-            <div class="cat-name">Web Development</div>
-          </div>
-          <div class="chips">
-            <span class="skill-chip"><i class="fa-brands fa-html5"></i>HTML</span>
-            <span class="skill-chip"><i class="fa-brands fa-css3-alt"></i>CSS</span>
-            <span class="skill-chip"><i class="fa-brands fa-js"></i>JavaScript</span>
-            <span class="skill-chip"><i class="fa-brands fa-php"></i>PHP</span>
-            <span class="skill-chip"><i class="fa-solid fa-n"></i>Next.js</span>
-            <span class="skill-chip"><i class="fa-brands fa-react"></i>React</span>
-            <span class="skill-chip"><i class="fa-brands fa-vuejs"></i>Vue</span>
-          </div>
-        </div>
-
-        <div class="skill-cat reveal">
-          <div class="cat-header">
-            <div class="cat-icon-wrap cat-icon-be"><i class="fa-solid fa-server"></i></div>
-            <div class="cat-name">Backend & Data</div>
-          </div>
-          <div class="chips">
-            <span class="skill-chip"><i class="fa-brands fa-node-js"></i>Node.js</span>
-            <span class="skill-chip"><i class="fa-brands fa-python"></i>Python</span>
-            <span class="skill-chip"><i class="fa-solid fa-database"></i>SQL</span>
-            <span class="skill-chip"><i class="fa-solid fa-bolt"></i>Supabase</span>
-            <span class="skill-chip"><i class="fa-solid fa-plug"></i>REST API</span>
-            <span class="skill-chip"><i class="fa-solid fa-robot"></i>AI Integration</span>
-          </div>
-        </div>
-
-        <div class="skill-cat reveal">
-          <div class="cat-header">
-            <div class="cat-icon-wrap cat-icon-design"><i class="fa-solid fa-pen-ruler"></i></div>
-            <div class="cat-name">Design</div>
-          </div>
-          <div class="chips">
-            <span class="skill-chip"><i class="fa-brands fa-figma"></i>Figma</span>
-            <span class="skill-chip"><i class="fa-solid fa-palette"></i>Canva</span>
-            <span class="skill-chip"><i class="fa-solid fa-layer-group"></i>UI/UX</span>
-            <span class="skill-chip"><i class="fa-solid fa-vector-square"></i>Graphic Design</span>
-            <span class="skill-chip"><i class="fa-solid fa-pencil"></i>Drawing</span>
-            <span class="skill-chip"><i class="fa-solid fa-object-group"></i>Interface Design</span>
-          </div>
-        </div>
-
-        <div class="skill-cat reveal">
-          <div class="cat-header">
-            <div class="cat-icon-wrap cat-icon-game"><i class="fa-solid fa-gamepad"></i></div>
-            <div class="cat-name">Mobile & Game Dev</div>
-          </div>
-          <div class="chips">
-            <span class="skill-chip"><i class="fa-brands fa-android"></i>Kotlin</span>
-            <span class="skill-chip"><i class="fa-solid fa-mobile-screen"></i>Android Dev</span>
-            <span class="skill-chip"><i class="fa-solid fa-cube"></i>Unity</span>
-            <span class="skill-chip"><i class="fa-solid fa-hashtag"></i>C#</span>
-            <span class="skill-chip"><i class="fa-solid fa-dice"></i>Game Dev</span>
-          </div>
-        </div>
-
-      </div>
+      <div class="skills-grid-wrap" id="skills-grid"></div>
 
       <div class="learning-box reveal">
         <div class="learning-title"><i class="fa-solid fa-graduation-cap"></i>Currently Exploring</div>
@@ -325,6 +263,50 @@
   <div id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../assets/script.js"></script>
+  <script>
+    async function renderSkills() {
+      const skills = await DB.get('skills');
+      const container = document.getElementById('skills-grid');
+      
+      if(!skills.length) return; // Fallback to HTML defaults if DB empty? 
+      // Or overwrite. Here we overwrite.
+
+      // Group by Category
+      const cats = {};
+      skills.forEach(s => {
+        if(!cats[s.category]) cats[s.category] = [];
+        cats[s.category].push(s);
+      });
+
+      const iconMap = {
+        'Web Development': {i:'fa-globe', c:'cat-icon-web'},
+        'Backend & Data': {i:'fa-server', c:'cat-icon-be'},
+        'Design': {i:'fa-pen-ruler', c:'cat-icon-design'},
+        'Mobile & Game Dev': {i:'fa-gamepad', c:'cat-icon-game'},
+        'Learning': {i:'fa-graduation-cap', c:'cat-icon-web'}
+      };
+
+      container.innerHTML = Object.entries(cats).map(([name, items]) => {
+        if(name === 'Learning') return ''; // Skip learning, rendered separately or add logic
+        const meta = iconMap[name] || {i:'fa-layer-group', c:'cat-icon-web'};
+        return `
+        <div class="skill-cat reveal">
+          <div class="cat-header">
+            <div class="cat-icon-wrap ${meta.c}"><i class="fa-solid ${meta.i}"></i></div>
+            <div class="cat-name">${name}</div>
+          </div>
+          <div class="chips">
+            ${items.map(s => `<span class="skill-chip"><i class="${s.icon}"></i>${s.name}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+      
+      // Re-trigger animations
+      setTimeout(initReveal, 100);
+    }
+
+    document.addEventListener('DOMContentLoaded', renderSkills);
+  </script>
 </body>
 
 </html>

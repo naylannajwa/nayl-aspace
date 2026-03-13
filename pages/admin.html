@@ -725,6 +725,7 @@ body::before {
     <ul class="nav-tabs">
       <li><a href="#" class="active" onclick="showPanel('dashboard',this);return false"><i class="fa-solid fa-chart-line"></i>Dashboard</a></li>
       <li><a href="#" onclick="showPanel('projects',this);return false"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="#" onclick="showPanel('skills',this);return false"><i class="fa-solid fa-brain"></i>Skills</a></li>
       <li><a href="#" onclick="showPanel('messages',this);return false"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
       <li><a href="#" onclick="showPanel('interests',this);return false"><i class="fa-solid fa-heart"></i>Interests</a></li>
       <li><a href="#" onclick="showPanel('settings',this);return false"><i class="fa-solid fa-gear"></i>Settings</a></li>
@@ -738,6 +739,7 @@ body::before {
   <div class="mobile-nav" id="mobile-nav">
     <button class="mob-nav-btn active" onclick="showPanel('dashboard',this)"><i class="fa-solid fa-chart-line"></i>Dash</button>
     <button class="mob-nav-btn" onclick="showPanel('projects',this)"><i class="fa-solid fa-rocket"></i>Projects</button>
+    <button class="mob-nav-btn" onclick="showPanel('skills',this)"><i class="fa-solid fa-brain"></i>Skills</button>
     <button class="mob-nav-btn" onclick="showPanel('messages',this)"><i class="fa-solid fa-paper-plane"></i>Msgs</button>
     <button class="mob-nav-btn" onclick="showPanel('interests',this)"><i class="fa-solid fa-heart"></i>Interests</button>
     <button class="mob-nav-btn" onclick="showPanel('settings',this)"><i class="fa-solid fa-gear"></i>Settings</button>
@@ -889,12 +891,73 @@ body::before {
       <div class="items-list" id="proj-list"></div>
     </div>
 
+    <!-- SKILLS -->
+    <div class="panel" id="p-skills">
+      <div class="panel-header">
+        <div><div class="panel-eyebrow">Expertise</div><div class="panel-title">Skills & Stack</div><div class="panel-sub">Kelola daftar skill dan teknologi</div></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon"><i class="fa-solid fa-plus"></i></div>
+          <div class="card-title">Tambah Skill</div>
+        </div>
+        <div class="form-grid-3">
+          <div class="fg">
+            <label class="fl">Nama Skill</label>
+            <input class="fi" id="sk-name" placeholder="e.g. React.js">
+          </div>
+          <div class="fg">
+            <label class="fl">Kategori</label>
+            <select class="fsel" id="sk-cat">
+              <option value="Web Development">Web Development</option>
+              <option value="Backend & Data">Backend & Data</option>
+              <option value="Design">Design</option>
+              <option value="Mobile & Game Dev">Mobile & Game Dev</option>
+              <option value="Learning">Currently Exploring</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Icon Class (FontAwesome)</label>
+            <input class="fi" id="sk-icon" placeholder="fa-brands fa-react">
+          </div>
+        </div>
+        <button class="f-submit" onclick="saveSkill()"><i class="fa-solid fa-floppy-disk"></i>Simpan Skill</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-header-icon"><i class="fa-solid fa-list"></i></div><div class="card-title">Daftar Skill</div></div>
+        <div class="cat-pills-wrap" id="skill-list" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+
     <!-- MESSAGES -->
     <div class="panel" id="p-messages">
       <div class="panel-header">
         <div><div class="panel-eyebrow">Moderate</div><div class="panel-title">Messages</div><div class="panel-sub">Pesan dari pengunjung kamu</div></div>
       </div>
       <div class="msg-grid" id="msg-admin-wall"></div>
+
+      <!-- SOCIALS MANAGEMENT INSIDE MESSAGES -->
+      <div class="form-section"><div class="form-section-line"></div><div class="form-section-label">Social Media Links</div><div class="form-section-line"></div></div>
+      
+      <div class="card">
+        <div class="card-header"><div class="card-header-icon"><i class="fa-solid fa-share-nodes"></i></div><div class="card-title">Tambah Sosmed</div></div>
+        <div class="form-grid-3">
+          <div class="fg"><label class="fl">Platform</label><input class="fi" id="soc-name" placeholder="e.g. Instagram"></div>
+          <div class="fg"><label class="fl">URL</label><input class="fi" id="soc-url" placeholder="https://..."></div>
+          <div class="fg"><label class="fl">Icon</label><input class="fi" id="soc-icon" placeholder="fa-brands fa-instagram"></div>
+        </div>
+        <div class="fg">
+          <label class="fl">Posisi (Random/Scattered)</label>
+          <select class="fsel" id="soc-class">
+            <option value="sl-1">Posisi 1 (Insta)</option><option value="sl-2">Posisi 2 (LinkedIn)</option><option value="sl-3">Posisi 3 (Email)</option><option value="sl-4">Posisi 4 (Discord)</option><option value="sl-5">Posisi 5 (Twitter)</option><option value="sl-6">Posisi 6 (Locket)</option><option value="sl-7">Posisi 7 (BeReal)</option><option value="sl-8">Posisi 8 (Line)</option><option value="sl-9">Posisi 9 (Telegram)</option><option value="sl-10">Posisi 10 (Spotify)</option><option value="sl-11">Posisi 11 (YouTube)</option><option value="sl-12">Posisi 12 (GitHub)</option><option value="sl-13">Posisi 13 (Threads)</option>
+          </select>
+        </div>
+        <button class="f-submit" onclick="saveSocial()"><i class="fa-solid fa-plus"></i>Tambah Link</button>
+        
+        <div class="items-list" id="social-list" style="margin-top:20px"></div>
+      </div>
     </div>
 
     <!-- INTERESTS -->
@@ -1469,7 +1532,7 @@ function showApp() {
   initTagsInput('i-tags-wrap', 'i-tags');
   initRatingStars('i-rating-stars', 'i-rating', 5);
   
-  refreshDash(); loadProjList(); loadIntList(); loadMsgList();
+  refreshDash(); loadProjList(); loadIntList(); loadMsgList(); loadSkillList(); loadSocialList();
   document.getElementById('s-bio').value = localStorage.getItem('ns_bio') || '';
   document.getElementById('sb-status-display').innerHTML = sbReady
     ? '<span class="sb-status sb-on"><i class="fa-solid fa-circle-check"></i>Connected to Supabase</span>'
@@ -1498,10 +1561,12 @@ async function refreshDash() {
   const projs = await DB.get('projects');
   const msgs  = await DB.get('public_messages');
   const items = await DB.get('interests');
+  const skills = await DB.get('skills');
   
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-rocket"></i></span><div class="stat-num" id="dc-proj">0</div><div class="stat-label">Projects</div></div>
     <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-heart"></i></span><div class="stat-num" id="dc-int">0</div><div class="stat-label">Interest Items</div></div>
+    <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-brain"></i></span><div class="stat-num" id="dc-skill">0</div><div class="stat-label">Skills</div></div>
     <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-paper-plane"></i></span><div class="stat-num" id="dc-msg">0</div><div class="stat-label">Messages</div></div>
     <div class="stat-card"><span class="stat-icon"><i class="fa-solid fa-layer-group"></i></span><div class="stat-num" id="dc-cats">0</div><div class="stat-label">Categories</div></div>
     <div class="stat-card"><span class="stat-icon"><i class="fa-brands fa-superpowers"></i></span><div class="stat-num" style="font-size:2rem">${sbReady?'✓':'—'}</div><div class="stat-label">Supabase</div></div>
@@ -1509,6 +1574,7 @@ async function refreshDash() {
   setTimeout(() => {
     const ep = document.getElementById('dc-proj'); if(ep) animateCount(ep, projs.length);
     const ei = document.getElementById('dc-int');  if(ei) animateCount(ei, items.length);
+    const es = document.getElementById('dc-skill');if(es) animateCount(es, skills.length);
     const em = document.getElementById('dc-msg');  if(em) animateCount(em, msgs.length);
     const ec = document.getElementById('dc-cats');
     const totalCats = new Set(items.map(i=>i.category)).size;
@@ -1684,6 +1750,74 @@ async function deleteMessage(id) {
   if (!confirm('Hapus pesan ini?')) return;
   await DB.delete('public_messages', id);
   loadMsgList(); refreshDash(); toast('Pesan dihapus','ok','fa-trash');
+}
+
+/* ══════════════════════════════════════════════
+   SOCIALS
+══════════════════════════════════════════════ */
+async function saveSocial() {
+  const data = {
+    id: Date.now().toString(),
+    name: document.getElementById('soc-name').value.trim(),
+    url: document.getElementById('soc-url').value.trim(),
+    icon: document.getElementById('soc-icon').value.trim() || 'fa-solid fa-link',
+    cls: document.getElementById('soc-class').value,
+    created_at: new Date().toISOString()
+  };
+  if(!data.name || !data.url) return toast('Isi nama dan URL!','err');
+  await DB.add('socials', data);
+  loadSocialList(); toast('Sosmed ditambahkan','ok');
+  ['soc-name','soc-url','soc-icon'].forEach(id=>document.getElementById(id).value='');
+}
+async function loadSocialList() {
+  const list = await DB.get('socials');
+  const el = document.getElementById('social-list');
+  if(!list.length) { el.innerHTML='<div class="list-empty">Belum ada sosmed</div>'; return; }
+  el.innerHTML = list.map(s => `
+    <div class="list-item">
+      <div class="li-icon"><i class="${s.icon}"></i></div>
+      <div class="li-body"><div class="li-name">${s.name}</div><div class="li-meta">${s.cls} · ${s.url}</div></div>
+      <div class="li-actions"><button class="btn-sm btn-del" onclick="deleteSocial('${s.id}')"><i class="fa-solid fa-trash"></i></button></div>
+    </div>
+  `).join('');
+}
+async function deleteSocial(id) {
+  if(!confirm('Hapus link ini?')) return;
+  await DB.delete('socials', id); loadSocialList();
+}
+
+/* ══════════════════════════════════════════════
+   SKILLS
+══════════════════════════════════════════════ */
+async function saveSkill() {
+  const data = {
+    id: Date.now().toString(),
+    name: document.getElementById('sk-name').value.trim(),
+    category: document.getElementById('sk-cat').value,
+    icon: document.getElementById('sk-icon').value.trim() || 'fa-solid fa-code',
+    created_at: new Date().toISOString()
+  };
+  if(!data.name) return toast('Nama skill wajib diisi','err');
+  await DB.add('skills', data);
+  loadSkillList(); refreshDash(); toast('Skill ditambahkan!','ok','fa-brain');
+  document.getElementById('sk-name').value = '';
+  document.getElementById('sk-icon').value = '';
+}
+async function loadSkillList() {
+  const skills = await DB.get('skills');
+  const el = document.getElementById('skill-list');
+  if(!skills.length) { el.innerHTML='<div style="width:100%;text-align:center;color:var(--ink-3)">Belum ada skill.</div>'; return; }
+  // Group by category for display is tricky in pills, simple list for CRUD
+  el.innerHTML = skills.map(s => `
+    <div class="cat-pill active" style="padding-right:6px">
+      <i class="${s.icon}" style="font-size:0.7rem"></i> ${s.name} <span style="opacity:0.6;font-size:0.65rem">(${s.category})</span>
+      <button type="button" class="pill-del" onclick="deleteSkill('${s.id}')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  `).join('');
+}
+async function deleteSkill(id) {
+  if(!confirm('Hapus skill ini?')) return;
+  await DB.delete('skills', id); loadSkillList(); refreshDash();
 }
 
 /* ══════════════════════════════════════════════

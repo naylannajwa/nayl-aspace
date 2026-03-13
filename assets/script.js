@@ -32,7 +32,9 @@ const DB = {
       'interests_manhwa':{ t:'interests', c:'manhwa' },
       'interests_anime': { t:'interests', c:'anime' },
       'interests_movies':{ t:'interests', c:'movies' },
-      'interests_misc':  { t:'interests', c:'misc' }
+      'interests_misc':  { t:'interests', c:'misc' },
+      'skills':          { t:'skills', o:'created_at', d:false },
+      'socials':         { t:'socials', o:'created_at', d:false }
     };
     
     const m = map[key];
@@ -83,7 +85,9 @@ const DB = {
       'interests_manhwa':'interests',
       'interests_anime': 'interests',
       'interests_movies':'interests',
-      'interests_misc':  'interests'
+      'interests_misc':  'interests',
+      'skills':          'skills',
+      'socials':         'socials'
     };
     const table = map[key];
     if (!table) return false;
@@ -107,7 +111,9 @@ const DB = {
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',
-      'interests': 'interests'
+      'interests': 'interests',
+      'skills': 'skills',
+      'socials': 'socials'
     };
     const table = map[key];
     if (!table) return false;
@@ -133,7 +139,9 @@ const DB = {
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',
-      'interests': 'interests'
+      'interests': 'interests',
+      'skills': 'skills',
+      'socials': 'socials'
     };
     const table = map[key];
     if (!table) return false;

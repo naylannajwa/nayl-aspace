@@ -111,21 +111,7 @@
         </div>
 
         <!-- SCATTERED SOCIAL LEAVES (Wrapped & Reordered) -->
-        <div class="social-grid">
-          <a href="#" class="scat-link sl-3" title="Email"><i class="fa-solid fa-envelope"></i></a>
-          <a href="#" class="scat-link sl-12" title="Github"><i class="fa-brands fa-github"></i></a>
-          <a href="#" class="scat-link sl-2" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" class="scat-link sl-1" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" class="scat-link sl-13" title="Threads"><i class="fa-brands fa-threads"></i></a>
-          <a href="#" class="scat-link sl-4" title="Discord"><i class="fa-brands fa-discord"></i></a>
-          <a href="#" class="scat-link sl-11" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          <a href="#" class="scat-link sl-5" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#" class="scat-link sl-8" title="Line"><i class="fa-brands fa-line"></i></a>
-          <a href="#" class="scat-link sl-9" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-          <a href="#" class="scat-link sl-10" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
-          <a href="#" class="scat-link sl-6" title="Locket"><i class="fa-solid fa-heart"></i></a>
-          <a href="#" class="scat-link sl-7" title="BeReal"><i class="fa-solid fa-camera"></i></a>
-        </div>
+        <div class="social-grid" id="social-grid"></div>
       </div>
 
       <!-- MESSAGE WALL -->
@@ -276,9 +262,22 @@
       }
     }
 
+    async function renderSocials() {
+      const socs = await DB.get('socials');
+      const grid = document.getElementById('social-grid');
+      if (!socs.length) return; // Keep default or empty if none
+      
+      grid.innerHTML = socs.map(s => `
+        <a href="${s.url}" target="_blank" class="scat-link ${s.cls}" title="${s.name}">
+          <i class="${s.icon}"></i>
+        </a>
+      `).join('');
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', () => {
       renderMessages();
+      renderSocials();
     });
   </script>
 </body>
