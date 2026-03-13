@@ -878,12 +878,26 @@ body::before {
   transition: var(--trans);
 }
 .extra-link-row.dragging { opacity: 0.5; border: 2px dashed var(--accent); background: var(--bg-card); }
+.moment-row, .gallery-row {
+  display: flex; gap: 8px; align-items: center;
+  margin-bottom: 8px;
+}
+.moment-row .fi, .gallery-row .fi {
+  background: var(--bg);
+}
+
 .drag-handle { cursor: grab; color: var(--ink-3); padding: 4px; display: flex; align-items: center; }
 .drag-handle:active { cursor: grabbing; }
 @media (max-width: 860px) {
   .mobile-nav { display: flex; }
   .app-body { padding-bottom: 70px; }
 }
+
+.nav-badge {
+  padding: 2px 6px;
+  margin-right: 60px;
+}
+
 </style>
 </head>
 <body>
@@ -1122,6 +1136,22 @@ body::before {
           <div class="fg">
             <label class="fl"><i class="fa-solid fa-heart-pulse"></i>My Feel (rich text)</label>
             <div id="i-editor"></div>
+          </div>
+
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-list-check"></i>Standout Moments (Max 4)</label>
+            <div id="i-moments-container">
+              <!-- Dynamic Moment Rows -->
+            </div>
+            <button type="button" class="btn-sm btn-edit" id="btn-add-moment" onclick="addMomentRow()" style="margin-top:8px"><i class="fa-solid fa-plus"></i> Add Moment</button>
+          </div>
+
+          <div class="fg">
+            <label class="fl"><i class="fa-solid fa-images"></i>Gallery & Vibes (Max 6)</label>
+            <div id="i-gallery-container">
+              <!-- Dynamic Gallery Rows -->
+            </div>
+            <button type="button" class="btn-sm btn-edit" id="btn-add-gallery" onclick="addGalleryRow()" style="margin-top:8px"><i class="fa-solid fa-plus"></i> Add Gallery Item</button>
           </div>
 
           <div class="fg">
@@ -1385,6 +1415,47 @@ function handleDragEnd() {
   this.classList.remove('dragging');
 }
 
+/* ── INTERESTS DYNAMIC ROWS ── */
+function addMomentRow(data = { t: '', d: '' }) {
+  const container = document.getElementById('i-moments-container');
+  if (container.children.length >= 4) return;
+  const div = document.createElement('div');
+  div.className = 'moment-row';
+  div.innerHTML = `
+    <div style="flex:1"><input class="fi i-moment-t" placeholder="Moment Title" value="${data.t}"></div>
+    <div style="flex:2"><input class="fi i-moment-d" placeholder="Description" value="${data.d}"></div>
+    <button type="button" class="btn-sm btn-del" onclick="this.parentElement.remove(); updateInterestButtons();"><i class="fa-solid fa-trash"></i></button>
+  `;
+  container.appendChild(div);
+  updateInterestButtons();
+}
+
+function addGalleryRow(data = { icon: 'fa-solid fa-star', lbl: '' }) {
+  const container = document.getElementById('i-gallery-container');
+  if (container.children.length >= 6) return;
+  const div = document.createElement('div');
+  div.className = 'gallery-row';
+  div.innerHTML = `
+    <div style="width:70px" class="icon-picker-wrap">
+      <div class="icon-preview" onclick="toggleIconPicker(this)" style="padding:10px;justify-content:center"><i class="${data.icon}"></i></div>
+      <div class="icon-grid-pop" style="width:280px"></div>
+      <input type="hidden" class="i-gallery-icon" value="${data.icon}">
+    </div>
+    <div style="flex:1"><input class="fi i-gallery-lbl" placeholder="Label" value="${data.lbl}"></div>
+    <button type="button" class="btn-sm btn-del" onclick="this.parentElement.remove(); updateInterestButtons();"><i class="fa-solid fa-trash"></i></button>
+  `;
+  container.appendChild(div);
+  updateInterestButtons();
+}
+
+function updateInterestButtons() {
+  const momentCount = document.getElementById('i-moments-container').children.length;
+  const galleryCount = document.getElementById('i-gallery-container').children.length;
+  document.getElementById('btn-add-moment').style.display = momentCount >= 4 ? 'none' : 'inline-flex';
+  document.getElementById('btn-add-gallery').style.display = galleryCount >= 6 ? 'none' : 'inline-flex';
+}
+
+
 /* ── QUILL ── */
 let qProj = null, qInt = null;
 function initEditors() {
@@ -1643,13 +1714,28 @@ async function saveInterest() {
   if (id) { const items = await DB.get('interests_'+cat); const ex = items.find(i => i.id === id); existingImgs = ex?.images || []; }
   const allImgs = [...existingImgs.filter(u => !state.files.some(f => f.url === u)), ...urls];
   const genre = document.getElementById('i-genre').value.trim();
+
+  const moments = Array.from(document.querySelectorAll('#i-moments-container .moment-row')).map(row => {
+    return {
+      t: row.querySelector('.i-moment-t').value.trim(),
+      d: row.querySelector('.i-moment-d').value.trim()
+    };
+  }).filter(m => m.t && m.d);
+
+  const gallery = Array.from(document.querySelectorAll('#i-gallery-container .gallery-row')).map(row => {
+    return {
+      icon: row.querySelector('.i-gallery-icon').value,
+      lbl: row.querySelector('.i-gallery-lbl').value.trim()
+    };
+  }).filter(g => g.lbl);
+
   const data = {
     id: id || Date.now().toString(),
     title: document.getElementById('i-title').value.trim(),
     icon: document.getElementById('i-icon').value || 'fa-solid fa-star',
     category: cat,
     meta: document.getElementById('i-meta').value.trim(),
-    genre, feel: feelHTML,
+    genre, feel: feelHTML, moments, gallery,
     badges: [genre.split('·')[0].trim() || 'Custom'],
     images: allImgs, rating: 5,
   };
@@ -1698,6 +1784,14 @@ async function editInterest(cat, id) {
   document.getElementById('i-icon-preview-name').textContent = ic;
   if (qInt) qInt.root.innerHTML = item.feel || '';
   
+  // Populate Moments & Gallery
+  document.getElementById('i-moments-container').innerHTML = '';
+  (item.moments || []).forEach(m => addMomentRow(m));
+
+  document.getElementById('i-gallery-container').innerHTML = '';
+  (item.gallery || []).forEach(g => addGalleryRow(g));
+  updateInterestButtons();
+
   // Fix image preview loading (manual render)
   const state = window._intImgState; 
   if (state) { 
@@ -1721,6 +1815,9 @@ function clearIntForm() {
   document.getElementById('i-icon').value = 'fa-solid fa-star';
   document.getElementById('i-icon-preview-i').className = 'fa-solid fa-star';
   document.getElementById('i-icon-preview-name').textContent = 'fa-solid fa-star';
+  document.getElementById('i-moments-container').innerHTML = '';
+  document.getElementById('i-gallery-container').innerHTML = '';
+  updateInterestButtons();
   if (qInt) qInt.setText('');
   const state = window._intImgState; if (state) { state.files = []; document.getElementById('i-img-preview').innerHTML = ''; }
   document.getElementById('int-form-lbl').textContent = 'Add Interest Item';
