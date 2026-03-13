@@ -52,6 +52,12 @@ const DB = {
   },
   
   add: async (key, item) => {
+    // FIX: Auto-correct field mismatch ('text' -> 'message') untuk mencegah error PGRST204
+    if (key === 'public_messages' && item.text) {
+      if (!item.message) item.message = item.text;
+      delete item.text; // Hapus properti 'text' agar tidak ditolak Supabase
+    }
+
     if (!sbReady) {
       const d = LS.get(key);
       if (Array.isArray(d)) { d.unshift(item); LS.set(key, d); }
