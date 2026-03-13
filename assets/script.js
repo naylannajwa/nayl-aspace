@@ -226,10 +226,13 @@ function initNav() {
   const nav = document.getElementById('user-nav');
   if (!nav) return;
   addEventListener('scroll', ()=> nav.classList.toggle('compact', scrollY>40));
-  // Active link
-  const cur = location.pathname.split('/').pop()||'index.html';
-  document.querySelectorAll('.nav-links a').forEach(a=>{
-    if(a.getAttribute('href').split('/').pop()===cur) a.classList.add('active');
+  
+  // Active link - Handle both local (.html) and Vercel clean URLs
+  let cur = location.pathname.split('/').pop().replace('.html', '') || 'index';
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    let href = a.getAttribute('href').split('/').pop().replace('.html', '');
+    if (!href || href === '..') href = 'index'; // Handle Home links (href="/")
+    if (href === cur) a.classList.add('active');
   });
 }
 
@@ -494,13 +497,9 @@ function initAdminTrigger() {
 }
 
 function goToAdmin() {
-  const isIndex = window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/index.html');
   const isInPages = window.location.pathname.includes('/pages/');
   
-  // Tentukan path relatif yang benar
-  let adminPath = 'pages/admin.html';
-  if (isInPages) adminPath = 'admin.html'; // jika dari pages/projects.html dll
-  else if (isIndex) adminPath = 'pages/admin.html'; 
+  let adminPath = isInPages ? 'admin' : 'pages/admin';
   
   toast('Opening Admin Portal...', 'ok', 'fa-unlock');
   setTimeout(() => { window.location.href = adminPath; }, 500);
