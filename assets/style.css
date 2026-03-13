@@ -385,19 +385,21 @@ nav#admin-nav{
 
 /* Random Positions (Desktop) */
 /* KIRI (Important/Social): LinkedIn, Email, Insta, Discord, X */
-.sl-1 {top:50%; left:-180px; transform:rotate(-15deg); animation-delay:0s}   /* Insta */
+.sl-1 {top:60%; left:-110px; transform:rotate(-15deg); animation-delay:0s}   /* Insta */
 .sl-2 {top:-5%; left:-120px; transform:rotate(10deg);  animation-delay:.5s}  /* LinkedIn */
 .sl-3 {top:25%; left:-240px; transform:rotate(-8deg);  animation-delay:1s}   /* Email */
 .sl-4 {top:95%; left:-120px; transform:rotate(20deg);  animation-delay:1.5s} /* Discord */
 .sl-5 {top:75%; left:-220px; transform:rotate(12deg);  animation-delay:.2s}  /* X */
+.sl-12{top:30%; left:-130px; transform:rotate(5deg); animation-delay:1.3s} /* GitHub*/
 
 /* KANAN (Entertainment/Fun): YouTube, Spotify, Locket, BeReal, Line, Tele */
-.sl-6 {top:55%; right:-160px; transform:rotate(-5deg);  animation-delay:.7s}  /* Locket */
-.sl-7 {top:75%; right:-260px; transform:rotate(15deg);  animation-delay:1.2s} /* BeReal */
+.sl-6 {top:35%; right:-110px; transform:rotate(-5deg);  animation-delay:.7s}  /* Locket */
+.sl-7 {top:65%; right:-260px; transform:rotate(15deg);  animation-delay:1.2s} /* BeReal */
 .sl-8 {top:100%; right:-120px; transform:rotate(-12deg); animation-delay:1.7s} /* Line */
 .sl-9 {top:90%; right:-220px; transform:rotate(8deg);   animation-delay:.4s}  /* Tele */
 .sl-10{top:30%; right:-240px; transform:rotate(-5deg);  animation-delay:.9s}  /* Spotify */
 .sl-11{top:5%; right:-150px; transform:rotate(10deg);  animation-delay:1.4s} /* YT */
+.sl-13 {top:65%; right:-130px; transform:rotate(-5deg);  animation-delay:.7s}  /* Locket */
 
 /* Mobile Responsive: Stack them neatly below instead of scattering (messy on small screens) */
 @media(max-width:960px){
