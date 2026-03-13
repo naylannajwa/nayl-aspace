@@ -2318,7 +2318,11 @@
                 <option value="sl-13">Posisi 13 (Threads)</option>
               </select>
             </div>
-            <button class="f-submit" onclick="saveSocial()"><i class="fa-solid fa-plus"></i>Tambah Link</button>
+            <input type="hidden" id="soc-edit-id">
+            <div style="display:flex;gap:10px">
+              <button class="f-submit" id="soc-save-btn" style="flex:1" onclick="saveSocial()"><i class="fa-solid fa-plus"></i>Tambah Link</button>
+              <button class="btn-cancel" id="soc-cancel-btn" onclick="clearSocialForm()" hidden><i class="fa-solid fa-xmark"></i>Batal</button>
+            </div>
 
             <div class="items-list" id="social-list" style="margin-top:20px"></div>
           </div>
@@ -2683,6 +2687,7 @@
       buildCategoryPills(prefix, newSelected);
       document.getElementById(prefix === 'p' ? 'p-cat' : 'i-cat').value = newSelected;
       toast(`Kategori dihapus`, 'ok', 'fa-trash');
+      logActivity(`Category "${val}" dihapus`);
     }
 
     /* ══════════════════════════════════════════════
@@ -2898,8 +2903,14 @@
     function showApp() {
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('admin-app').style.display = 'block';
-      initEditors();
+      
+      // FIX: Restore last active panel FIRST so UI is correct immediately
+      const savedPanel = localStorage.getItem('ns_admin_panel') || 'dashboard';
+      showPanel(savedPanel);
 
+      // Try init editors safely
+      try { if (typeof Quill !== 'undefined') initEditors(); } catch(e) { console.warn('Quill init error', e); }
+      
       const projImgState = { files: [] };
       const intImgState = { files: [] };
       window._projImgState = projImgState;
@@ -2935,11 +2946,20 @@
        PANEL
     ══════════════════════════════════════════════ */
     function showPanel(id, btn) {
+      if (!id) id = 'dashboard';
+      localStorage.setItem('ns_admin_panel', id);
+      
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.getElementById('p-' + id)?.classList.add('active');
+      
       document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
       document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+      
+      const dBtn = document.querySelector(`.nav-tabs a[onclick*="'${id}'"]`);
+      if (dBtn) dBtn.classList.add('active');
+      const mBtn = document.querySelector(`.mob-nav-btn[onclick*="'${id}'"]`);
+      if (mBtn) mBtn.classList.add('active');
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -3087,7 +3107,10 @@
 
     async function deleteProject(id) {
       if (!confirm('Hapus project ini?')) return;
+      const projs = await DB.get('projects');
+      const p = projs.find(x => x.id === id);
       await DB.delete('projects', id);
+      if(p) logActivity(`Project "${p.name}" dihapus`);
       loadProjList(); refreshDash(); toast('Project dihapus', 'ok', 'fa-trash');
     }
 
@@ -3136,7 +3159,10 @@
     }
     async function deleteMessage(id) {
       if (!confirm('Hapus pesan ini?')) return;
+      const msgs = await DB.get('public_messages');
+      const m = msgs.find(x => x.id === id);
       await DB.delete('public_messages', id);
+      if(m) logActivity(`Pesan dari "${m.name}" dihapus`);
       loadMsgList(); refreshDash(); toast('Pesan dihapus', 'ok', 'fa-trash');
     }
 
@@ -3144,8 +3170,9 @@
        SOCIALS
     ══════════════════════════════════════════════ */
     async function saveSocial() {
+      const id = document.getElementById('soc-edit-id').value;
       const data = {
-        id: Date.now().toString(),
+        id: id || Date.now().toString(),
         name: document.getElementById('soc-name').value.trim(),
         url: document.getElementById('soc-url').value.trim(),
         icon: document.getElementById('soc-icon').value.trim() || 'fa-solid fa-link',
@@ -3153,9 +3180,19 @@
         created_at: new Date().toISOString()
       };
       if (!data.name || !data.url) return toast('Isi nama dan URL!', 'err');
-      await DB.add('socials', data);
-      loadSocialList(); toast('Sosmed ditambahkan', 'ok');
-      ['soc-name', 'soc-url', 'soc-icon'].forEach(id => document.getElementById(id).value = '');
+      
+      if (id) {
+        await DB.update('socials', data);
+        logActivity(`Sosmed "${data.name}" diperbarui`);
+        toast('Sosmed diperbarui', 'ok');
+      } else {
+        await DB.add('socials', data);
+        logActivity(`Sosmed "${data.name}" ditambahkan`);
+        toast('Sosmed ditambahkan', 'ok');
+      }
+
+      loadSocialList(); 
+      clearSocialForm();
     }
     async function loadSocialList() {
       const list = await DB.get('socials');
@@ -3165,13 +3202,37 @@
     <div class="list-item">
       <div class="li-icon"><i class="${s.icon}"></i></div>
       <div class="li-body"><div class="li-name">${s.name}</div><div class="li-meta">${s.cls} · ${s.url}</div></div>
-      <div class="li-actions"><button class="btn-sm btn-del" onclick="deleteSocial('${s.id}')"><i class="fa-solid fa-trash"></i></button></div>
+      <div class="li-actions">
+        <button class="btn-sm btn-edit" onclick="editSocial('${s.id}')"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn-sm btn-del" onclick="deleteSocial('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div>
     </div>
   `).join('');
     }
+    async function editSocial(id) {
+      const list = await DB.get('socials');
+      const s = list.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('soc-edit-id').value = s.id;
+      document.getElementById('soc-name').value = s.name;
+      document.getElementById('soc-url').value = s.url;
+      document.getElementById('soc-icon').value = s.icon;
+      document.getElementById('soc-class').value = s.cls;
+      document.getElementById('soc-save-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan';
+      document.getElementById('soc-cancel-btn').hidden = false;
+    }
     async function deleteSocial(id) {
       if (!confirm('Hapus link ini?')) return;
+      const socs = await DB.get('socials');
+      const s = socs.find(x => x.id === id);
       await DB.delete('socials', id); loadSocialList();
+      if(s) logActivity(`Sosmed "${s.name}" dihapus`);
+    }
+    function clearSocialForm() {
+      ['soc-name', 'soc-url', 'soc-icon', 'soc-edit-id'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('soc-class').value = 'sl-1';
+      document.getElementById('soc-save-btn').innerHTML = '<i class="fa-solid fa-plus"></i> Tambah Link';
+      document.getElementById('soc-cancel-btn').hidden = true;
     }
 
     /* ══════════════════════════════════════════════
@@ -3187,6 +3248,7 @@
       };
       if (!data.name) return toast('Nama skill wajib diisi', 'err');
       await DB.add('skills', data);
+      logActivity(`Skill "${data.name}" ditambahkan`);
       loadSkillList(); refreshDash(); toast('Skill ditambahkan!', 'ok', 'fa-brain');
       document.getElementById('sk-name').value = '';
       document.getElementById('sk-icon').value = '';
@@ -3223,7 +3285,10 @@
     }
     async function deleteSkill(id) {
       if (!confirm('Hapus skill ini?')) return;
+      const skills = await DB.get('skills');
+      const s = skills.find(x => x.id === id);
       await DB.delete('skills', id); loadSkillList(); refreshDash();
+      if(s) logActivity(`Skill "${s.name}" dihapus`);
     }
 
     /* ══════════════════════════════════════════════
@@ -3397,7 +3462,10 @@
 
     async function deleteInterest(id) {
       if (!confirm('Hapus item ini?')) return;
+      const items = await DB.get('interests');
+      const i = items.find(x => x.id === id);
       await DB.delete('interests', id);
+      if(i) logActivity(`Interest "${i.title}" dihapus`);
       loadIntList(); refreshDash(); toast('Dihapus', 'ok', 'fa-trash');
     }
 
@@ -3435,6 +3503,7 @@
     function saveBio() {
       localStorage.setItem('ns_bio', document.getElementById('s-bio').value);
       toast('Bio tersimpan! ✦', 'ok', 'fa-floppy-disk');
+      logActivity('Bio profile diperbarui');
     }
 
     async function logActivity(text) {
@@ -3451,7 +3520,7 @@
       div.className = 'activity-item';
       div.innerHTML = `<div class="activity-dot"></div><div class="activity-text">${text}</div><div class="activity-time">${time}</div>`;
       el.insertBefore(div, el.firstChild);
-      if (el.children.length > 8) el.removeChild(el.lastChild);
+      if (el.children.length > 20) el.removeChild(el.lastChild);
 
       // 2. Save to DB
       await DB.add('activities', item);
@@ -3462,8 +3531,8 @@
       const el = document.getElementById('activity-list');
       el.innerHTML = ''; // Clear default
 
-      // Ambil 8 teratas (DB.get sudah sort desc by created_at)
-      items.slice(0, 8).forEach(item => {
+      // Ambil 15 teratas (DB.get sudah sort desc by created_at)
+      items.slice(0, 15).forEach(item => {
         const time = new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         el.innerHTML += `<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">${item.text}</div><div class="activity-time">${time}</div></div>`;
       });

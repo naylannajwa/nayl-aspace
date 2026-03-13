@@ -66,17 +66,6 @@ const DB = {
       if (Array.isArray(d)) { d.unshift(item); LS.set(key, d); }
       return true;
     }
-    
-    // CRITICAL FIX: Siapkan payload bersih untuk Supabase
-    const payload = { ...item }; // Copy object agar item asli tidak berubah
-    delete payload.id; // Hapus ID manual, biarkan Supabase generate UUID
-
-    if (key === 'public_messages') {
-      // Fix field mismatch: 'text' -> 'message' sesuai schema
-      if (payload.text) { payload.message = payload.text; delete payload.text; }
-      // Hapus date manual, Supabase pakai created_at default now()
-      delete payload.date; 
-    }
 
     const map = {
       'public_messages': 'public_messages',
@@ -93,6 +82,20 @@ const DB = {
     };
     const table = map[key];
     if (!table) return false;
+
+    // CRITICAL FIX: Siapkan payload bersih
+    const payload = { ...item }; 
+
+    // Hapus ID HANYA jika tabel menggunakan Auto-UUID (projects, interests, messages)
+    // Untuk skills, socials, activities (ID manual text), ID JANGAN DIHAPUS.
+    if (['public_messages', 'projects', 'interests'].includes(table)) {
+      delete payload.id;
+    }
+
+    if (key === 'public_messages') {
+      if (payload.text) { payload.message = payload.text; delete payload.text; }
+      delete payload.date;
+    }
 
     // FIX: Gunakan payload (yang sudah dibersihkan), bukan item.
     const { error } = await sb.from(table).insert(payload);
