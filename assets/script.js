@@ -86,6 +86,54 @@ const DB = {
     const { error } = await sb.from(table).insert(item);
     if (error) console.error(error);
     return !error;
+  },
+
+  update: async (key, item) => {
+    if (!sbReady) {
+      // LocalStorage Fallback
+      const d = LS.get(key);
+      const idx = d.findIndex(x => x.id === item.id);
+      if (idx !== -1) { d[idx] = item; LS.set(key, d); }
+      return true;
+    }
+
+    // Mapping key ke nama tabel Supabase
+    const map = {
+      'projects': 'projects',
+      'interests': 'interests'
+    };
+    const table = map[key];
+    if (!table) return false;
+
+    // Hapus id dari body update karena id dipakai sebagai identifier di query
+    const updateData = { ...item };
+    delete updateData.id; 
+
+    const { error } = await sb.from(table).update(updateData).eq('id', item.id);
+    if (error) console.error('Supabase update error:', error);
+    return !error;
+  },
+
+  delete: async (key, id) => {
+    if (!sbReady) {
+      // LocalStorage Fallback
+      let d = LS.get(key);
+      d = d.filter(x => x.id !== id);
+      LS.set(key, d);
+      return true;
+    }
+
+    const map = {
+      'public_messages': 'public_messages',
+      'projects': 'projects',
+      'interests': 'interests'
+    };
+    const table = map[key];
+    if (!table) return false;
+
+    const { error } = await sb.from(table).delete().eq('id', id);
+    if (error) console.error('Supabase delete error:', error);
+    return !error;
   }
 };
 

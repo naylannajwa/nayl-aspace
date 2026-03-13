@@ -707,9 +707,12 @@ body::before {
       <div class="lr-eyebrow">Authenticate</div>
       <div class="lr-title">Welcome back</div>
       <p class="lr-sub">Sign in to manage your portfolio content and settings.</p>
-      <div class="setup-notice"><i class="fa-solid fa-circle-info"></i> Set <code>SUPABASE_URL</code> & <code>SUPABASE_ANON_KEY</code> in <code>script.js</code> for real auth. Without it, data saves to <code>localStorage</code> (demo mode).</div>
-      <div class="fg"><label class="fl"><i class="fa-solid fa-envelope"></i>Email</label><input class="fi" type="email" id="l-email" placeholder="admin@email.com"></div>
-      <div class="fg"><label class="fl"><i class="fa-solid fa-lock"></i>Password</label><input class="fi" type="password" id="l-pw" placeholder="••••••••"></div>
+        <input class="fi" type="email" id="l-email" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')document.getElementById('l-pw').focus()">
+      </div>
+      <div class="fg">
+        <label class="fl"><i class="fa-solid fa-lock"></i>Password</label>
+        <input class="fi" type="password" id="l-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
       <button class="f-submit" id="l-btn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i>Enter Admin Panel</button>
     </div>
   </div>
