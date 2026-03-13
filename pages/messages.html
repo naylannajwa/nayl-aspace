@@ -134,7 +134,9 @@ async function renderMessages(){
     let btns = '';
     
     // Prev Arrow
-    if(currentPage > 1) btns += `<button class="page-btn" onclick="goToPage(${currentPage-1})"><i class="fa-solid fa-chevron-left"></i></button>`;
+    btns += `<button class="page-btn" ${currentPage===1 ? 'disabled' : `onclick="goToPage(${currentPage-1})"`}>
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>`;
 
     // Logic: Show max 5 numbers window
     let start = Math.max(1, currentPage - 2);
@@ -158,7 +160,9 @@ async function renderMessages(){
     }
 
     // Next Arrow
-    if(currentPage < totalPages) btns += `<button class="page-btn" onclick="goToPage(${currentPage+1})"><i class="fa-solid fa-chevron-right"></i></button>`;
+    btns += `<button class="page-btn" ${currentPage===totalPages ? 'disabled' : `onclick="goToPage(${currentPage+1})"`}>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>`;
 
     pagBar.innerHTML = btns;
   } else {
@@ -187,8 +191,14 @@ function renderCard(m, i, rot) {
 
 function goToPage(n) {
   currentPage = n;
-  renderMessages();
-  // Pagination tetap di tempat, tidak scroll ke atas
+  renderMessages().then(() => {
+    // Scroll to top of message list for better UX
+    const wall = document.getElementById('msg-wall');
+    if(wall) {
+      const t = wall.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({top: t, behavior: 'smooth'});
+    }
+  });
 }
 
 async function postMessage(){

@@ -428,6 +428,7 @@ nav#admin-nav{
   cursor:pointer;transition:var(--trans);
 }
 .page-btn:hover{border-color:var(--cyan);color:var(--white);transform:translateY(-2px)}
+.page-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;border-color:var(--glass-b);color:var(--white-dim)}
 .page-btn.active{
   background:var(--cyan);border-color:var(--cyan);color:var(--bg);
   box-shadow:0 0 15px var(--glow-cyan);font-weight:700;
