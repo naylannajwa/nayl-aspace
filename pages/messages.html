@@ -1,185 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nayl-aSpace · Messages</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
-<link rel="stylesheet" href="../assets/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-.hero-band{padding:calc(var(--nav-h)+50px) 52px 50px;background:radial-gradient(ellipse at top, rgba(0,212,255,0.1), transparent 70%);position:relative;z-index:2}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nayl-aSpace · Messages</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300d4ff%22>✦</text></svg>">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .hero-band {
+      padding: calc(var(--nav-h)+50px) 52px 50px;
+      background: radial-gradient(ellipse at top, rgba(0, 212, 255, 0.1), transparent 70%);
+      position: relative;
+      z-index: 2
+    }
 
-/* FORM AREA */
-.msg-input-box{
-  background:var(--glass);border:1px solid var(--glass-b);
-  border-radius:var(--r-lg);padding:30px;max-width:600px;margin:0 auto 60px;
-  position:relative;overflow:hidden;backdrop-filter:blur(24px);
-}
-.msg-input-box::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(to bottom, var(--cyan), var(--blue-2))}
+    /* FORM AREA */
+    .msg-input-box {
+      background: var(--glass);
+      border: 1px solid var(--glass-b);
+      border-radius: var(--r-lg);
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto 60px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(24px);
+    }
 
-/* MOBILE NAV */
-.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.5rem;cursor:pointer;z-index:1001}
-@media(max-width:768px){
-  .hero-band{padding:0px 22px 0px}
-  .nav-right{display:none}
-}
-</style>
+    .msg-input-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--cyan), var(--blue-2))
+    }
+
+    /* MOBILE NAV */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001
+    }
+
+    @media(max-width:768px) {
+      .hero-band {
+        padding: 0px 22px 0px
+      }
+
+      .nav-right {
+        display: none
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="cursor"></div><div id="cursor-ring"></div>
-<canvas id="bg-canvas"></canvas>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <canvas id="bg-canvas"></canvas>
 
-<nav id="user-nav">
-  <a class="nav-logo" href="../index.html">nayl-aSpace</a>
-  <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
-    <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
-    <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
-    <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
-    <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
-  </ul>
-</nav>
+  <nav id="user-nav">
+    <a class="nav-logo" href="../index.html">nayl-aSpace</a>
+    <button class="nav-toggle" id="nav-toggle"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+      <li><a href="projects.html"><i class="fa-solid fa-rocket"></i>Projects</a></li>
+      <li><a href="skills.html"><i class="fa-solid fa-brain"></i>Skills</a></li>
+      <li><a href="messages.html"><i class="fa-solid fa-paper-plane"></i>Messages</a></li>
+      <li><a href="interests.html" class="private-tab"><i class="fa-solid fa-star"></i>Interests</a></li>
+    </ul>
+  </nav>
 
-<div class="page-content">
-  <div class="hero-band">
-    <div style="max-width:1180px;margin:0 auto;text-align:center">
-      <p class="section-label reveal" style="justify-content:center"><i class="fa-solid fa-comment-dots"></i>Drop a Note</p>
-      <h1 class="section-title reveal"><span class="grad">Say Hello!</span></h1>
-      <p class="reveal" style="color:var(--white-dim);font-family:var(--f-mono);font-size:.9rem">Leave a message, a joke, or just say hi. It sticks here.</p>
-    </div>
-  </div>
-
-  <div class="section-wrap" style="padding-top:0">
-    
-    <!-- WRAPPER FOR SCATTERED LAYOUT -->
-    <div class="msg-scatter-wrap reveal">
-      
-      <!-- INPUT FORM -->
-      <div class="msg-input-box">
-        <div class="fg">
-          <label class="fl">Your Name / Alias</label>
-          <input class="fi" id="m-name" placeholder="Anonymous constellation" maxlength="20">
-        </div>
-        <div class="fg">
-          <label class="fl">Message</label>
-          <textarea class="fta" id="m-text" placeholder="Write something cool here..." maxlength="200" style="min-height:100px"></textarea>
-        </div>
-        <button class="f-submit" onclick="postMessage()"><i class="fa-solid fa-paper-plane"></i>Stick It!</button>
-      </div>
-
-      <!-- SCATTERED SOCIAL LEAVES (Wrapped & Reordered) -->
-      <div class="social-grid">
-        <a href="#" class="scat-link sl-3" title="Email"><i class="fa-solid fa-envelope"></i></a>
-        <a href="#" class="scat-link sl-2" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="#" class="scat-link sl-12" title="Github"><i class="fa-brands fa-github"></i></a>
-        <a href="#" class="scat-link sl-1" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" class="scat-link sl-4" title="Discord"><i class="fa-brands fa-discord"></i></a>
-        <a href="#" class="scat-link sl-11" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-        <a href="#" class="scat-link sl-5" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" class="scat-link sl-8" title="Line"><i class="fa-brands fa-line"></i></a>
-        <a href="#" class="scat-link sl-9" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-        <a href="#" class="scat-link sl-10" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
-        <a href="#" class="scat-link sl-6" title="Locket"><i class="fa-solid fa-heart"></i></a>
-        <a href="#" class="scat-link sl-7" title="BeReal"><i class="fa-solid fa-camera"></i></a>
-        <a href="#" class="scat-link sl-13" title="Threads"><i class="fa-brands fa-threads"></i></a>
+  <div class="page-content">
+    <div class="hero-band">
+      <div style="max-width:1180px;margin:0 auto;text-align:center">
+        <p class="section-label reveal" style="justify-content:center"><i class="fa-solid fa-comment-dots"></i>Drop a
+          Note</p>
+        <h1 class="section-title reveal"><span class="grad">Say Hello!</span></h1>
+        <p class="reveal" style="color:var(--white-dim);font-family:var(--f-mono);font-size:.9rem">Leave a message, a
+          joke, or just say hi. It sticks here.</p>
       </div>
     </div>
 
-    <!-- MESSAGE WALL -->
-    <div class="msg-wall" id="msg-wall">
-      <!-- Cards injected via JS -->
+    <div class="section-wrap" style="padding-top:0">
+
+      <!-- WRAPPER FOR SCATTERED LAYOUT -->
+      <div class="msg-scatter-wrap reveal">
+
+        <!-- INPUT FORM -->
+        <div class="msg-input-box">
+          <div class="fg">
+            <label class="fl">Your Name / Alias</label>
+            <input class="fi" id="m-name" placeholder="Anonymous constellation" maxlength="20">
+          </div>
+          <div class="fg">
+            <label class="fl">Message</label>
+            <textarea class="fta" id="m-text" placeholder="Write something cool here..." maxlength="200"
+              style="min-height:100px"></textarea>
+          </div>
+          <button class="f-submit" onclick="postMessage()"><i class="fa-solid fa-paper-plane"></i>Stick It!</button>
+        </div>
+
+        <!-- SCATTERED SOCIAL LEAVES (Wrapped & Reordered) -->
+        <div class="social-grid">
+          <a href="#" class="scat-link sl-3" title="Email"><i class="fa-solid fa-envelope"></i></a>
+          <a href="#" class="scat-link sl-12" title="Github"><i class="fa-brands fa-github"></i></a>
+          <a href="#" class="scat-link sl-2" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="scat-link sl-1" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="scat-link sl-13" title="Threads"><i class="fa-brands fa-threads"></i></a>
+          <a href="#" class="scat-link sl-4" title="Discord"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="scat-link sl-11" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="scat-link sl-5" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="scat-link sl-8" title="Line"><i class="fa-brands fa-line"></i></a>
+          <a href="#" class="scat-link sl-9" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+          <a href="#" class="scat-link sl-10" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
+          <a href="#" class="scat-link sl-6" title="Locket"><i class="fa-solid fa-heart"></i></a>
+          <a href="#" class="scat-link sl-7" title="BeReal"><i class="fa-solid fa-camera"></i></a>
+        </div>
+      </div>
+
+      <!-- MESSAGE WALL -->
+      <div class="msg-wall" id="msg-wall">
+        <!-- Cards injected via JS -->
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-bar" id="pagination-bar"></div>
+
     </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-bar" id="pagination-bar"></div>
-
   </div>
-</div>
 
-<footer><p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p></footer>
-<div id="toast"></div>
+  <footer>
+    <p>crafted with <span class="accent">✦</span> by <span class="accent">nayl-aSpace</span></p>
+  </footer>
+  <div id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/script.js"></script>
-<script>
-let currentPage = 1;
-const ITEMS_PER_PAGE = 8;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/script.js"></script>
+  <script>
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 8;
 
-async function renderMessages(){
-  const msgs = await DB.get('public_messages');
-  const wall = document.getElementById('msg-wall');
-  
-  if(!msgs.length){
-    wall.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--white-dim);padding:40px;opacity:.6">It's quiet here... be the first to post! 🚀</div>`;
-    return;
-  }
+    async function renderMessages() {
+      const msgs = await DB.get('public_messages');
+      const wall = document.getElementById('msg-wall');
 
-  // Pagination Logic
-  const totalPages = Math.ceil(msgs.length / ITEMS_PER_PAGE);
-  if(currentPage > totalPages) currentPage = 1;
-  
-  const start = (currentPage - 1) * ITEMS_PER_PAGE;
-  const end = start + ITEMS_PER_PAGE;
-  const shownMsgs = msgs.slice(start, end);
+      if (!msgs.length) {
+        wall.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--white-dim);padding:40px;opacity:.6">It's quiet here... be the first to post! 🚀</div>`;
+        return;
+      }
 
-  // Render Cards
-  wall.innerHTML = shownMsgs.map((m, i) => {
-    // Random rotation between -6deg and 6deg for stacking effect
-    const rot = (Math.random() * 12 - 6).toFixed(1);
-    return renderCard(m, i, rot);
-  }).join('');
+      // Pagination Logic
+      const totalPages = Math.ceil(msgs.length / ITEMS_PER_PAGE);
+      if (currentPage > totalPages) currentPage = 1;
 
-  // Render Pagination Buttons
-  const pagBar = document.getElementById('pagination-bar');
-  if(totalPages > 1) {
-    let btns = '';
-    
-    // Prev Arrow
-    btns += `<button class="page-btn" ${currentPage===1 ? 'disabled' : `onclick="goToPage(${currentPage-1})"`}>
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE;
+      const shownMsgs = msgs.slice(start, end);
+
+      // Render Cards
+      wall.innerHTML = shownMsgs.map((m, i) => {
+        // Random rotation between -6deg and 6deg for stacking effect
+        const rot = (Math.random() * 12 - 6).toFixed(1);
+        return renderCard(m, i, rot);
+      }).join('');
+
+      // Render Pagination Buttons
+      const pagBar = document.getElementById('pagination-bar');
+      if (totalPages > 1) {
+        let btns = '';
+
+        // Prev Arrow
+        btns += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : `onclick="goToPage(${currentPage - 1})"`}>
       <i class="fa-solid fa-chevron-left"></i>
     </button>`;
 
-    // Logic: Show max 5 numbers window
-    let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, currentPage + 2);
+        // Logic: Show max 5 numbers window
+        let start = Math.max(1, currentPage - 2);
+        let end = Math.min(totalPages, currentPage + 2);
 
-    if(currentPage <= 3) end = Math.min(totalPages, 5);
-    if(currentPage >= totalPages - 2) start = Math.max(1, totalPages - 4);
+        if (currentPage <= 3) end = Math.min(totalPages, 5);
+        if (currentPage >= totalPages - 2) start = Math.max(1, totalPages - 4);
 
-    if(start > 1) {
-      btns += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
-      if(start > 2) btns += `<span style="padding:0 4px;color:var(--white-dim);font-size:.8rem">...</span>`;
-    }
+        if (start > 1) {
+          btns += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+          if (start > 2) btns += `<span style="padding:0 4px;color:var(--white-dim);font-size:.8rem">...</span>`;
+        }
 
-    for(let i=start; i<=end; i++) {
-      btns += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goToPage(${i})">${i}</button>`;
-    }
+        for (let i = start; i <= end; i++) {
+          btns += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        }
 
-    if(end < totalPages) {
-      if(end < totalPages - 1) btns += `<span style="padding:0 4px;color:var(--white-dim);font-size:.8rem">...</span>`;
-      btns += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
-    }
+        if (end < totalPages) {
+          if (end < totalPages - 1) btns += `<span style="padding:0 4px;color:var(--white-dim);font-size:.8rem">...</span>`;
+          btns += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+        }
 
-    // Next Arrow
-    btns += `<button class="page-btn" ${currentPage===totalPages ? 'disabled' : `onclick="goToPage(${currentPage+1})"`}>
+        // Next Arrow
+        btns += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : `onclick="goToPage(${currentPage + 1})"`}>
       <i class="fa-solid fa-chevron-right"></i>
     </button>`;
 
-    pagBar.innerHTML = btns;
-  } else {
-    pagBar.innerHTML = '';
-  }
-  
-  initReveal(); // Re-trigger reveal animation
-}
+        pagBar.innerHTML = btns;
+      } else {
+        pagBar.innerHTML = '';
+      }
 
-function renderCard(m, i, rot) {
-  const icons = ['fa-ghost', 'fa-rocket', 'fa-face-smile', 'fa-heart', 'fa-star', 'fa-bolt'];
-  const icon = icons[i % icons.length];
-  const rotStyle = rot ? `transform: rotate(${rot}deg)` : '';
-  
-    return `
+      initReveal(); // Re-trigger reveal animation
+    }
+
+    function renderCard(m, i, rot) {
+      const icons = ['fa-ghost', 'fa-rocket', 'fa-face-smile', 'fa-heart', 'fa-star', 'fa-bolt'];
+      const icon = icons[i % icons.length];
+      const rotStyle = rot ? `transform: rotate(${rot}deg)` : '';
+
+      return `
     <div class="msg-card reveal" style="${rotStyle}">
       <div class="msg-head">
         <span class="msg-user">${m.name}</span>
@@ -189,47 +233,48 @@ function renderCard(m, i, rot) {
       <i class="fa-solid ${icon} msg-decoration"></i>
     </div>
     `;
-}
-
-function goToPage(n) {
-  currentPage = n;
-  renderMessages().then(() => {
-    // Scroll to top of message list for better UX
-    const wall = document.getElementById('msg-wall');
-    if(wall) {
-      const t = wall.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({top: t, behavior: 'smooth'});
     }
-  });
-}
 
-async function postMessage(){
-  const name = document.getElementById('m-name').value.trim() || 'Anonymous';
-  const text = document.getElementById('m-text').value.trim();
-  
-  if(!text) return toast('Please write a message first!', 'warn');
+    function goToPage(n) {
+      currentPage = n;
+      renderMessages().then(() => {
+        // Scroll to top of message list for better UX
+        const wall = document.getElementById('msg-wall');
+        if (wall) {
+          const t = wall.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo({ top: t, behavior: 'smooth' });
+        }
+      });
+    }
 
-  const newMsg = {
-    id: Date.now(),
-    name: name,
-    text: text,
-    date: new Date().toLocaleDateString()
-  };
+    async function postMessage() {
+      const name = document.getElementById('m-name').value.trim() || 'Anonymous';
+      const text = document.getElementById('m-text').value.trim();
 
-  const ok = await DB.add('public_messages', newMsg);
-  currentPage = 1; // Go to first page to see new message
+      if (!text) return toast('Please write a message first!', 'warn');
 
-  document.getElementById('m-text').value = '';
-  if(ok) {
+      const newMsg = {
+        id: Date.now(),
+        name: name,
+        text: text,
+        date: new Date().toLocaleDateString()
+      };
+
+      const ok = await DB.add('public_messages', newMsg);
+      currentPage = 1; // Go to first page to see new message
+
+      document.getElementById('m-text').value = '';
+      if (ok) {
+        renderMessages();
+        toast('Message posted! 🎉', 'ok', 'fa-paper-plane');
+      } else {
+        toast('Failed to post message', 'err');
+      }
+    }
+
+    // Init
     renderMessages();
-    toast('Message posted! 🎉', 'ok', 'fa-paper-plane');
-  } else {
-    toast('Failed to post message', 'err');
-  }
-}
-
-// Init
-renderMessages();
-</script>
+  </script>
 </body>
+
 </html>
