@@ -1007,13 +1007,13 @@ footer .accent{color:var(--cyan)}
     backdrop-filter: blur(3px); /* Blur tipis agar konten belakang terlihat samar */
   }
   .modal-box {
-    width: 100%; height: 100%; max-height: 100%; /* Full screen 100% */
-    border-radius: 0; border: none;
+    width: 100%; height: 96vh; max-height: 96vh; /* Kasih celah dikit di atas */
+    border-radius: 24px 24px 0 0; border: none;
     background: var(--bg);
     padding: 0;
     display: flex; flex-direction: column;
     overflow: hidden;
-    box-shadow: none;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   /* Fix container height agar absolute positioning story-media bekerja relatif terhadap layar penuh */
@@ -1026,14 +1026,14 @@ footer .accent{color:var(--cyan)}
   
   .story-content {
     position: relative; z-index: 10; margin-top: 0;
-    padding: 24px; padding-top: calc(32px + env(safe-area-inset-top)); padding-bottom: 120px;
+    padding: 32px 24px 120px; /* Padding atas lebih besar untuk handle */
     height: 100%; /* Mengisi penuh */
     background: linear-gradient(to bottom, rgba(4,10,30,0.98), var(--bg));
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-radius: 0; /* Hapus radius agar seamless */
-    border-top: none;
+    border-radius: 24px 24px 0 0; 
+    border-top: 1px solid rgba(255,255,255,0.12);
     overflow-y: auto; overflow-x: hidden;
-    box-shadow: none;
+    box-shadow: none; /* Shadow pindah ke parent */
     animation: slideUpSheet .4s cubic-bezier(0.19, 1, 0.22, 1);
   }
   

@@ -321,21 +321,20 @@ function openProjModal(id){
   mb.classList.add('sheet-half');
 
   document.getElementById('proj-modal').classList.add('open');
-  document.body.style.overflow = 'hidden'; // Kunci scroll halaman belakang
-
-  // ── SWIPE DOWN GESTURE LOGIC ──
+    document.body.style.overflow = 'hidden';
+    
+  // FIX: Inisialisasi swipe SETELAH konten dibuat
   initSheetGestures();
 }
 
 function initSheetGestures() {
-  const content = document.querySelector('.story-content');
-  const box = document.querySelector('.modal-box');
   const modal = document.getElementById('proj-modal');
+  const content = document.querySelector('.story-content'); // Elemen baru
+  const box = document.querySelector('.modal-box');
   if (!content || !modal || !box) return;
 
-  // Cegah listener ditambahkan berulang kali
-  if (box.dataset.gesturesInitialized) return;
-  box.dataset.gesturesInitialized = 'true';
+  // HAPUS BLOCKING: Kita perlu pasang listener baru setiap kali modal dibuka
+  // karena elemen '.story-content' selalu dibuat ulang.
 
   let startY = 0, currentY = 0, isDragging = false, startTranslateY = 0;
   let sheetState = 'half';
@@ -412,6 +411,12 @@ function initSheetGestures() {
   content.addEventListener('touchend', onTouchEnd);
 }
 
+
+
+/*document.addEventListener('DOMContentLoaded', () => {
+});*/
+
+
 function openLightbox(url){
   document.getElementById('lightbox-img').src=url;
   document.getElementById('lightbox').classList.add('open');
@@ -429,7 +434,9 @@ function loadProjects(){
   allProjects=ls.length?ls:DEFAULT_PROJECTS;
   renderProjects();
 }
+
 loadProjects();
+
 </script>
 </body>
 </html>
