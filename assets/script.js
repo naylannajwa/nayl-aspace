@@ -25,10 +25,10 @@ const DB = {
   get: async (key) => {
     if (!sbReady) return LS.get(key);
     
-    const map = {
-      'public_messages': { t:'public_messages', o:'created_at', d:false },
+  const map = {
+      'public_messages': { t:'public_messages', o:'created_at', d:false, ignoreCols: true },
       'projects':        { t:'projects', o:'created_at', d:false },
-      'interests':       { t:'interests', o:'created_at', d:false }, // Tambahan: Fetch semua interest
+      'interests':       { t:'interests', o:'created_at', d:false },
       'interests_manhwa':{ t:'interests', c:'manhwa' },
       'interests_anime': { t:'interests', c:'anime' },
       'interests_movies':{ t:'interests', c:'movies' },
@@ -44,7 +44,11 @@ const DB = {
     else q = q.order('created_at', { ascending: false });
 
     const { data, error } = await q;
-    return error ? LS.get(key) : data;
+    if (error) {
+      console.warn('Supabase error, using localStorage:', error);
+      return LS.get(key);
+    }
+    return data || [];
   },
   
   add: async (key, item) => {
