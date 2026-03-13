@@ -656,9 +656,9 @@
       renderProjects();
     }
 
-    function loadProjects() {
-      const ls = LS.get('projects', []);
-      allProjects = ls.length ? ls : DEFAULT_PROJECTS;
+    async function loadProjects() {
+      const data = await DB.get('projects'); // Gunakan DB.get agar ambil dari Supabase
+      allProjects = data.length ? data : DEFAULT_PROJECTS;
 
       // Update Counts
       document.getElementById('c-all').textContent = allProjects.length;
@@ -671,8 +671,10 @@
       renderProjects();
     }
 
-    loadProjects();
-
+    // Tunggu sampai Supabase siap (initSB di script.js jalan saat DOMContentLoaded)
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProjects();
+    });
   </script>
 </body>
 

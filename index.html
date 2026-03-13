@@ -626,9 +626,11 @@
     })();
 
     // Update stat
-    const lp = LS.get('projects', []);
-    if (lp.length) document.getElementById('s-proj').textContent = lp.length + '+';
-
+    document.addEventListener('DOMContentLoaded', async () => {
+      const lp = await DB.get('projects');
+      if (lp.length) document.getElementById('s-proj').textContent = lp.length + '+';
+    });
+    
     // Bio from LS
     const bio = localStorage.getItem('ns_bio');
     if (bio) document.getElementById('bio-text').textContent = bio;
