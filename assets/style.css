@@ -78,8 +78,13 @@ nav#user-nav{
   height:var(--nav-h);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 52px;
-  transition:height .3s var(--ease),padding .3s var(--ease);
+  transition:height .3s var(--ease),padding .3s var(--ease),transform .4s cubic-bezier(.2,.8,.2,1);
 }
+/* Class untuk menyembunyikan navbar atas */
+nav#user-nav.nav-hidden {
+  transform: translateY(-100%);
+}
+
 /* FIX: Pindahkan background/blur ke ::before agar tidak mengunci posisi fixed anak (nav-links) */
 nav#user-nav::before {
   content:''; position:absolute; inset:0; z-index:-1;
@@ -991,6 +996,17 @@ footer .accent{color:var(--cyan)}
     text-shadow: 0 0 10px var(--cyan);
   }
   
+  /* Bounce Animation on Click/Active */
+  .nav-links a:active i, .nav-links a.active i {
+    animation: navIconBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes navIconBounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.2); } /* Skala dikurangi (sebelumnya 1.35) */
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1.1); }
+  }
+
   /* Active Icon Float */
   .nav-links a.active i {
     transform: scale(1.1);

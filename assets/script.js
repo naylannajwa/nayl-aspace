@@ -139,7 +139,7 @@ function initNav() {
   addEventListener('scroll', ()=> nav.classList.toggle('compact', scrollY>40));
   // Active link
   const cur = location.pathname.split('/').pop()||'index.html';
-  document.querySelectorAll('#user-nav .nav-links a').forEach(a=>{
+  document.querySelectorAll('.nav-links a').forEach(a=>{
     if(a.getAttribute('href').split('/').pop()===cur) a.classList.add('active');
   });
 }
@@ -297,6 +297,51 @@ function initMobileMenu() {
   }
 }
 
+// ── SMART SCROLL (AUTO HIDE NAV) ──────────────────────────
+function initSmartScroll() {
+  const navTop = document.getElementById('user-nav'); // Tetap ambil referensi, tapi tidak kita sembunyikan
+  const navBot = document.getElementById('nav-links'); // Mobile bottom nav
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+
+    // Selalu munculkan jika di paling atas
+    if (currentScroll <= 10) {
+      navTop?.classList.remove('nav-hidden'); // Munculkan navbar atas
+      return;
+    }
+
+    // Deteksi Scroll
+    if (currentScroll > lastScroll && currentScroll > 60) {
+      // SCROLL DOWN -> SEMBUNYI
+      navTop?.classList.add('nav-hidden'); // Sembunyikan navbar atas
+    } else if (currentScroll < lastScroll) {
+      // SCROLL UP -> MUNCUL
+      navTop?.classList.remove('nav-hidden'); // Navbar atas muncul kembali
+    }
+    lastScroll = currentScroll;
+  }, { passive: true });
+}
+
+// ── FIX NAV STACKING CONTEXT ──────────────────────────────
+function initNavLayout() {
+  const nav = document.getElementById('user-nav');
+  const links = document.getElementById('nav-links');
+  if (!nav || !links) return;
+
+  const update = () => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && links.parentElement === nav) {
+      document.body.appendChild(links); // Move to body to detach from header transform
+    } else if (!isMobile && links.parentElement !== nav) {
+      nav.appendChild(links); // Move back to header for desktop layout
+    }
+  };
+  window.addEventListener('resize', update);
+  update();
+}
+
 // ── ADMIN EASTER EGG ─────────────────────────────────────
 function initAdminTrigger() {
   let adminClickCount = 0;
@@ -324,6 +369,38 @@ function initAdminTrigger() {
   }
 }
 
+// ── SOUND FX (SUBTLE POP) ─────────────────────────────────
+function initNavSound() {
+  // Menggunakan satu AudioContext untuk efisiensi
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  const playPop = () => {
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.type = 'sine'; // Gelombang sinus halus
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.12); // Pitch drop
+    
+    gain.gain.setValueAtTime(0.03, ctx.currentTime); // Volume sangat rendah (subtle)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.12);
+
+    // Haptic Feedback (Getaran Singkat 10ms)
+    if (navigator.vibrate) navigator.vibrate(10);
+  };
+
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    // Gunakan pointerdown agar responsif di touch & mouse
+    a.addEventListener('pointerdown', playPop);
+  });
+}
+
 // ── INIT ALL ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initSB();
@@ -332,6 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initAdminNav();
   initMobileMenu();
+  initNavLayout();
+  initSmartScroll();
+  initNavSound();
   initAdminTrigger();
   setTimeout(initReveal, 80);
 });
