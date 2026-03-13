@@ -64,6 +64,13 @@ const DB = {
       return true;
     }
     
+    // FIX: Hapus ID dan Date manual saat kirim ke Supabase
+    // Biarkan database yang mengurus UUID dan created_at
+    if (key === 'public_messages') {
+      delete item.id;
+      delete item.date;
+    }
+
     const map = {
       'public_messages': 'public_messages',
       'projects': 'projects',

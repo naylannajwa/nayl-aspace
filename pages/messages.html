@@ -223,13 +223,17 @@
       const icon = icons[i % icons.length];
       const rotStyle = rot ? `transform: rotate(${rot}deg)` : '';
 
+      // FIX: Handle perbedaan nama kolom (Supabase: message/created_at vs LocalStorage: text/date)
+      const displayMsg = m.message || m.text || '';
+      const displayDate = m.created_at ? new Date(m.created_at).toLocaleDateString() : (m.date || '');
+
       return `
     <div class="msg-card reveal" style="${rotStyle}">
       <div class="msg-head">
         <span class="msg-user">${m.name}</span>
-        <span class="msg-time">${m.date}</span>
+        <span class="msg-time">${displayDate}</span>
       </div>
-      <div class="msg-body">${m.text}</div>
+      <div class="msg-body">${displayMsg}</div>
       <i class="fa-solid ${icon} msg-decoration"></i>
     </div>
     `;
