@@ -112,7 +112,7 @@
       background: rgba(5, 15, 50, .8);
       border: 1px solid var(--glass-b);
       border-radius: var(--r-pill);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: .6rem;
       color: var(--cyan);
       backdrop-filter: blur(8px);
@@ -151,7 +151,7 @@
     }
 
     .tc-title {
-      font-family: 'Fraunces', serif;
+      font-family: var(--f-display);
       font-size: .95rem;
       font-weight: 700;
       margin-bottom: 4px;
@@ -159,7 +159,7 @@
     }
 
     .tc-meta {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: .66rem;
       color: var(--blue-3);
     }
@@ -198,7 +198,7 @@
       border: 1px solid var(--glass-b);
       border-radius: var(--r-pill);
       color: var(--white-dim);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: .72rem;
       cursor: pointer;
       transition: var(--trans);
@@ -274,7 +274,7 @@
     }
 
     .det-hero-cat {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.68rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -294,7 +294,7 @@
     }
 
     .det-hero-title {
-      font-family: 'Fraunces', serif;
+      font-family: var(--f-display);
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 900;
       line-height: 1.05;
@@ -321,7 +321,7 @@
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 999px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.68rem;
       color: rgba(200, 220, 255, 0.8);
     }
@@ -404,7 +404,7 @@
     }
 
     .det-card-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.65rem;
       font-weight: 500;
       letter-spacing: 0.14em;
@@ -438,7 +438,7 @@
     }
 
     .feel-quote-mark {
-      font-family: 'Fraunces', serif;
+      font-family: var(--f-display);
       font-size: 5rem;
       line-height: 0.5;
       color: rgba(0, 212, 255, 0.1);
@@ -476,7 +476,7 @@
     }
 
     .fav-quote-text {
-      font-family: 'Fraunces', serif;
+      font-family: var(--f-display);
       font-size: 1.05rem;
       font-style: italic;
       color: rgba(220, 210, 255, 0.9);
@@ -485,7 +485,7 @@
     }
 
     .fav-quote-from {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.68rem;
       color: rgba(167, 139, 250, 0.6);
     }
@@ -522,7 +522,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.65rem;
       color: #4ade80;
     }
@@ -595,7 +595,7 @@
     }
 
     .gallery-vibe-lbl {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.6rem;
       color: rgba(200, 220, 255, 0.7);
       text-align: center;
@@ -628,7 +628,7 @@
     }
 
     .stat-row-key {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--f-mono);
       font-size: 0.7rem;
       color: rgba(140, 180, 255, 0.5);
       display: flex;
@@ -645,7 +645,7 @@
       font-size: 0.85rem;
       font-weight: 500;
       color: rgba(220, 230, 255, 0.9);
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--f-body);
     }
 
     .rec-badge {
@@ -1069,7 +1069,7 @@
           if (q) items = items.filter(i => i.title.toLowerCase().includes(q) || (i.meta || '').toLowerCase().includes(q) || (i.genre || '').toLowerCase().includes(q));
 
           if (!items.length) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace;font-size:0.8rem">No results for "${q}"</div>`;
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:rgba(255,255,255,.3);font-family:var(--f-mono);font-size:0.8rem">No results for "${q}"</div>`;
             return;
           }
           grid.innerHTML = items.map(item => renderTitleCard(item)).join('');
