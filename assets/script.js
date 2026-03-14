@@ -474,8 +474,7 @@ function initAdminTrigger() {
                             .find(el => el.textContent.includes('nayl-aSpace'));
 
   if (adminTrigger) {
-    adminTrigger.style.cursor = 'pointer';
-    adminTrigger.title = 'Click 3x to unlock Admin';
+    // Info dan kursor pointer dihapus agar menjadi easter egg yang sepenuhnya rahasia
 
     adminTrigger.addEventListener('click', (e) => {
       e.preventDefault();
