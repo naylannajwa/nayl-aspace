@@ -165,11 +165,16 @@ function initCursor() {
   const ring = document.getElementById('cursor-ring');
   if (!dot || !ring) return;
   let mx=0, my=0, rx=0, ry=0;
-  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  document.addEventListener('mousemove', e => { 
+    mx=e.clientX; my=e.clientY; 
+    // Update posisi dot langsung saat mouse bergerak (0 latency / tanpa jeda)
+    dot.style.left = (mx-4) + 'px';
+    dot.style.top = (my-4) + 'px';
+  });
   (function loop() {
-    rx += (mx-rx)*.13; ry += (my-ry)*.13;
-    dot.style.cssText  = `left:${mx-4}px;top:${my-4}px`;
-    ring.style.cssText = `left:${rx-16}px;top:${ry-16}px`;
+    rx += (mx-rx)*0.3; ry += (my-ry)*0.3; // Naikkan pengali (0.13 ke 0.3) agar ring lebih cepat/ringan
+    ring.style.left = (rx-16) + 'px';
+    ring.style.top = (ry-16) + 'px';
     requestAnimationFrame(loop);
   })();
   document.addEventListener('mouseover', e => {
